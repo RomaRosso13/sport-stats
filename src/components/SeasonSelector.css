@@ -1,0 +1,68 @@
+.season-selector {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+
+  padding: 8px 40px 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #111827;
+
+  cursor: pointer;
+  outline: none;
+
+  transition: 
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+
+/* Hover */
+.season-selector:hover {
+  border-color: #2563eb;
+  box-shadow: 0 4px 10px rgba(37,99,235,0.15);
+  transform: translateY(-1px);
+}
+
+/* Focus */
+.season-selector:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.25);
+}
+
+/* Flecha custom */
+.season-selector {
+  background-image:
+    linear-gradient(45deg, transparent 50%, #2563eb 50%),
+    linear-gradient(135deg, #2563eb 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) 50%,
+    calc(100% - 12px) 50%;
+  background-size:
+    6px 6px,
+    6px 6px;
+  background-repeat: no-repeat;
+}
+
+/* Disabled */
+.season-selector:disabled {
+  background-color: #f9fafb;
+  color: #9ca3af;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .season-selector {
+    font-size: 12px;
+    padding: 8px 36px 8px 12px;
+  }
+}

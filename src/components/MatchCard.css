@@ -1,0 +1,139 @@
+.match-card {
+  background: linear-gradient(180deg, #ffffff, #fafafa);
+  border-radius: 16px;
+  padding: 16px 18px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+/* hover */
+@media (hover: hover) {
+  .match-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(0,0,0,0.08);
+  }
+}
+
+/* ESTADO */
+.match-card.finished {
+  border-left: 4px solid #16a34a;
+}
+
+.match-card.pending {
+  border-left: 4px solid #f59e0b;
+}
+
+.team {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+
+/* TEAMS */
+.teams {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  font-weight: 700;
+}
+
+.team.local {
+  justify-content: flex-start;
+}
+
+.team.visitor {
+  justify-content: flex-end;
+}
+
+.vs {
+  font-size: 12px;
+  font-weight: 800;
+  color: #9ca3af;
+  padding: 0 10px;
+}
+
+/* SCORE */
+.match-info {
+  display: flex;
+  justify-content: center;
+}
+
+.score {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.score small {
+  font-size: 16px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+/* STATUS BADGE */
+.status-badge {
+  background: #fff7ed;
+  color: #b45309;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 999px;
+}
+
+/* META */
+.match-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* GANADOR */
+.team.winner {
+  color: #166534;
+  font-weight: 800;
+  position: relative;
+}
+
+/* pequeña línea de victoria */
+.team.winner::after {
+  content: "";
+  display: block;
+  height: 3px;
+  width: 100%;
+  margin-top: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+}
+
+/* PERDEDOR */
+.team.loser {
+  color: #9ca3af;
+  font-weight: 600;
+}
+
+/* EMPATE */
+.draw-label {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: #f3f4f6;
+  color: #374151;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.team-logo {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+

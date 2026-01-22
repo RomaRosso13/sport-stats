@@ -1,0 +1,98 @@
+.resultados {
+  margin: 2.5rem 0;
+}
+
+.resultados h2 {
+  margin-bottom: 1rem;
+}
+
+.resultados-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.resultado-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 14px 18px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  box-shadow: 0 6px 18px rgba(0,0,0,.06);
+}
+
+.equipo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.lado.izquierdo {
+  justify-content: flex-start;
+}
+
+.lado.derecho {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+
+.equipo:first-of-type {
+  text-align: left;
+  justify-content: flex-start;
+}
+
+.equipo:last-of-type {
+  text-align: right;
+  justify-content: flex-end;
+}
+
+
+.equipo.ganador {
+  font-weight: 700;
+  color: #16a34a;
+  display: inline-flex;
+  align-items: center;
+}
+
+
+.marcador {
+  font-size: 22px;
+  font-weight: 700;
+  padding: 0 14px;
+}
+
+.meta {
+  grid-column: 1 / -1;
+  margin-top: 6px;
+  font-size: 12px;
+  color: #6b7280;
+  justify-content: center; 
+  display: flex;
+  gap: 6px;
+}
+
+.empty {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.badge-win {
+  margin-left: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 6px;
+  border-radius: 999px;
+  background: #16a34a;
+  color: #fff;
+  vertical-align: middle;
+}
+
+.team-logo {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  flex-shrink: 0;
+}

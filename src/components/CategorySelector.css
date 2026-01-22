@@ -1,0 +1,27 @@
+.category-selector {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.category-tab {
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #374151;
+  transition: all 0.2s ease;
+}
+
+.category-tab:hover {
+  background: #f1f5f9;
+}
+
+.category-tab.active {
+  background: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
+}

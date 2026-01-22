@@ -1,0 +1,102 @@
+.proxima-jornada {
+  margin: 3rem 0;
+}
+
+.proxima-jornada h2 {
+  margin-bottom: 1.25rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.partidos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* CARD */
+.partido-card {
+  background: linear-gradient(180deg, #ffffff, #fafafa);
+  border-radius: 16px;
+  padding: 16px 20px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  position: relative;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* acento lateral */
+.partido-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 12px;
+  bottom: 12px;
+  width: 4px;
+  border-radius: 4px;
+  background: #3b82f6; /* azul */
+}
+
+/* hover */
+@media (hover: hover) {
+  .partido-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
+  }
+}
+
+/* EQUIPOS */
+.equipo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.2;
+}
+
+
+/* VS */
+.vs {
+  font-weight: 800;
+  font-size: 13px;
+  color: #9ca3af;
+  padding: 0 18px;
+  letter-spacing: 1px;
+}
+
+/* META */
+.meta {
+  grid-column: 1 / -1;
+  margin-top: 8px;
+  font-size: 12px;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* EMPTY */
+.empty {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.team-logo {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.lado.izquierdo {
+  justify-content: flex-start;
+}
+
+.lado.derecho {
+  justify-content: flex-end;
+  text-align: right;
+}

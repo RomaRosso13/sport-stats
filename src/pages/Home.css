@@ -1,0 +1,134 @@
+/* ===============================
+   CONTENEDOR PRINCIPAL
+================================ */
+.home-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* ⛔ scroll aquí */
+}
+
+
+/* ===============================
+   GRID DE STATS SUPERIORES
+================================ */
+.cards-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  width: 100%;
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .cards-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .cards-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===============================
+   LAYOUT PRINCIPAL (3 COLUMNAS)
+================================ */
+.home-layout {
+  flex: 1;
+  display: grid;
+  padding-top: 12px;
+  grid-template-columns: 1.3fr 1.3fr; /* 👈 tabla manda */
+  grid-template-rows: 1fr 1fr;
+  gap: 24px;
+  min-height: 0;
+}
+
+
+
+/* ===============================
+   TARJETAS BASE
+================================ */
+.home-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+
+
+/* ===============================
+   TITULOS DE TARJETA
+================================ */
+.card-title {
+  margin: 0 0 12px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* ===============================
+   CUERPO DE TARJETA (SCROLLEABLE)
+================================ */
+.card-body {
+  flex: 1;
+  overflow-y: auto;
+}
+
+
+
+/* ===============================
+   RESPONSIVE
+================================ */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .home-layout {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .home-card.positions-wrapper {
+      min-height: 0;
+    }
+
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .home-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.positions-wrapper {
+  grid-row: 1 / -1; /* 👈 ocupa ambas filas */
+}
+
+.tabla-posiciones thead th {
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 2;
+}
+
+.app-footer {
+  height: 40px;
+  flex-shrink: 0;
+  border-top: 1px solid #e5e7eb; /* 👈 línea gris */
+  background: #ffffff;
+  color: #6b7280;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Tabla de posiciones */
+.home-card.positions-wrapper {
+  max-height: calc(100vh - 300px);
+}
+
+
+

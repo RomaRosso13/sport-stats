@@ -1,0 +1,39 @@
+.results-day {
+  margin-bottom: 48px; /* separación clara entre jornadas */
+}
+
+
+.results-day-header {
+  margin-bottom: 18px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.day-title h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  color: #0f172a;
+}
+
+.day-date {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  margin-top: 2px;
+  display: block;
+}
+
+.results-grid {
+  margin-top: 16px;
+  gap: 24px;
+}
+
+.results-day-header {
+  display: inline-block;
+  background: #f1f5f9;
+  padding: 8px 14px;
+  border-radius: 999px;
+}
+

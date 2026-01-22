@@ -1,0 +1,92 @@
+.team-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+}
+
+.team-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.team-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.team-logo {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.team-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.team-name {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.coach {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.players-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.empty {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.players-toggle {
+  margin-top: 10px;
+  background: none;
+  border: none;
+  color: #2563eb;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 0;
+  text-align: left;
+}
+
+.players-toggle:hover {
+  text-decoration: underline;
+}
+
+.players-section {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.35s ease;
+}
+
+.players-section.open {
+  max-height: 500px; /* suficiente para roster normal */
+}
+
+.players-section .player-row {
+  padding: 6px 0;
+}
+
+.team-chart-section {
+  margin-top: 14px;
+}
+
+.chart-title {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}

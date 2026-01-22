@@ -1,0 +1,63 @@
+.tabla-wrapper {
+  margin-top: 24px;
+  overflow-x: auto;
+}
+
+.tabla-posiciones {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.tabla-posiciones th,
+.tabla-posiciones td {
+  padding: 12px;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+.tabla-posiciones tbody tr:nth-child(even) {
+  background-color: #f1f5f9;
+}
+
+.tabla-posiciones td:nth-child(2) {
+  text-align: left;
+  font-weight: 500;
+}
+
+.tabla-posiciones tr.leader {
+  background-color: #d1fae5; /* verde clarito para el líder */
+  font-weight: bold;
+}
+
+.tabla-posiciones tr:hover {
+  background-color: #f3f4f6;
+}
+
+.tabla-posiciones tr.playoffs {
+  background-color: #fef9c3; /* amarillo clarito para playoffs */
+}
+
+.equipo-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.team-logo {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.team-name {
+  white-space: nowrap;
+}
+
+
+

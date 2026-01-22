@@ -1,0 +1,29 @@
+.results-container {
+  flex: 1;                /* ocupa el espacio entre header y footer */
+  overflow-y: auto;       /* 👈 SOLO aquí hay scroll */
+  padding: 24px;
+}
+.empty-results {
+  color: #6b7280;
+  margin-top: 24px;
+}
+
+/* Layout general */
+.app-layout {
+  height: 100vh;          /* ocupa toda la pantalla */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Footer fijo abajo */
+.app-footer {
+  height: 40px;
+  flex-shrink: 0;
+  border-top: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: #6b7280;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

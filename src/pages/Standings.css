@@ -1,0 +1,26 @@
+/* Layout general */
+.app-layout {
+  height: 100vh;          /* ocupa toda la pantalla */
+  display: flex;
+  flex-direction: column;
+}
+
+.standings-container {
+  height: 100vh;          /* ocupa toda la pantalla */
+  display: flex;
+  overflow-y: auto; 
+  flex-direction: column;
+}
+
+/* Footer fijo abajo */
+.app-footer {
+  height: 40px;
+  flex-shrink: 0;
+  border-top: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: #6b7280;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

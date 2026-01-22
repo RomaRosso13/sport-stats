@@ -1,0 +1,143 @@
+.result-card {
+  background: linear-gradient(180deg, #ffffff, #fafafa);
+  border-radius: 16px;
+  padding: 18px 20px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.06);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+@media (hover: hover) {
+  .result-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(0,0,0,0.08);
+  }
+}
+
+.result-main {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+/* TEAM */
+.team {
+  font-weight: 600;
+  font-size: 14px;
+  opacity: 0.75;
+}
+
+.team.winner {
+  opacity: 1;
+  font-weight: 800;
+}
+
+/* subrayado ganador */
+.team.winner .team-name {
+  position: relative;
+}
+
+.team.winner .team-name::after {
+  content: "";
+  display: block;
+  height: 3px;
+  width: 100%;
+  margin-top: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+}
+
+/* SCORE */
+.score {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 28px;
+  font-weight: 900;
+}
+
+.score span {
+  min-width: 24px;
+  text-align: center;
+}
+
+.score .winner {
+  color: #16a34a;
+}
+
+.score .dash {
+  font-size: 18px;
+  color: #9ca3af;
+}
+
+/* META */
+.result-meta {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.team-logo {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.team {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  opacity: 0.75;
+}
+
+.team.left {
+  flex-direction: row;
+}
+
+.team.right {
+  flex-direction: row-reverse;
+}
+
+
+
+.team.winner {
+  opacity: 1;
+  font-weight: 800;
+}
+
+.team.winner .team-name::after {
+  content: "";
+  display: block;
+  height: 3px;
+  width: 100%;
+  margin-top: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+}
+
+.score {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 26px; /* un poco más compacto */
+  font-weight: 900;
+}
+
+.score span {
+  min-width: 22px;
+  text-align: center;
+}
+
+.result-meta {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #6b7280;
+}
