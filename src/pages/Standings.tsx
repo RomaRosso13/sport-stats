@@ -62,7 +62,7 @@ function Standings() {
 
   return (
   <div className="app-layout">
-    <Header league={league} seasons={seasons} season={season} />
+    <Header league={league}/>
     <main className="standings-container">
       <CategorySelector categories={categories} active={category} onChange={setCategory}/>
       <h2 style={{ marginTop: '32px' }}>Tabla de Posiciones</h2>

@@ -49,7 +49,7 @@ function Calendar() {
 
   return (
     <div className="app-layout">
-      <Header league={league} seasons={seasons} season={season} />
+      <Header league={league}/>
 
       <main className="calendar-container">
         <CategorySelector

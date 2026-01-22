@@ -63,7 +63,7 @@ function Teams() {
 
   return (
     <div className = 'app-layout'>
-    <Header league={league} seasons={seasons} season={season} />
+    <Header league={league}/>
     <main className="teams-container">
       <CategorySelector categories={categories} active={category} onChange={setCategory}/>
         <div className="teams-grid">

@@ -45,7 +45,7 @@ function TeamCard({ team, matchdays }) {
       <div className={`players-section ${open ? "open" : ""}`}>
         {team.jugadores && team.jugadores.length > 0 ? (
           team.jugadores.map(player => (
-            <PlayerRow key={player.id} player={jugador} />
+            <PlayerRow key={player.id} player={player} />
           ))
         ) : (
           <p className="empty">Sin jugadores registrados</p>

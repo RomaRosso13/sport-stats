@@ -66,7 +66,7 @@ function Results() {
 
   return (
     <div className="app-layout">
-      <Header league={league} seasons={seasons} season={season} />
+      <Header league={league}/>
       <main className="results-container">
         <CategorySelector categories={categories} active={category} onChange={setCategory}/>
         {matchdaysWithResults.length === 0 ? (

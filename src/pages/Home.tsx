@@ -102,7 +102,7 @@ function Home() {
 
 return (
   <div className="app-shell">
-    <Header league={league} seasons={seasons} season={season} />
+    <Header league={league}/>
 
     <main className="home-container">
       <CategorySelector
