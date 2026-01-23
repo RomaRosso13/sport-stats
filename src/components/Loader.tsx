@@ -1,6 +1,11 @@
 import './Loader.css'
 
-function Loader({ show, label }) {
+type LoaderProps = {
+  show: boolean
+  label?: string
+}
+
+function Loader({ show, label }: LoaderProps) {
   return (
     <div className={`loader-overlay ${show ? 'visible' : ''}`}>
       <div className="loader-box">
