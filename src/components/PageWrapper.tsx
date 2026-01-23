@@ -1,9 +1,8 @@
 import './PageWrapper.css'
 
-function PageWrapper({ loading, children }) {
+function PageWrapper({ loading }) {
   return (
     <div className={`page-wrapper ${loading ? 'loading' : 'ready'}`}>
-      {children}
     </div>
   )
 }
