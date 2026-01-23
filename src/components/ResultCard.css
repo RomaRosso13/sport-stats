@@ -103,8 +103,6 @@
   flex-direction: row-reverse;
 }
 
-
-
 .team.winner {
   opacity: 1;
   font-weight: 800;
@@ -141,3 +139,45 @@
   font-weight: 600;
   color: #6b7280;
 }
+
+
+@media (max-width: 640px) {
+
+  .result-card {
+    padding: 14px 16px;
+    border-radius: 14px;
+  }
+
+  .result-main {
+    margin-bottom: 10px;
+  }
+
+  .team {
+    font-size: 13px;
+    gap: 6px;
+  }
+
+  .team-logo {
+    width: 22px;
+    height: 22px;
+  }
+
+  .score {
+    font-size: 20px;
+    gap: 4px;
+  }
+
+  .score span {
+    min-width: 18px;
+  }
+
+  .score .dash {
+    font-size: 14px;
+  }
+
+  .result-meta {
+    font-size: 10px;
+    gap: 6px;
+  }
+}
+  

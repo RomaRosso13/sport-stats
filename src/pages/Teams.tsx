@@ -4,6 +4,8 @@ import { useState } from "react"
 import Header from "../components/Header"
 import CategorySelector from "../components/CategorySelector"
 import TeamCard from "../components/TeamCard"
+import Loader from '../components/Loader'
+import PageWrapper from '../components/PageWrapper'
 
 import { useLeague } from '../context/LeagueContext'
 import { useSeason } from "../context/SeasonContext"
@@ -59,10 +61,29 @@ function Teams() {
     loadMatchdays()
   }, [category?.id])
 
-  console.log('Teams', teams)
+    const isDataLoading = !league || !matchdays.length
+    const [showLoader, setShowLoader] = useState(true)
+  
+    useEffect(() => {
+      if (!isDataLoading) {
+        setShowLoader(false)
+        return
+      }
+  
+      setShowLoader(true)
+  
+      const timeout = setTimeout(() => {
+        setShowLoader(false)
+      }, 4000)
+  
+      return () => clearTimeout(timeout)
+    }, [isDataLoading])
+
 
   return (
     <div className = 'app-layout'>
+    <Loader show={showLoader} label="Cargando..." />
+    <PageWrapper loading={showLoader}/>
     <Header league={league}/>
     <main className="teams-container">
       <CategorySelector categories={categories} active={category} onChange={setCategory}/>

@@ -3,14 +3,9 @@ import "./MatchCard.css"
 function MatchCard({ match }) {
   const isFinished = match.status === "Terminado"
 
-  const localWon =
-    isFinished && match.local_points > match.visit_points
-
-  const visitorWon =
-    isFinished && match.visit_points > match.local_points
-
-  const isDraw =
-    isFinished && match.local_points === match.visit_points
+  const localWon = isFinished && match.local_points > match.visit_points
+  const visitorWon = isFinished && match.visit_points > match.local_points
+  const isDraw = isFinished && match.local_points === match.visit_points
 
   return (
     <div className={`match-card ${isFinished ? "finished" : "pending"}`}>
@@ -63,8 +58,8 @@ function MatchCard({ match }) {
 
       {/* META */}
       <div className="match-meta">
-        <span>{match.branch.name}</span>
-        <span>Campo {match.field.name}</span>
+        <span>{match.branch.name} {match.field.name}</span>
+        <span>Hora: {match.hour}</span>
       </div>
 
       {isDraw && <div className="draw-label">Empate</div>}

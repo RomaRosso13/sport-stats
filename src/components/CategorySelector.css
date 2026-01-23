@@ -25,3 +25,10 @@
   color: #ffffff;
   border-color: #2563eb;
 }
+
+@media (max-width: 640px) {
+  .category-tab {
+    padding: 6px 14px;
+    font-size: 13px;
+  }
+}

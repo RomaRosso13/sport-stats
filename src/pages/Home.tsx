@@ -7,6 +7,9 @@ import NextGameDay from '../components/NextGameDay'
 import RecentResults from '../components/RecentResults'
 import StatsTable from '../components/StatsTable'
 import CategorySelector from "../components/CategorySelector"
+import Loader from '../components/Loader'
+import PageWrapper from '../components/PageWrapper'
+import LeagueNotFound from '../components/LeagueNotFound'
 
 import { useSeason } from "../context/SeasonContext"
 import { useLeague } from '../context/LeagueContext'
@@ -65,7 +68,6 @@ function Home() {
   const matches = matchdays.flatMap(j => j.games)
   const calculatedTable = calculateTable(matches)
   const nextGameDay = getNextGameDay(matchdays)
-  console.log('NextGameDay', nextGameDay)
   const recentResults = getRecentResults(matchdays, 4)
 
 
@@ -91,17 +93,16 @@ function Home() {
     { id: 2, nombre: "Fernando Cruz", equipo: "Panteras", sacks: 6 }
   ]
 
-
-  if (loading || !league || loadingMatchdays) {
-    return <p>Cargando...</p>
-  }
+  const isLoading = loading || !league || loadingMatchdays
 
   if (!season) {
-    return <p>No hay temporada activa</p>
+    return <LeagueNotFound/>
   }
 
 return (
   <div className="app-shell">
+    <Loader show={isLoading} label="Cargando..." />
+    <PageWrapper loading={isLoading}/>
     <Header league={league}/>
 
     <main className="home-container">

@@ -5,6 +5,7 @@ export async function getLeagueBySlug(slug) {
     .from('League')
     .select('*')
     .eq('slug', slug)
+    .eq('active', true)
     .single()
 
   if (error) throw error

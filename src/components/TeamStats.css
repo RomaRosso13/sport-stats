@@ -39,3 +39,39 @@
 .bar.draw {
   background: #f59e0b;
 }
+
+@media (max-width: 640px) {
+  .team-stats {
+    font-size: 12px;
+  }
+
+  .stats-numbers,
+  .points {
+    margin-bottom: 4px;
+  }
+
+  .stats-bars {
+    height: 8px;
+    border-radius: 5px;
+    margin-bottom: 6px;
+  }
+
+  .bar {
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 480px) {
+  .team-stats {
+    font-size: 11px;
+  }
+
+  .stats-bars {
+    height: 7px;
+  }
+
+  .bar {
+    font-size: 8px;
+  }
+}
+

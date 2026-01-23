@@ -68,16 +68,21 @@ export function calculateTable(matches) {
       }
     })
 
-  // 🔥 diferencia de puntos
   Object.values(tabla).forEach(equipo => {
+    equipo.pf = Number(equipo.pf)
+    equipo.pc = Number(equipo.pc)
+    equipo.pj = Number(equipo.pj)
     equipo.difference = equipo.pf - equipo.pc
-    equipo.average = (equipo.pj / equipo.difference).toFixed(2)
+    equipo.average =
+    equipo.pj > 0 ? Number(((equipo.pf - equipo.pc) / equipo.pj).toFixed(2)) : 0
   })
 
-  // 🏆 orden final
+
   return Object.values(tabla).sort((a, b) => {
     if (b.puntos !== a.puntos) return b.puntos - a.puntos
     if (b.difference !== a.difference) return b.difference - a.difference
+    if (b.average !== a.average) return b.average - a.average
     return b.pf - a.pf
   })
+
 }

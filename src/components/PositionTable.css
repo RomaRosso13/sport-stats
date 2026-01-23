@@ -60,4 +60,42 @@
 }
 
 
+@media (max-width: 768px) {
+  .tabla-posiciones th,
+  .tabla-posiciones td {
+    padding: 8px 6px;
+    font-size: 0.75rem;
+  }
 
+  .team-logo {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 640px) {
+  .tabla-posiciones th:nth-child(3),
+  .tabla-posiciones td:nth-child(3), /* PJ */
+  .tabla-posiciones th:nth-child(6),
+  .tabla-posiciones td:nth-child(6), /* PF */
+  .tabla-posiciones th:nth-child(7),
+  .tabla-posiciones td:nth-child(7), /* PC */
+  .tabla-posiciones th:nth-child(8),
+  .tabla-posiciones td:nth-child(8), /* DIF */
+  .tabla-posiciones th:nth-child(9),
+  .tabla-posiciones td:nth-child(9) { /* DIF */
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .equipo-cell {
+    gap: 6px;
+  }
+
+  .team-name {
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

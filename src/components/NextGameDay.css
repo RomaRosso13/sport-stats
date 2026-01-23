@@ -50,14 +50,15 @@
 
 /* EQUIPOS */
 .equipo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 700;
-  font-size: 15px;
-  line-height: 1.2;
+  min-width: 0;
 }
 
+.equipo span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
 
 /* VS */
 .vs {
@@ -99,4 +100,45 @@
 .lado.derecho {
   justify-content: flex-end;
   text-align: right;
+}
+
+@media (max-width: 768px) {
+  .proxima-jornada {
+    margin: 2rem 0;
+  }
+
+  .proxima-jornada h2 {
+    font-size: 1.05rem;
+    margin-bottom: 1rem;
+  }
+
+  .partido-card {
+    padding: 14px 16px;
+    border-radius: 14px;
+  }
+
+  .team-logo {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .vs {
+    padding: 0 10px;
+    font-size: 12px;
+  }
+
+  .equipo {
+    font-size: 14px;
+    gap: 6px;
+  }
+}
+
+@media (max-width: 640px) {
+  .meta {
+    font-size: 11px;
+    margin-top: 6px;
+    gap: 4px;
+  }
 }

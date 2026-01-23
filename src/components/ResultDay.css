@@ -37,3 +37,23 @@
   border-radius: 999px;
 }
 
+@media (max-width: 768px) {
+  .results-day {
+    margin-bottom: 36px;
+  }
+
+  .day-title h3 {
+    font-size: 16px;
+  }
+
+  .day-date {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 640px) {
+  .results-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}

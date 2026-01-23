@@ -43,7 +43,7 @@ function Header({ league }) {
           </button>
 
           {menuOpen && (
-            <div className="dropdown-menu">
+            <div className={`dropdown-menu ${menuOpen ? 'open' : ''}`}>
               <Link to={`/${league.slug}`}>Inicio</Link>
               <Link to={`/${league.slug}/calendario`}>Calendario</Link>
               <Link to={`/${league.slug}/results`}>Resultados</Link>
@@ -52,6 +52,7 @@ function Header({ league }) {
               <hr />
               <a href="#">Reglamento</a>
             </div>
+
           )}
         </nav>
 

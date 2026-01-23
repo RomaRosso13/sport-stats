@@ -5,6 +5,7 @@ export async function getSeasonsByLeagueId(leagueId) {
     .from('Season')
     .select('*')
     .eq('league_id', leagueId)
+    .eq('active', true)
     .order('created_at', { ascending: true })
 
   if (error) throw error

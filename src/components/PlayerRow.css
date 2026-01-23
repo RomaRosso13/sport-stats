@@ -14,3 +14,15 @@
   font-weight: 600;
   color: #2563eb;
 }
+
+@media (max-width: 640px) {
+  .player-row {
+    font-size: 13px;
+    padding: 5px 0;
+    gap: 8px;
+  }
+
+  .player-position {
+    font-size: 12px;
+  }
+}

@@ -90,3 +90,59 @@
   font-weight: 600;
   margin-bottom: 6px;
 }
+
+@media (max-width: 768px) {
+  .team-card {
+    padding: 14px;
+  }
+
+  .team-logo {
+    width: 34px;
+    height: 34px;
+  }
+
+  .team-name {
+    font-size: 15px;
+  }
+
+  .coach {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  .team-card {
+    padding: 12px;
+    border-radius: 12px;
+  }
+
+  .team-header {
+    margin-bottom: 10px;
+  }
+
+  .team-info {
+    gap: 10px;
+  }
+
+  .team-logo {
+    width: 30px;
+    height: 30px;
+  }
+
+  .team-name {
+    font-size: 14px;
+  }
+
+  .coach {
+    font-size: 11px;
+  }
+
+  .players-list {
+    gap: 4px;
+  }
+
+  .players-toggle {
+    font-size: 12px;
+    padding: 4px 0;
+  }
+}

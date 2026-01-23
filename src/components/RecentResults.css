@@ -96,3 +96,46 @@
   object-fit: contain;
   flex-shrink: 0;
 }
+
+@media (max-width: 640px) {
+
+  .resultados {
+    margin: 2rem 0;
+  }
+
+  .resultado-card {
+    padding: 12px 14px;
+    border-radius: 12px;
+  }
+
+  .marcador {
+    font-size: 18px;
+    padding: 0 10px;
+  }
+
+  .equipo {
+    font-size: 13px;
+    gap: 5px;
+  }
+
+  .team-logo {
+    width: 20px;
+    height: 20px;
+  }
+
+  .meta {
+    font-size: 11px;
+    margin-top: 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .marcador {
+    font-size: 16px;
+  }
+
+  .badge-win {
+    font-size: 9px;
+    padding: 2px 5px;
+  }
+}
