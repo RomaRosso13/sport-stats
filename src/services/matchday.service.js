@@ -10,3 +10,18 @@ export async function getMatchDaysByCategoryId(categoryId) {
   if (error) throw error
   return data
 }
+
+export async function createMatchday(name, date, categoryId) {
+  const { data, error } = await supabase
+    .from('Matchday')
+    .insert([{
+      name: name,
+      date: date,
+      category_id: categoryId,
+    }])
+    .select()
+    .single()
+
+  if (error) throw error
+  return data
+}

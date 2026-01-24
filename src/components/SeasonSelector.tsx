@@ -1,5 +1,3 @@
-import { useSeason } from "../context/SeasonContext"
-
 import './SeasonSelector.css'
 
 function SeasonSelector({ seasons, activeSeason, onChange }) {

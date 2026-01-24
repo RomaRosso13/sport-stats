@@ -28,6 +28,11 @@
   letter-spacing: -0.5px;
 }
 
+.user-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* ajusta a gusto */
+}
 
 
 .liga-temporada {
@@ -40,20 +45,30 @@
   align-items: center;
 }
 
-.login-btn {
-  background: transparent;
-  border: 1px solid #ffffff;
-  color: #ffffff;
-  padding: 6px 12px;
-  border-radius: 6px;
+.auth-btn {
+  background: white;
+  color: #2563eb;
+  border: none;
+  padding: 12px 14px;
+  border-radius: 999px;
+  font-weight: 600;
   font-size: 0.85rem;
   cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.15s ease;
 }
 
-.login-btn:hover {
-  background-color: #ffffff;
-  color: #0f172a;
+.auth-btn:hover {
+  background-color: #eff6ff;
+  transform: translateY(-1px);
 }
+
+.auth-btn:active {
+  transform: translateY(0);
+}
+
 
 .header-right {
   display: flex;
