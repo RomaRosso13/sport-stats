@@ -6,10 +6,13 @@ import { useLeague } from '../../context/LeagueContext'
 import { getTeamsByCategoryId } from '../../services/team.service.js'
 import { getBranchByLeagueId } from '../../services/branch.service.js'
 import { getFieldByBranchId } from '../../services/field.service.js'
+import { getMatchDaysByCategoryId } from '../../services/matchday.service.js'
+import { getMatchesByMatchDayIds } from '../../services/match.service.js'
 
 import { STAGE_OPTIONS, STAGE_LABELS } from '../../utils/matchStages'
 
 import TeamSelect from './TeamSelect'
+import MatchupHelper from './MatchupHelper'
 
 import './MatchdayMatchesEditor.css'
 
@@ -20,6 +23,7 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches }) {
   const [teams, setTeams] = useState([])
   const [branches, setBranches] = useState([])
   const [fields, setFields] = useState([])
+  const [categoryMatches, setCategoryMatches] = useState([])
 
   const [loadingData, setLoadingData] = useState(false)
   const [loadingFields, setLoadingFields] = useState(false)
@@ -36,7 +40,7 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches }) {
   })
 
   /* =========================
-     CARGAR EQUIPOS Y SEDES
+     CARGAR EQUIPOS, SEDES Y HISTORIAL DE PARTIDOS
      ========================= */
   useEffect(() => {
     if (!category || !league) return
@@ -45,13 +49,21 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches }) {
       try {
         setLoadingData(true)
 
-        const [teamsData, branchData] = await Promise.all([
+        const [teamsData, branchData, matchdaysData] = await Promise.all([
           getTeamsByCategoryId(category.id),
-          getBranchByLeagueId(league.id)
+          getBranchByLeagueId(league.id),
+          getMatchDaysByCategoryId(category.id)
         ])
 
         setTeams(teamsData || [])
         setBranches(branchData || [])
+
+        const matchdayIds = (matchdaysData || []).map(md => md.id)
+        const matchesData = matchdayIds.length
+          ? await getMatchesByMatchDayIds(matchdayIds)
+          : []
+
+        setCategoryMatches(matchesData || [])
       } catch (err) {
         console.error('Error cargando datos del formulario', err)
       } finally {
@@ -61,6 +73,14 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches }) {
 
     loadFormData()
   }, [category?.id, league?.id])
+
+  // Partidos ya guardados en la BD + los que se llevan agregados en esta
+  // sesión (aún sin guardar), para que la ayuda de rivales no sugiera un
+  // enfrentamiento que ya se acaba de armar pero todavía no se ha guardado.
+  const allKnownMatches = [
+    ...categoryMatches.map(m => ({ local_team_id: m.local_team_id, visit_team_id: m.visit_team_id })),
+    ...matches.map(m => ({ local_team_id: m.homeTeamId, visit_team_id: m.awayTeamId }))
+  ]
 
   /* =========================
      AUTO–SELECCIONAR SEDE (solo si no hay)
@@ -190,6 +210,18 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches }) {
     setMatches(prev => prev.filter(m => m.id !== id))
   }
 
+  // El equipo de referencia para la ayuda de rivales es el local si ya se
+  // eligió; si no, cae al visitante. Elegir una sugerencia llena el otro campo.
+  const referenceIsHome = !!draftMatch.homeTeamId
+  const referenceTeamId = referenceIsHome ? draftMatch.homeTeamId : draftMatch.awayTeamId
+
+  function handleSelectOpponent(teamId) {
+    setDraftMatch(prev => referenceIsHome
+      ? { ...prev, awayTeamId: teamId }
+      : { ...prev, homeTeamId: teamId }
+    )
+  }
+
   if (!matchday) {
     return (
       <div className="matches-editor-empty">
@@ -233,6 +265,13 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches }) {
             />
           </div>
         </div>
+
+        <MatchupHelper
+          teams={teams}
+          matches={allKnownMatches}
+          teamId={referenceTeamId}
+          onSelectOpponent={handleSelectOpponent}
+        />
 
         <div className="match-form-row details-row">
           <div className="field-group">

@@ -1,5 +1,6 @@
 import { supabase } from '../libs/supabase'
 import { runQuery } from '../libs/supabaseQuery'
+import { cached, invalidate } from '../utils/queryCache'
 
 const STATS_SELECT = `
   *,
@@ -16,20 +17,24 @@ const STATS_SELECT = `
 `
 
 export async function getIndividualStatsByCategory(categoryId) {
-  return runQuery(
-    supabase
-      .from('IndividualStats')
-      .select(STATS_SELECT)
-      .eq('category_id', categoryId)
+  return cached('getIndividualStatsByCategory', [categoryId], () =>
+    runQuery(
+      supabase
+        .from('IndividualStats')
+        .select(STATS_SELECT)
+        .eq('category_id', categoryId)
+    )
   )
 }
 
 export async function getIndividualStatsByMatchId(matchId) {
-  return runQuery(
-    supabase
-      .from('IndividualStats')
-      .select(STATS_SELECT)
-      .eq('match_id', matchId)
+  return cached('getIndividualStatsByMatchId', [matchId], () =>
+    runQuery(
+      supabase
+        .from('IndividualStats')
+        .select(STATS_SELECT)
+        .eq('match_id', matchId)
+    )
   )
 }
 
@@ -102,6 +107,9 @@ export async function saveIndividualStatsForMatch(categoryId, entries) {
   if (wroteNothing) {
     throw new Error('No se pudieron guardar las estadísticas (permiso denegado)')
   }
+
+  invalidate('getIndividualStatsByCategory')
+  invalidate('getIndividualStatsByMatchId')
 
   return results
 }

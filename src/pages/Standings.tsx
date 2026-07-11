@@ -9,6 +9,7 @@ import PageWrapper from '../components/common/PageWrapper'
 
 import { useLeague } from '../context/LeagueContext'
 import { useCategory } from '../context/CategoryContext'
+import { useAuth } from '../context/AuthContext'
 
 import { getMatchDaysByCategoryId } from '../services/matchday.service'
 import { getMatchesByMatchDayIds } from '../services/match.service'
@@ -22,6 +23,7 @@ import "./Standings.css"
 function Standings() {
     const { league } = useLeague()
     const { categories, category, setCategory } = useCategory()
+    const { user } = useAuth()
     const [matchdays, setMatchdays] = useState([])
     const [teams, setTeams] = useState([])
     const [, setLoadingMatchdays] = useState(true)
@@ -118,13 +120,15 @@ function Standings() {
       <CategorySelector categories={categories} active={category} onChange={setCategory}/>
       <div className="standings-header">
         <h2 style={{ marginTop: '32px' }}>Tabla de Posiciones</h2>
-        <button
-          className="export-image-btn"
-          onClick={handleExportImage}
-          disabled={exporting || isDataLoading}
-        >
-          {exporting ? 'Exportando...' : 'Exportar imagen'}
-        </button>
+        {user && (
+          <button
+            className="export-image-btn"
+            onClick={handleExportImage}
+            disabled={exporting || isDataLoading}
+          >
+            {exporting ? 'Exportando...' : 'Exportar imagen'}
+          </button>
+        )}
       </div>
       <div ref={tableRef}>
         <PositionTable table={calculatedTable} />

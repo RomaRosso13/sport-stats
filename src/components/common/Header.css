@@ -137,8 +137,11 @@
   top: calc(100% + 10px);
   right: 0;
 
-  min-width: 240px;
-  padding: 14px;
+  display: grid;
+  grid-template-columns: 1fr;
+  min-width: 220px;
+  padding: 12px;
+  gap: 2px 20px;
 
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
@@ -147,10 +150,6 @@
   box-shadow:
     0 20px 40px rgba(0, 0, 0, 0.18),
     0 0 0 1px rgba(255, 255, 255, 0.4);
-
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
 
   /* Animación */
   opacity: 0;
@@ -164,6 +163,11 @@
   z-index: 1000;
 }
 
+.dropdown-menu.has-admin {
+  grid-template-columns: 1fr 1fr;
+  min-width: 400px;
+}
+
 /* Estado abierto */
 .dropdown-menu.open {
   opacity: 1;
@@ -171,14 +175,33 @@
   pointer-events: auto;
 }
 
+.menu-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.admin-section {
+  border-left: 1px solid #e5e7eb;
+  padding-left: 18px;
+}
+
+.menu-section-title {
+  padding: 2px 10px 6px;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #94a3b8;
+}
 
 .dropdown-menu a {
   text-decoration: none;
   color: #1e293b;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 
-  padding: 8px 10px;
+  padding: 7px 10px;
   border-radius: 10px;
 
   transition:
@@ -297,5 +320,22 @@
 
   .inline-login input {
     width: 130px;
+  }
+
+  .dropdown-menu,
+  .dropdown-menu.has-admin {
+    grid-template-columns: 1fr;
+    min-width: 0;
+    width: min(280px, calc(100vw - 28px));
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+
+  .admin-section {
+    border-left: none;
+    border-top: 1px solid #e5e7eb;
+    padding-left: 0;
+    padding-top: 10px;
+    margin-top: 6px;
   }
 }

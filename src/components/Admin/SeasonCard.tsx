@@ -1,6 +1,6 @@
 import './SeasonCard.css'
 
-function SeasonCard({ season, isSelected, onSelect }) {
+function SeasonCard({ season, isSelected, onSelect, onToggleActive }) {
   return (
     <div
       className={`season-card ${isSelected ? 'selected' : ''}`}
@@ -11,6 +11,14 @@ function SeasonCard({ season, isSelected, onSelect }) {
       <span className={`status ${season.active ? 'active' : 'archived'}`}>
         {season.active ? 'Activa' : 'Archivada'}
       </span>
+
+      <button
+        type="button"
+        className={season.active ? 'archive-btn' : 'activate-btn'}
+        onClick={e => { e.stopPropagation(); onToggleActive(season) }}
+      >
+        {season.active ? 'Archivar' : 'Reactivar'}
+      </button>
     </div>
   )
 }

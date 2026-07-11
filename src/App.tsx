@@ -8,6 +8,7 @@ import Results from "./pages/Results"
 import Standings from "./pages/Standings"
 import Playoffs from "./pages/Playoffs"
 import PlayerStats from "./pages/PlayerStats"
+import Reglamento from "./pages/Reglamento"
 import Teams from "./pages/Teams"
 import TeamProfile from "./pages/TeamProfile"
 import PlayerProfile from "./pages/PlayerProfile"
@@ -18,6 +19,7 @@ import MatchDayCreator from "./pages/admin/MatchdayCreator"
 import SeasonAdministrator from "./pages/admin/SeasonAdministrator"
 import TeamManager from "./pages/admin/TeamManager"
 import VenueManager from "./pages/admin/VenueManager"
+import UserManager from "./pages/admin/UserManager"
 import AdminDashboard from "./pages/admin/AdminDashboard"
 
 function App() {
@@ -32,15 +34,17 @@ function App() {
           <Route path="tabla" element={<Standings />} />
           <Route path="playoffs" element={<Playoffs />} />
           <Route path="estadisticas" element={<PlayerStats />} />
+          <Route path="reglamento" element={<Reglamento />} />
           <Route path="equipos" element={<Teams />} />
           <Route path="equipos/:teamId" element={<TeamProfile />} />
           <Route path="jugadores/:playerId" element={<PlayerProfile />} />
           <Route path="/:leagueSlug/admin" element={ <ProtectedRoute> <AdminDashboard /> </ProtectedRoute> }/>
           <Route path="/:leagueSlug/admin/gestor" element={ <ProtectedRoute> <SeasonAdministrator /> </ProtectedRoute> }/>
-          <Route path="/:leagueSlug/admin/editar" element={ <ProtectedRoute> <MatchDayEditor /> </ProtectedRoute> }/>
+          <Route path="/:leagueSlug/admin/editar" element={ <ProtectedRoute allowStaff> <MatchDayEditor /> </ProtectedRoute> }/>
           <Route path="/:leagueSlug/admin/crear" element={ <ProtectedRoute> <MatchDayCreator /> </ProtectedRoute> }/>
           <Route path="/:leagueSlug/admin/equipos" element={ <ProtectedRoute> <TeamManager /> </ProtectedRoute> }/>
           <Route path="/:leagueSlug/admin/sedes" element={ <ProtectedRoute> <VenueManager /> </ProtectedRoute> }/>
+          <Route path="/:leagueSlug/admin/usuarios" element={ <ProtectedRoute> <UserManager /> </ProtectedRoute> }/>
         </Route>
 
         <Route path="*" element={<p>Liga no encontrada</p>} />

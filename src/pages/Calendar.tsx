@@ -46,6 +46,8 @@ function Calendar() {
             games: matchesMap[md.id] || []
           }))
         )
+      } catch (err) {
+        console.error(err)
       } finally {
         setLoadingMatchdays(false)
       }

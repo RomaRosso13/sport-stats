@@ -1,5 +1,6 @@
 import { supabase } from '../libs/supabase'
 import { runQuery } from '../libs/supabaseQuery'
+import { cached, invalidate } from '../utils/queryCache'
 
 const MATCH_SELECT = `
   *,
@@ -20,34 +21,59 @@ const MATCH_SELECT = `
   field:field_id (
     id,
     name
+  ),
+  submitter:submitted_by (
+    id,
+    name,
+    email
   )
 `
 
 export async function getMatchesByMatchDayIds(matchdayId) {
   const ids = Array.isArray(matchdayId) ? matchdayId : [matchdayId]
+  const sortedIds = [...ids].sort()
 
-  return runQuery(
-    supabase.from('Match').select(MATCH_SELECT).in('matchday_id', ids)
+  return cached('getMatchesByMatchDayIds', [sortedIds], () =>
+    runQuery(
+      supabase.from('Match').select(MATCH_SELECT).in('matchday_id', ids)
+    )
   )
 }
 
 export async function getMatchById(matchId) {
-  return runQuery(
-    supabase.from('Match').select(MATCH_SELECT).eq('id', matchId).single()
+  return cached('getMatchById', [matchId], () =>
+    runQuery(
+      supabase.from('Match').select(MATCH_SELECT).eq('id', matchId).single()
+    )
   )
 }
 
-export async function updateMatches(matches) {
-  const updates = matches.map(match => ({
-    id: match.id,
-    local_points: match.local_score,
-    visit_points: match.away_score,
-    status: match.status
-  }))
+// `currentUserId` (id interno de User, no el auth uuid) se guarda como
+// `submitted_by` solo la primera vez que un partido recibe un resultado,
+// para conservar la atribución al capturador original aunque un admin
+// lo apruebe/edite después.
+export async function updateMatches(matches, currentUserId) {
+  const updates = matches.map(match => {
+    const row = {
+      id: match.id,
+      local_points: match.local_score,
+      visit_points: match.away_score,
+      status: match.status
+    }
+
+    if (!match.submitted_by && currentUserId) {
+      row.submitted_by = currentUserId
+    }
+
+    return row
+  })
 
   await runQuery(
     supabase.from('Match').upsert(updates, { onConflict: 'id' })
   )
+
+  invalidate('getMatchesByMatchDayIds')
+  invalidate('getMatchById')
 }
 
 export async function createMatches(matches, matchday) {
@@ -63,8 +89,11 @@ export async function createMatches(matches, matchday) {
     matchday_id: matchday.id
   }))
 
-  return runQuery(
+  const result = await runQuery(
     supabase.from('Match').insert(payload).select(),
     'Error al crear los partidos'
   )
+
+  invalidate('getMatchesByMatchDayIds')
+  return result
 }

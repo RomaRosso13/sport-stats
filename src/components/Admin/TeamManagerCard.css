@@ -57,7 +57,14 @@
   color: #6b7280;
 }
 
-.team-manager-edit-btn {
+.team-manager-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.team-manager-edit-btn,
+.team-manager-delete-btn {
   flex-shrink: 0;
   padding: 6px 12px;
   border-radius: 8px;
@@ -72,4 +79,13 @@
 
 .team-manager-edit-btn:hover {
   background: #f3f4f6;
+}
+
+.team-manager-delete-btn {
+  color: #dc2626;
+  border-color: #fecaca;
+}
+
+.team-manager-delete-btn:hover {
+  background: #fef2f2;
 }

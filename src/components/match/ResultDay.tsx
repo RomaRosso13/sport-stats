@@ -20,7 +20,8 @@ function ResultsDay({ matchday, teams }) {
 
   const totalGames = matchday.games.length
   const finishedGames = matchday.games.filter(g => g.status === "Terminado").length
-  const pendingGames = totalGames - finishedGames
+  const reviewGames = matchday.games.filter(g => g.status === "Por aprobar").length
+  const pendingGames = totalGames - finishedGames - reviewGames
 
   return (
     <section className="results-day">
@@ -34,6 +35,9 @@ function ResultsDay({ matchday, teams }) {
           <span className="summary-pill total">{totalGames} partidos</span>
           {finishedGames > 0 && (
             <span className="summary-pill finished">{finishedGames} finalizados</span>
+          )}
+          {reviewGames > 0 && (
+            <span className="summary-pill review">{reviewGames} por aprobar</span>
           )}
           {pendingGames > 0 && (
             <span className="summary-pill pending">{pendingGames} por jugar</span>

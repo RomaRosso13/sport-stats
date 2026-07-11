@@ -95,6 +95,10 @@
   color: #b45309;
 }
 
+.summary-tile.review .summary-value {
+  color: #9333ea;
+}
+
 .summary-label {
   font-size: 12px;
   font-weight: 600;

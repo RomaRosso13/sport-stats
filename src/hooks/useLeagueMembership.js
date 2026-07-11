@@ -2,20 +2,22 @@ import { useEffect, useState } from 'react'
 
 import { useAuth } from '../context/AuthContext'
 import { useLeague } from '../context/LeagueContext'
-import { userBelongsToLeague } from '../services/league_user.service'
+import { getUserRoleForLeague } from '../services/league_user.service'
 
 export function useLeagueMembership() {
   const { user, loading: authLoading } = useAuth()
   const { league, loading: leagueLoading } = useLeague()
 
-  const [isMember, setIsMember] = useState(false)
+  const [role, setRole] = useState(null)
+  const [userId, setUserId] = useState(null)
   const [checking, setChecking] = useState(true)
 
   useEffect(() => {
     if (authLoading || leagueLoading) return
 
     if (!user || !league) {
-      setIsMember(false)
+      setRole(null)
+      setUserId(null)
       setChecking(false)
       return
     }
@@ -25,11 +27,17 @@ export function useLeagueMembership() {
     async function checkMembership() {
       try {
         setChecking(true)
-        const belongs = await userBelongsToLeague(user.id, league.id)
-        if (isMounted) setIsMember(belongs)
+        const membership = await getUserRoleForLeague(user.id, league.id)
+        if (isMounted) {
+          setRole(membership?.role || null)
+          setUserId(membership?.userId || null)
+        }
       } catch (err) {
         console.error(err)
-        if (isMounted) setIsMember(false)
+        if (isMounted) {
+          setRole(null)
+          setUserId(null)
+        }
       } finally {
         if (isMounted) setChecking(false)
       }
@@ -43,7 +51,11 @@ export function useLeagueMembership() {
   }, [user?.id, league?.id, authLoading, leagueLoading])
 
   return {
-    isMember,
+    role,
+    userId,
+    isMember: !!role,
+    isStaff: role === 'Staff',
+    isFullAdmin: role === 'Admin' || role === 'SuperAdmin',
     loading: authLoading || leagueLoading || checking
   }
 }

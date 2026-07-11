@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useCategory } from '../../context/CategoryContext';
 import { useLeague } from '../../context/LeagueContext'
+import { useLeagueMembership } from '../../hooks/useLeagueMembership'
 
 import MatchdaySelector from '../../components/Admin/MatchdaySelector'
 import MatchList from '../../components/Admin/MatchList'
@@ -47,11 +48,13 @@ function EditMatchday() {
   const { categories, category, setCategory } = useCategory()
   const [selectedMatchday, setSelectedMatchday] = useState(null)
   const { league } = useLeague()
+  const { isStaff, userId } = useLeagueMembership()
   const [saving, setSaving] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
 
   const [teams, setTeams] = useState([])
   const [statsTotals, setStatsTotals] = useState({})
+  const [statsByMatch, setStatsByMatch] = useState({})
   const [statsDraft, setStatsDraft] = useState<StatsDraft>({})
 
   useEffect(() => {
@@ -92,12 +95,19 @@ function EditMatchday() {
     setTeams(teamsData || [])
 
     const totals = {}
+    const byMatch = {}
     ;(statsData || []).forEach(row => {
       const rowTotals = {}
       STAT_FIELDS.forEach(field => { rowTotals[field] = row[field] || 0 })
       totals[row.player_id] = rowTotals
+
+      if (row.match_id != null) {
+        if (!byMatch[row.match_id]) byMatch[row.match_id] = []
+        byMatch[row.match_id].push(row)
+      }
     })
     setStatsTotals(totals)
+    setStatsByMatch(byMatch)
   }
 
   useEffect(() => {
@@ -145,7 +155,7 @@ async function handleSave() {
     setSaving(true)
     setSaveSuccess(false)
 
-    await updateMatches(currentMatchday.games)
+    await updateMatches(currentMatchday.games, userId)
 
     const perMatchPlayer: Record<string, PlayerStatsDelta> = {}
     Object.entries(statsDraft).forEach(([matchIdKey, matchEntries]) => {
@@ -225,8 +235,10 @@ async function handleSave() {
             teams={teams}
             statsDraft={statsDraft}
             statsTotals={statsTotals}
+            statsByMatch={statsByMatch}
             onAddStatEntry={addStatEntry}
             onRemoveStatEntry={removeStatEntry}
+            isStaff={isStaff}
           />
         ) : (
           <p className="matchday-editor-empty">

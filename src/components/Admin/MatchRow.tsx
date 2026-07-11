@@ -8,8 +8,10 @@ function MatchRow({
   visitPlayers = [],
   statsEntries = [],
   statsTotals = {},
+  savedStats = [],
   onAddStatEntry,
-  onRemoveStatEntry
+  onRemoveStatEntry,
+  isStaff = false
 }) {
   const [statsOpen, setStatsOpen] = useState(false)
 
@@ -37,9 +39,11 @@ function MatchRow({
   }
 
   const isFinished = match.status === 'Terminado'
+  const isReview = match.status === 'Por aprobar'
+  const cardStatusClass = isFinished ? 'finished' : isReview ? 'review' : 'pending'
 
   return (
-    <div className={`match-card ${isFinished ? 'finished' : 'pending'}`}>
+    <div className={`match-card ${cardStatusClass}`}>
       {/* Local */}
       <div className="team">
         <img
@@ -97,13 +101,27 @@ function MatchRow({
       <div className="status">
         <label className="status-label">Estado</label>
         <select
-          className={`status-select ${isFinished ? 'finished' : ''}`}
+          className={`status-select ${cardStatusClass}`}
           value={match.status}
+          disabled={isStaff && isFinished}
           onChange={e => update('status', e.target.value)}
         >
           <option value="Pendiente">Pendiente</option>
-          <option value="Terminado">Terminado</option>
+          <option value="Por aprobar">Por aprobar</option>
+          <option value="Terminado" disabled={isStaff}>Terminado</option>
         </select>
+        {isStaff && (
+          <span className="status-staff-hint">
+            {isFinished
+              ? 'Un administrador ya aprobó este resultado'
+              : 'Un administrador debe aprobar el resultado para marcarlo como Terminado'}
+          </span>
+        )}
+        {match.submitter && (
+          <span className="submitted-by-hint">
+            Capturado por: {match.submitter.name || match.submitter.email}
+          </span>
+        )}
       </div>
 
       {/* Estadísticas individuales */}
@@ -114,8 +132,8 @@ function MatchRow({
           onClick={() => setStatsOpen(prev => !prev)}
         >
           {statsOpen ? '− Ocultar estadísticas' : '+ Estadísticas'}
-          {statsEntries.length > 0 && (
-            <span className="stats-toggle-badge">{statsEntries.length}</span>
+          {(statsEntries.length + savedStats.length) > 0 && (
+            <span className="stats-toggle-badge">{statsEntries.length + savedStats.length}</span>
           )}
         </button>
       </div>
@@ -126,6 +144,7 @@ function MatchRow({
           localPlayers={localPlayers}
           visitPlayers={visitPlayers}
           entries={statsEntries}
+          savedStats={savedStats}
           statsTotals={statsTotals}
           onAddEntry={onAddStatEntry}
           onRemoveEntry={onRemoveStatEntry}

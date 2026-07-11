@@ -40,6 +40,11 @@ const QUICK_LINKS = [
     to: 'admin/sedes',
     label: 'Gestor de Sedes',
     description: 'Crea sedes y sus canchas'
+  },
+  {
+    to: 'admin/usuarios',
+    label: 'Gestor de Usuarios',
+    description: 'Asigna roles de administración'
   }
 ]
 
@@ -85,6 +90,10 @@ function AdminDashboard() {
             (matchesByMatchday[md.id] || []).some(m => m.status === 'Pendiente')
           )
 
+          const reviewMatchdays = matchdaysData.filter(md =>
+            (matchesByMatchday[md.id] || []).some(m => m.status === 'Por aprobar')
+          )
+
           const teamsWithoutPlayers = teams.filter(
             t => !(t.Player || []).some(p => p.active)
           )
@@ -97,7 +106,9 @@ function AdminDashboard() {
             ),
             finishedMatches: matches.filter(m => m.status === 'Terminado').length,
             pendingMatches: matches.filter(m => m.status === 'Pendiente').length,
+            reviewMatches: matches.filter(m => m.status === 'Por aprobar').length,
             pendingMatchdays,
+            reviewMatchdays,
             teamsWithoutPlayers
           }
         }))
@@ -117,8 +128,9 @@ function AdminDashboard() {
     teams: acc.teams + s.teamsCount,
     activePlayers: acc.activePlayers + s.activePlayersCount,
     finishedMatches: acc.finishedMatches + s.finishedMatches,
-    pendingMatches: acc.pendingMatches + s.pendingMatches
-  }), { teams: 0, activePlayers: 0, finishedMatches: 0, pendingMatches: 0 })
+    pendingMatches: acc.pendingMatches + s.pendingMatches,
+    reviewMatches: acc.reviewMatches + s.reviewMatches
+  }), { teams: 0, activePlayers: 0, finishedMatches: 0, pendingMatches: 0, reviewMatches: 0 })
 
   const alerts = []
 
@@ -133,6 +145,13 @@ function AdminDashboard() {
     s.pendingMatchdays.forEach(md => {
       alerts.push({
         text: `${s.category.type} · ${md.name} tiene partidos sin resultado`,
+        to: 'admin/editar'
+      })
+    })
+
+    s.reviewMatchdays.forEach(md => {
+      alerts.push({
+        text: `${s.category.type} · ${md.name} tiene resultados por aprobar`,
         to: 'admin/editar'
       })
     })
@@ -192,6 +211,12 @@ function AdminDashboard() {
             <span className="summary-value">{totals.pendingMatches}</span>
             <span className="summary-label">Partidos pendientes</span>
           </div>
+          {totals.reviewMatches > 0 && (
+            <div className="summary-tile review">
+              <span className="summary-value">{totals.reviewMatches}</span>
+              <span className="summary-label">Por aprobar</span>
+            </div>
+          )}
         </div>
 
         <section className="alerts-section">

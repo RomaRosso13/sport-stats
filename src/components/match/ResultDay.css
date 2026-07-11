@@ -58,6 +58,11 @@
   color: #b45309;
 }
 
+.summary-pill.review {
+  background: #faf5ff;
+  color: #6b21a8;
+}
+
 .results-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));

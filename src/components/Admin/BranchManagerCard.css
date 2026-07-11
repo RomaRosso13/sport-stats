@@ -40,7 +40,14 @@
   color: #6b7280;
 }
 
-.branch-manager-edit-btn {
+.branch-manager-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.branch-manager-edit-btn,
+.branch-manager-delete-btn {
   flex-shrink: 0;
   padding: 6px 12px;
   border-radius: 8px;
@@ -55,4 +62,13 @@
 
 .branch-manager-edit-btn:hover {
   background: #f3f4f6;
+}
+
+.branch-manager-delete-btn {
+  color: #dc2626;
+  border-color: #fecaca;
+}
+
+.branch-manager-delete-btn:hover {
+  background: #fef2f2;
 }

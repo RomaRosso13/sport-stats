@@ -65,9 +65,11 @@ function MatchDetail() {
     loadMatch()
   }, [matchId])
 
-  const isPendiente = match?.status === 'Pendiente'
-  const localGano = !!match && !isPendiente && match.local_points > match.visit_points
-  const visitanteGano = !!match && !isPendiente && match.visit_points > match.local_points
+  const isFinished = match?.status === 'Terminado'
+  const isReview = match?.status === 'Por aprobar'
+  const statusClass = isFinished ? 'finished' : isReview ? 'review' : 'pending'
+  const localGano = !!match && isFinished && match.local_points > match.visit_points
+  const visitanteGano = !!match && isFinished && match.visit_points > match.local_points
 
   return (
     <div className="app-layout">
@@ -83,8 +85,8 @@ function MatchDetail() {
 
           <div className="match-detail-score-card">
             <div className="match-detail-tags">
-              <span className={`match-detail-status-tag ${isPendiente ? 'pending' : 'finished'}`}>
-                {isPendiente ? 'Pendiente' : 'Final'}
+              <span className={`match-detail-status-tag ${statusClass}`}>
+                {isFinished ? 'Final' : isReview ? 'Por aprobar' : 'Pendiente'}
               </span>
               {match.type && match.type !== 'Regular' && (
                 <span className="match-detail-stage-tag">{STAGE_LABELS[match.type]}</span>
@@ -101,9 +103,9 @@ function MatchDetail() {
               </Link>
 
               <div className="match-detail-score">
-                <span className={localGano ? 'winner' : ''}>{isPendiente ? '-' : match.local_points}</span>
+                <span className={localGano ? 'winner' : ''}>{isFinished ? match.local_points : '-'}</span>
                 <span className="dash">-</span>
-                <span className={visitanteGano ? 'winner' : ''}>{isPendiente ? '-' : match.visit_points}</span>
+                <span className={visitanteGano ? 'winner' : ''}>{isFinished ? match.visit_points : '-'}</span>
               </div>
 
               <Link

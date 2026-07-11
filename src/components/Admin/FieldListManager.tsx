@@ -1,6 +1,6 @@
 import './FieldListManager.css'
 
-function FieldListManager({ branch, onAddField, onEditField }) {
+function FieldListManager({ branch, onAddField, onEditField, onDeleteField }) {
   const fields = branch.Field || []
 
   return (
@@ -19,9 +19,14 @@ function FieldListManager({ branch, onAddField, onEditField }) {
           {fields.map(field => (
             <div key={field.id} className="field-row">
               <span className="field-name">{field.name}</span>
-              <button type="button" onClick={() => onEditField(field)}>
-                Editar
-              </button>
+              <div className="field-row-actions">
+                <button type="button" onClick={() => onEditField(field)}>
+                  Editar
+                </button>
+                <button type="button" className="delete-btn" onClick={() => onDeleteField(field)}>
+                  Eliminar
+                </button>
+              </div>
             </div>
           ))}
         </div>

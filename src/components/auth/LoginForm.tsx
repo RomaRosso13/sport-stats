@@ -20,9 +20,9 @@ export default function InlineLoginForm({ onClose }) {
 
     try {
       setLoading(true)
-      await signInByPasswordForLeague(email, password, league.id)
+      const { role } = await signInByPasswordForLeague(email, password, league.id)
       onClose()
-      navigate(`/${league.slug}/admin`)
+      navigate(role === 'Staff' ? `/${league.slug}/admin/editar` : `/${league.slug}/admin`)
     } catch (err) {
       setErrorMessage(err.message)
     } finally {

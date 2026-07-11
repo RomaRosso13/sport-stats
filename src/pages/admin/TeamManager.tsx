@@ -10,7 +10,7 @@ import TeamFormModal from '../../components/Admin/TeamFormModal'
 import PlayerFormModal from '../../components/Admin/PlayerFormModal'
 import PlayerRosterManager from '../../components/Admin/PlayerRosterManager'
 
-import { getTeamsByCategoryId } from '../../services/team.service.js'
+import { getTeamsByCategoryId, deleteTeam } from '../../services/team.service.js'
 import { setPlayerActive } from '../../services/player.service.js'
 
 import './TeamManager.css'
@@ -77,6 +77,19 @@ function TeamManager() {
     }))
   }
 
+  async function handleDeleteTeam(team) {
+    if (!window.confirm(`¿Eliminar el equipo "${team.name}"? Esta acción no se puede deshacer.`)) return
+
+    try {
+      await deleteTeam(team.id)
+      setTeams(prev => prev.filter(t => t.id !== team.id))
+      if (selectedTeamId === team.id) setSelectedTeamId(null)
+    } catch (err) {
+      console.error(err)
+      alert(err.message || 'No se pudo eliminar el equipo')
+    }
+  }
+
   async function handleToggleActive(player) {
     try {
       const updated = await setPlayerActive(player.id, !player.active)
@@ -120,6 +133,7 @@ function TeamManager() {
                 isSelected={selectedTeamId === team.id}
                 onSelect={t => setSelectedTeamId(t.id)}
                 onEdit={t => { setEditingTeam(t); setShowTeamModal(true) }}
+                onDelete={handleDeleteTeam}
               />
             ))}
           </div>

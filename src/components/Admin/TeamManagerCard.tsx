@@ -1,6 +1,6 @@
 import './TeamManagerCard.css'
 
-function TeamManagerCard({ team, isSelected, onSelect, onEdit }) {
+function TeamManagerCard({ team, isSelected, onSelect, onEdit, onDelete }) {
   const playerCount = team.Player?.length || 0
 
   return (
@@ -21,16 +21,29 @@ function TeamManagerCard({ team, isSelected, onSelect, onEdit }) {
         </span>
       </div>
 
-      <button
-        type="button"
-        className="team-manager-edit-btn"
-        onClick={e => {
-          e.stopPropagation()
-          onEdit(team)
-        }}
-      >
-        Editar
-      </button>
+      <div className="team-manager-actions">
+        <button
+          type="button"
+          className="team-manager-edit-btn"
+          onClick={e => {
+            e.stopPropagation()
+            onEdit(team)
+          }}
+        >
+          Editar
+        </button>
+
+        <button
+          type="button"
+          className="team-manager-delete-btn"
+          onClick={e => {
+            e.stopPropagation()
+            onDelete(team)
+          }}
+        >
+          Eliminar
+        </button>
+      </div>
     </div>
   )
 }

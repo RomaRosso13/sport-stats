@@ -9,8 +9,8 @@ import CategoryCard from '../../components/Admin/CategoryCard'
 import CreateSeasonModal from '../../components/Admin/CreateSeasonModal'
 import CreateCategoyModal from '../../components/Admin/CreateCategoryModal'
 
-import { getSeasonsByLeagueId } from '../../services/season.service.js'
-import { getCategoriesBySeasonId } from '../../services/category.service.js'
+import { getSeasonsByLeagueId, setSeasonActive } from '../../services/season.service.js'
+import { getCategoriesBySeasonId, setCategoryActive } from '../../services/category.service.js'
 
 import './SeasonAdministrator.css'
 
@@ -60,6 +60,27 @@ function SeasonAdministrator () {
     loadCategories()
   }, [selectedSeason?.id])
 
+  async function handleToggleSeasonActive(season) {
+    try {
+      const updated = await setSeasonActive(season.id, !season.active)
+      setSeasonsData(prev => prev.map(s => s.id === updated.id ? updated : s))
+      if (selectedSeason?.id === updated.id) setSelectedSeason(updated)
+    } catch (err) {
+      console.error(err)
+      alert(err.message || 'No se pudo actualizar la temporada')
+    }
+  }
+
+  async function handleToggleCategoryActive(cat) {
+    try {
+      const updated = await setCategoryActive(cat.id, !cat.active)
+      setCategoriesData(prev => prev.map(c => c.id === updated.id ? updated : c))
+    } catch (err) {
+      console.error(err)
+      alert(err.message || 'No se pudo actualizar la categoría')
+    }
+  }
+
   return (
     <div className="app-layout">
       <Header league={league}/>
@@ -83,7 +104,7 @@ function SeasonAdministrator () {
         ) : (
           <div className="season-grid">
             {seasonsData.map(season => (
-              <SeasonCard key={season.id} season={season} isSelected={selectedSeason?.id === season?.id} onSelect={setSelectedSeason} />
+              <SeasonCard key={season.id} season={season} isSelected={selectedSeason?.id === season?.id} onSelect={setSelectedSeason} onToggleActive={handleToggleSeasonActive} />
             ))}
           </div>
         )}
@@ -104,7 +125,7 @@ function SeasonAdministrator () {
                 </p>
               ) : (
                 categoriesData.map(cat => (
-                  <CategoryCard key={cat.id} category={cat} isSelected={category?.id === cat.id} onSelect={setCategory}/>
+                  <CategoryCard key={cat.id} category={cat} isSelected={category?.id === cat.id} onSelect={setCategory} onToggleActive={handleToggleCategoryActive}/>
                 ))
               )}
             </div>

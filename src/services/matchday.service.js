@@ -1,18 +1,21 @@
 import { supabase } from '../libs/supabase'
 import { runQuery } from '../libs/supabaseQuery'
+import { cached, invalidate } from '../utils/queryCache'
 
 export async function getMatchDaysByCategoryId(categoryId) {
-  return runQuery(
-    supabase
-      .from('Matchday')
-      .select('*')
-      .eq('category_id', categoryId)
-      .order('date', { ascending: true })
+  return cached('getMatchDaysByCategoryId', [categoryId], () =>
+    runQuery(
+      supabase
+        .from('Matchday')
+        .select('*')
+        .eq('category_id', categoryId)
+        .order('date', { ascending: true })
+    )
   )
 }
 
 export async function createMatchday(name, date, categoryId) {
-  return runQuery(
+  const result = await runQuery(
     supabase
       .from('Matchday')
       .insert([{
@@ -23,4 +26,7 @@ export async function createMatchday(name, date, categoryId) {
       .select()
       .single()
   )
+
+  invalidate('getMatchDaysByCategoryId')
+  return result
 }

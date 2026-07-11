@@ -6,8 +6,10 @@ function MatchList({
   teams = [],
   statsDraft = {},
   statsTotals = {},
+  statsByMatch = {},
   onAddStatEntry,
-  onRemoveStatEntry
+  onRemoveStatEntry,
+  isStaff = false
 }) {
   if (!matches.length) {
     return <p className="match-list-empty">No hay partidos en esta jornada</p>
@@ -29,8 +31,10 @@ function MatchList({
           visitPlayers={getActivePlayers(match.visit_team.id)}
           statsEntries={statsDraft[match.id] || []}
           statsTotals={statsTotals}
+          savedStats={statsByMatch[match.id] || []}
           onAddStatEntry={onAddStatEntry}
           onRemoveStatEntry={onRemoveStatEntry}
+          isStaff={isStaff}
         />
       ))}
     </div>

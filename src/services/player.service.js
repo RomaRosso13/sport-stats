@@ -1,30 +1,41 @@
 import { supabase } from '../libs/supabase'
 import { runQuery } from '../libs/supabaseQuery'
+import { cached, invalidate } from '../utils/queryCache'
 
 export async function getPlayerById(playerId) {
-  return runQuery(
-    supabase
-      .from('Player')
-      .select(`
-        *,
-        team:team_id (
-          id,
-          name,
-          logo_url,
-          category_id,
-          category:category_id (
+  return cached('getPlayerById', [playerId], () =>
+    runQuery(
+      supabase
+        .from('Player')
+        .select(`
+          *,
+          team:team_id (
             id,
-            type
+            name,
+            logo_url,
+            category_id,
+            category:category_id (
+              id,
+              type
+            )
           )
-        )
-      `)
-      .eq('id', playerId)
-      .single()
+        `)
+        .eq('id', playerId)
+        .single()
+    )
   )
 }
 
+// Los jugadores vienen embebidos en las consultas de equipo (getTeamsByCategoryId/
+// getTeamById), así que cualquier escritura aquí también invalida esos caches.
+function invalidatePlayerCaches() {
+  invalidate('getPlayerById')
+  invalidate('getTeamsByCategoryId')
+  invalidate('getTeamById')
+}
+
 export async function createPlayer(teamId, { name, number, position, imageUrl }) {
-  return runQuery(
+  const result = await runQuery(
     supabase
       .from('Player')
       .insert([{
@@ -38,10 +49,13 @@ export async function createPlayer(teamId, { name, number, position, imageUrl })
       .select()
       .single()
   )
+
+  invalidatePlayerCaches()
+  return result
 }
 
 export async function updatePlayer(playerId, { name, number, position, imageUrl, active }) {
-  return runQuery(
+  const result = await runQuery(
     supabase
       .from('Player')
       .update({
@@ -55,10 +69,13 @@ export async function updatePlayer(playerId, { name, number, position, imageUrl,
       .select()
       .single()
   )
+
+  invalidatePlayerCaches()
+  return result
 }
 
 export async function setPlayerActive(playerId, active) {
-  return runQuery(
+  const result = await runQuery(
     supabase
       .from('Player')
       .update({ active })
@@ -66,4 +83,7 @@ export async function setPlayerActive(playerId, active) {
       .select()
       .single()
   )
+
+  invalidatePlayerCaches()
+  return result
 }

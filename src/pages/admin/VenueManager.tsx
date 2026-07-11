@@ -8,7 +8,8 @@ import BranchFormModal from '../../components/Admin/BranchFormModal'
 import FieldFormModal from '../../components/Admin/FieldFormModal'
 import FieldListManager from '../../components/Admin/FieldListManager'
 
-import { getBranchesWithFieldsByLeagueId } from '../../services/branch.service.js'
+import { getBranchesWithFieldsByLeagueId, deleteBranch } from '../../services/branch.service.js'
+import { deleteField } from '../../services/field.service.js'
 
 import './VenueManager.css'
 
@@ -72,6 +73,35 @@ function VenueManager() {
     }))
   }
 
+  async function handleDeleteBranch(branch) {
+    if (!window.confirm(`¿Eliminar la sede "${branch.name}"? Esta acción no se puede deshacer.`)) return
+
+    try {
+      await deleteBranch(branch.id)
+      setBranches(prev => prev.filter(b => b.id !== branch.id))
+      if (selectedBranchId === branch.id) setSelectedBranchId(null)
+    } catch (err) {
+      console.error(err)
+      alert(err.message || 'No se pudo eliminar la sede')
+    }
+  }
+
+  async function handleDeleteField(field) {
+    if (!window.confirm(`¿Eliminar la cancha "${field.name}"? Esta acción no se puede deshacer.`)) return
+
+    try {
+      await deleteField(field.id)
+      setBranches(prev => prev.map(b =>
+        b.id === selectedBranchId
+          ? { ...b, Field: (b.Field || []).filter(f => f.id !== field.id) }
+          : b
+      ))
+    } catch (err) {
+      console.error(err)
+      alert(err.message || 'No se pudo eliminar la cancha')
+    }
+  }
+
   return (
     <div className="app-layout">
       <Header league={league}/>
@@ -102,6 +132,7 @@ function VenueManager() {
                 isSelected={selectedBranchId === branch.id}
                 onSelect={b => setSelectedBranchId(b.id)}
                 onEdit={b => { setEditingBranch(b); setShowBranchModal(true) }}
+                onDelete={handleDeleteBranch}
               />
             ))}
           </div>
@@ -112,6 +143,7 @@ function VenueManager() {
             branch={selectedBranch}
             onAddField={() => { setEditingField(null); setShowFieldModal(true) }}
             onEditField={f => { setEditingField(f); setShowFieldModal(true) }}
+            onDeleteField={handleDeleteField}
           />
         )}
       </main>

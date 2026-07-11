@@ -1,6 +1,6 @@
 import './BranchManagerCard.css'
 
-function BranchManagerCard({ branch, isSelected, onSelect, onEdit }) {
+function BranchManagerCard({ branch, isSelected, onSelect, onEdit, onDelete }) {
   const fieldCount = branch.Field?.length || 0
 
   return (
@@ -15,16 +15,29 @@ function BranchManagerCard({ branch, isSelected, onSelect, onEdit }) {
         </span>
       </div>
 
-      <button
-        type="button"
-        className="branch-manager-edit-btn"
-        onClick={e => {
-          e.stopPropagation()
-          onEdit(branch)
-        }}
-      >
-        Editar
-      </button>
+      <div className="branch-manager-actions">
+        <button
+          type="button"
+          className="branch-manager-edit-btn"
+          onClick={e => {
+            e.stopPropagation()
+            onEdit(branch)
+          }}
+        >
+          Editar
+        </button>
+
+        <button
+          type="button"
+          className="branch-manager-delete-btn"
+          onClick={e => {
+            e.stopPropagation()
+            onDelete(branch)
+          }}
+        >
+          Eliminar
+        </button>
+      </div>
     </div>
   )
 }

@@ -59,6 +59,11 @@
   background: #fff7ed;
 }
 
+.match-detail-status-tag.review {
+  color: #6b21a8;
+  background: #faf5ff;
+}
+
 .match-detail-stage-tag {
   display: inline-block;
   font-size: 10px;

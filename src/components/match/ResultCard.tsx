@@ -4,15 +4,17 @@ import "./ResultCard.css"
 
 function ResultCard({ match }) {
   const { leagueSlug } = useParams()
-  const localGano = match.local_points > match.visit_points
-  const visitanteGano = match.visit_points > match.local_points
-  const isPendiente = match.status === "Pendiente"
+  const isFinished = match.status === "Terminado"
+  const isReview = match.status === "Por aprobar"
+  const statusClass = isFinished ? "finished" : isReview ? "review" : "pending"
+  const localGano = isFinished && match.local_points > match.visit_points
+  const visitanteGano = isFinished && match.visit_points > match.local_points
   const isPlayoffMatch = match.type && match.type !== "Regular"
 
   return (
-    <Link to={`/${leagueSlug}/partido/${match.id}`} className={`result-card ${isPendiente ? "pending" : "finished"}`}>
+    <Link to={`/${leagueSlug}/partido/${match.id}`} className={`result-card ${statusClass}`}>
       <span className="result-status-tag">
-        {isPendiente ? "Pendiente" : "Final"}
+        {isFinished ? "Final" : isReview ? "Por aprobar" : "Pendiente"}
       </span>
 
       {isPlayoffMatch && (
@@ -21,7 +23,7 @@ function ResultCard({ match }) {
 
       <div className="result-main">
         {/* LOCAL */}
-        <div className={`team left ${!isPendiente && localGano ? "winner" : ""}`}>
+        <div className={`team left ${localGano ? "winner" : ""}`}>
           <img
             src={match.local_team.logo_url}
             alt={match.local_team.name}
@@ -32,17 +34,17 @@ function ResultCard({ match }) {
 
         {/* SCORE */}
         <div className="score">
-          <span className={!isPendiente && localGano ? "winner" : ""}>
-            {isPendiente ? "-" : match.local_points}
+          <span className={localGano ? "winner" : ""}>
+            {isFinished ? match.local_points : "-"}
           </span>
           <span className="dash">-</span>
-          <span className={!isPendiente && visitanteGano ? "winner" : ""}>
-            {isPendiente ? "-" : match.visit_points}
+          <span className={visitanteGano ? "winner" : ""}>
+            {isFinished ? match.visit_points : "-"}
           </span>
         </div>
 
         {/* VISITANTE */}
-        <div className={`team right ${!isPendiente && visitanteGano ? "winner" : ""}`}>
+        <div className={`team right ${visitanteGano ? "winner" : ""}`}>
           <span className="team-name" title={match.visit_team.name}>{match.visit_team.name}</span>
           <img
             src={match.visit_team.logo_url}

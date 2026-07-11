@@ -1,6 +1,6 @@
 import { supabase } from '../libs/supabase'
 import { runQuery } from '../libs/supabaseQuery'
-import { userBelongsToLeague } from './league_user.service'
+import { getUserRoleForLeague } from './league_user.service'
 
 export async function signInByPasswordForLeague(email, password, leagueId) {
   const data = await runQuery(
@@ -8,14 +8,14 @@ export async function signInByPasswordForLeague(email, password, leagueId) {
     'Correo o contraseña incorrectos'
   )
 
-  const belongs = await userBelongsToLeague(data.user.id, leagueId)
+  const membership = await getUserRoleForLeague(data.user.id, leagueId)
 
-  if (!belongs) {
+  if (!membership) {
     await supabase.auth.signOut()
     throw new Error('No perteneces a esta liga')
   }
 
-  return data
+  return { ...data, role: membership.role }
 }
 
 export async function signOut() {

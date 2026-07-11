@@ -14,7 +14,7 @@ import './Header.css'
 function Header({ league }) {
   const { user } = useAuth()
   const { seasons, season, setSeason, loading } = useSeason()
-  const { isMember: isLeagueAdmin } = useLeagueMembership()
+  const { isMember, isFullAdmin } = useLeagueMembership()
 
   const [menuOpen, setMenuOpen] = useState(false)
   const [showLoginForm, setShowLoginForm] = useState(false)
@@ -30,6 +30,7 @@ async function handleLogout() {
 
 
     window.location.href = `/${league.slug}`
+    
   } catch (err) {
     console.error(err.message)
   }
@@ -74,55 +75,74 @@ async function handleLogout() {
           </button>
 
           {menuOpen && (
-            <div className="dropdown-menu open">
-              <Link to={`/${league.slug}`} onClick={() => setMenuOpen(false)}>
-                Inicio
-              </Link>
-              <Link to={`/${league.slug}/calendario`} onClick={() => setMenuOpen(false)}>
-                Calendario
-              </Link>
-              <Link to={`/${league.slug}/results`} onClick={() => setMenuOpen(false)}>
-                Partidos
-              </Link>
-              <Link to={`/${league.slug}/tabla`} onClick={() => setMenuOpen(false)}>
-                Tabla de Posiciones
-              </Link>
-              <Link to={`/${league.slug}/playoffs`} onClick={() => setMenuOpen(false)}>
-                Playoffs
-              </Link>
-              <Link to={`/${league.slug}/estadisticas`} onClick={() => setMenuOpen(false)}>
-                Estadísticas
-              </Link>
-              <Link to={`/${league.slug}/equipos`} onClick={() => setMenuOpen(false)}>
-                Equipos
-              </Link>
+            <div className={`dropdown-menu open ${isMember ? 'has-admin' : ''}`}>
+              <div className="menu-section">
+                {isMember && <span className="menu-section-title">Navegación</span>}
+                <Link to={`/${league.slug}`} onClick={() => setMenuOpen(false)}>
+                  Inicio
+                </Link>
+                <Link to={`/${league.slug}/calendario`} onClick={() => setMenuOpen(false)}>
+                  Calendario
+                </Link>
+                <Link to={`/${league.slug}/results`} onClick={() => setMenuOpen(false)}>
+                  Partidos
+                </Link>
+                <Link to={`/${league.slug}/tabla`} onClick={() => setMenuOpen(false)}>
+                  Tabla de Posiciones
+                </Link>
+                <Link to={`/${league.slug}/playoffs`} onClick={() => setMenuOpen(false)}>
+                  Playoffs
+                </Link>
+                <Link to={`/${league.slug}/estadisticas`} onClick={() => setMenuOpen(false)}>
+                  Estadísticas
+                </Link>
+                <Link to={`/${league.slug}/equipos`} onClick={() => setMenuOpen(false)}>
+                  Equipos
+                </Link>
+                <hr />
+                <Link to={`/${league.slug}/reglamento`} onClick={() => setMenuOpen(false)}>
+                  Reglamento
+                </Link>
+              </div>
 
-              {isLeagueAdmin && (
-                <>
-                  <hr />
-                  <Link to={`/${league.slug}/admin`} onClick={() => setMenuOpen(false)}>
-                    Panel de Administración
-                  </Link>
-                  <Link to={`/${league.slug}/admin/gestor`} onClick={() => setMenuOpen(false)}>
-                    Gestor de temporadas
-                  </Link>
-                  <Link to={`/${league.slug}/admin/crear`} onClick={() => setMenuOpen(false)}>
-                    Gestor de Jornadas
-                  </Link>
+              {isMember && (
+                <div className="menu-section admin-section">
+                  <span className="menu-section-title">Administración</span>
+                  {isFullAdmin && (
+                    <Link to={`/${league.slug}/admin`} onClick={() => setMenuOpen(false)}>
+                      Panel de Administración
+                    </Link>
+                  )}
+                  {isFullAdmin && (
+                    <Link to={`/${league.slug}/admin/gestor`} onClick={() => setMenuOpen(false)}>
+                      Gestor de temporadas
+                    </Link>
+                  )}
+                  {isFullAdmin && (
+                    <Link to={`/${league.slug}/admin/crear`} onClick={() => setMenuOpen(false)}>
+                      Gestor de Jornadas
+                    </Link>
+                  )}
                   <Link to={`/${league.slug}/admin/editar`} onClick={() => setMenuOpen(false)}>
                     Registrar resultados
                   </Link>
-                  <Link to={`/${league.slug}/admin/equipos`} onClick={() => setMenuOpen(false)}>
-                    Gestor de Equipos
-                  </Link>
-                  <Link to={`/${league.slug}/admin/sedes`} onClick={() => setMenuOpen(false)}>
-                    Gestor de Sedes
-                  </Link>
-                </>
+                  {isFullAdmin && (
+                    <Link to={`/${league.slug}/admin/equipos`} onClick={() => setMenuOpen(false)}>
+                      Gestor de Equipos
+                    </Link>
+                  )}
+                  {isFullAdmin && (
+                    <Link to={`/${league.slug}/admin/sedes`} onClick={() => setMenuOpen(false)}>
+                      Gestor de Sedes
+                    </Link>
+                  )}
+                  {isFullAdmin && (
+                    <Link to={`/${league.slug}/admin/usuarios`} onClick={() => setMenuOpen(false)}>
+                      Gestor de Usuarios
+                    </Link>
+                  )}
+                </div>
               )}
-
-              <hr />
-              <a href="#">Reglamento</a>
             </div>
           )}
         </nav>
