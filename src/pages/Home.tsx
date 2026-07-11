@@ -86,7 +86,7 @@ function Home() {
   }
 
 return (
-  <div className="app-shell">
+  <div className="app-layout">
     <Loader show={isLoading} label="Cargando..." />
     <PageWrapper loading={isLoading}/>
     <Header league={league}/>

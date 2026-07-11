@@ -212,3 +212,64 @@
   flex-direction: column;
   gap: 6px;
 }
+
+/* ===============================
+   MOBILE: header de 2 filas
+   (logo+nombre arriba, menú+cuenta abajo alineado a la derecha)
+   evita que el mensaje de bienvenida / botón / login inline
+   empujen la página a scroll horizontal
+================================ */
+@media (max-width: 640px) {
+  .header-liga {
+    flex-wrap: wrap;
+    row-gap: 10px;
+    padding: 10px 14px;
+  }
+
+  .header-left {
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .liga-nombre {
+    font-size: 1.3rem;
+  }
+
+  .header-right {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .user-actions {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .user-name {
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.75rem;
+  }
+
+  .auth-btn {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+
+  .inline-login {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    row-gap: 6px;
+  }
+
+  .inline-login input {
+    width: 130px;
+  }
+}

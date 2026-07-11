@@ -1,3 +1,9 @@
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 /* ===============================
    CONTENEDOR PRINCIPAL
 ================================ */
@@ -151,9 +157,11 @@
 ================================ */
 @media (max-width: 640px) {
 
-  /* scroll vuelve al body */
+  /* scroll vuelve al body: "auto" seguía creando su propia caja de
+     scroll interna; "visible" deja que el contenido desborde hacia
+     la página completa */
   .home-container {
-    overflow: auto;
+    overflow: visible;
   }
 
   /* layout deja de ser dashboard */
@@ -177,6 +185,12 @@
 
   .right-column {
     grid-row: auto;
+  }
+
+  /* en desktop reparten la altura fija del grid; en mobile cada card
+     debe medir según su propio contenido, si no se comprimen a casi 0 */
+  .right-column .home-card {
+    flex: none;
   }
 
   .home-card.positions-wrapper {
