@@ -6,6 +6,8 @@
   padding: 8px 10px;
   border-radius: 10px;
   transition: background-color .15s ease;
+  text-decoration: none;
+  color: inherit;
 }
 
 .player-row:hover {

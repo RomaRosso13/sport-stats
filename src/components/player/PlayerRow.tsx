@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { Link, useParams } from "react-router-dom"
 import "./PlayerRow.css"
 
 function getInitial(name) {
@@ -7,9 +8,10 @@ function getInitial(name) {
 
 function PlayerRow({ player }) {
   const [imageFailed, setImageFailed] = useState(false)
+  const { leagueSlug } = useParams()
 
   return (
-    <div className="player-row">
+    <Link to={`/${leagueSlug}/jugadores/${player.id}`} className="player-row">
       <div className="player-row-main">
         {player.image_url && !imageFailed ? (
           <img
@@ -29,7 +31,7 @@ function PlayerRow({ player }) {
       {player.position && (
         <span className="player-row-position">{player.position}</span>
       )}
-    </div>
+    </Link>
   )
 }
 

@@ -12,7 +12,7 @@ import PageWrapper from '../../components/common/PageWrapper';
 import { getMatchesByMatchDayIds, updateMatches } from '../../services/match.service'
 import { getMatchDaysByCategoryId } from '../../services/matchday.service'
 import { getTeamsByCategoryId } from '../../services/team.service'
-import { getIndividualStatsByCategory, addIndividualStatsDeltas } from '../../services/individual_stats.service'
+import { getIndividualStatsByCategory, saveIndividualStatsForMatch } from '../../services/individual_stats.service'
 
 import './MatchdayEditor.css'
 
@@ -33,6 +33,7 @@ type StatEntry = {
 type StatsDraft = Record<number, StatEntry[]>
 
 type PlayerStatsDelta = {
+  matchId: number
   playerId: number
   teamId: number
   touchdown: number
@@ -146,25 +147,30 @@ async function handleSave() {
 
     await updateMatches(currentMatchday.games)
 
-    const allEntries: StatEntry[] = Object.values(statsDraft).flat()
-    const perPlayer: Record<number, PlayerStatsDelta> = {}
-    allEntries.forEach(entry => {
-      if (!perPlayer[entry.playerId]) {
-        perPlayer[entry.playerId] = {
-          playerId: entry.playerId,
-          teamId: entry.teamId,
-          touchdown: 0,
-          touchdown_pass: 0,
-          sacks: 0,
-          interceptions: 0
+    const perMatchPlayer: Record<string, PlayerStatsDelta> = {}
+    Object.entries(statsDraft).forEach(([matchIdKey, matchEntries]) => {
+      const matchId = Number(matchIdKey)
+
+      matchEntries.forEach(entry => {
+        const key = `${matchId}_${entry.playerId}`
+        if (!perMatchPlayer[key]) {
+          perMatchPlayer[key] = {
+            matchId,
+            playerId: entry.playerId,
+            teamId: entry.teamId,
+            touchdown: 0,
+            touchdown_pass: 0,
+            sacks: 0,
+            interceptions: 0
+          }
         }
-      }
-      perPlayer[entry.playerId][entry.statKey] += entry.amount
+        perMatchPlayer[key][entry.statKey] += entry.amount
+      })
     })
 
-    const statEntries = Object.values(perPlayer)
+    const statEntries = Object.values(perMatchPlayer)
     if (statEntries.length) {
-      await addIndividualStatsDeltas(category.id, statEntries)
+      await saveIndividualStatsForMatch(category.id, statEntries)
     }
 
     setStatsDraft({})

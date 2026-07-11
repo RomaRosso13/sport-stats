@@ -1,15 +1,23 @@
+import { Link, useParams } from "react-router-dom"
+import { STAGE_LABELS } from "../../utils/matchStages"
 import "./ResultCard.css"
 
 function ResultCard({ match }) {
+  const { leagueSlug } = useParams()
   const localGano = match.local_points > match.visit_points
   const visitanteGano = match.visit_points > match.local_points
   const isPendiente = match.status === "Pendiente"
+  const isPlayoffMatch = match.type && match.type !== "Regular"
 
   return (
-    <div className={`result-card ${isPendiente ? "pending" : "finished"}`}>
+    <Link to={`/${leagueSlug}/partido/${match.id}`} className={`result-card ${isPendiente ? "pending" : "finished"}`}>
       <span className="result-status-tag">
         {isPendiente ? "Pendiente" : "Final"}
       </span>
+
+      {isPlayoffMatch && (
+        <span className="result-stage-tag">{STAGE_LABELS[match.type]}</span>
+      )}
 
       <div className="result-main">
         {/* LOCAL */}
@@ -54,7 +62,7 @@ function ResultCard({ match }) {
         <span>Campo: {match.field.name}</span>
       </div>
 
-    </div>
+    </Link>
   )
 }
 

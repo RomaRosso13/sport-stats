@@ -94,6 +94,18 @@
   white-space: nowrap;
 }
 
+.jugador-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.jugador-link:hover .player-name {
+  text-decoration: underline;
+}
+
 .player-photo,
 .player-avatar {
   width: 28px;

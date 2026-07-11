@@ -1,4 +1,5 @@
-import "./CategorySelector.css";
+import PillDropdown from "../common/PillDropdown"
+import "./CategorySelector.css"
 
 const CATEGORY_LABELS = {
   Mixto: "Mixto",
@@ -9,21 +10,19 @@ const CATEGORY_LABELS = {
 function CategorySelector({ categories, active, onChange }) {
   if (!categories || categories.length === 0) return null;
 
+  const options = categories.map(category => ({
+    id: category.id,
+    label: CATEGORY_LABELS[category.type] || category.type,
+    original: category
+  }))
+
   return (
     <div className="category-selector">
-      {categories.map((category) => {
-        const isActive = active?.id === category.id;
-
-        return (
-          <button
-            key={category.id}
-            className={`category-tab ${isActive ? "active" : ""}`}
-            onClick={() => onChange(category)}
-          >
-            {CATEGORY_LABELS[category.type] || category.type}
-          </button>
-        );
-      })}
+      <PillDropdown
+        options={options}
+        activeId={active?.id}
+        onChange={option => onChange(option.original)}
+      />
     </div>
   );
 }

@@ -1,4 +1,5 @@
 .result-card {
+  display: block;
   background: linear-gradient(180deg, #ffffff, #fafafa);
   border-radius: 16px;
   padding: 18px 20px;
@@ -6,6 +7,8 @@
   border-left: 4px solid transparent;
   transition: transform .2s ease, box-shadow .2s ease;
   position: relative;
+  text-decoration: none;
+  color: inherit;
 }
 
 @media (hover: hover) {
@@ -43,6 +46,20 @@
 .result-card.pending .result-status-tag {
   color: #b45309;
   background: #fff7ed;
+}
+
+.result-stage-tag {
+  display: inline-block;
+  margin-left: 8px;
+  margin-bottom: 12px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-dark);
 }
 
 .result-main {

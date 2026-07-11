@@ -1,57 +1,72 @@
 import { supabase } from '../libs/supabase'
 import { runQuery } from '../libs/supabaseQuery'
 
+const STATS_SELECT = `
+  *,
+  player:player_id (
+    id,
+    name,
+    number,
+    image_url
+  ),
+  team:team_id (
+    id,
+    name
+  )
+`
+
 export async function getIndividualStatsByCategory(categoryId) {
   return runQuery(
     supabase
       .from('IndividualStats')
-      .select(`
-        *,
-        player:player_id (
-          id,
-          name,
-          number,
-          image_url
-        ),
-        team:team_id (
-          id,
-          name
-        )
-      `)
+      .select(STATS_SELECT)
       .eq('category_id', categoryId)
+  )
+}
+
+export async function getIndividualStatsByMatchId(matchId) {
+  return runQuery(
+    supabase
+      .from('IndividualStats')
+      .select(STATS_SELECT)
+      .eq('match_id', matchId)
   )
 }
 
 const STAT_FIELDS = ['touchdown', 'touchdown_pass', 'sacks', 'interceptions']
 
-// `entries`: [{ playerId, teamId, touchdown, touchdown_pass, sacks, interceptions }]
-// Each entry is a DELTA to add on top of the player's existing totals for the category,
-// since IndividualStats stores one cumulative row per player per category (no per-match record).
-export async function addIndividualStatsDeltas(categoryId, entries) {
+// `entries`: [{ matchId, playerId, teamId, touchdown, touchdown_pass, sacks, interceptions }]
+// IndividualStats stores one row per player per match, so season/category totals are
+// simply the sum across every match row for that player (see classifyTopPlayersByStats).
+// Each entry is a DELTA added on top of that player's existing row for THIS match, so
+// re-opening and re-saving the stats panel for the same match keeps accumulating correctly.
+export async function saveIndividualStatsForMatch(categoryId, entries) {
   const withChanges = entries.filter(entry =>
     STAT_FIELDS.some(field => entry[field])
   )
 
   if (!withChanges.length) return []
 
-  const playerIds = withChanges.map(entry => entry.playerId)
+  const matchIds = [...new Set(withChanges.map(entry => entry.matchId))]
+  const playerIds = [...new Set(withChanges.map(entry => entry.playerId))]
 
   const existingRows = await runQuery(
     supabase
       .from('IndividualStats')
       .select('*')
       .eq('category_id', categoryId)
+      .in('match_id', matchIds)
       .in('player_id', playerIds)
   )
 
-  const existingByPlayerId = {}
-  existingRows.forEach(row => { existingByPlayerId[row.player_id] = row })
+  const existingByKey = {}
+  existingRows.forEach(row => { existingByKey[`${row.match_id}_${row.player_id}`] = row })
 
   const updates = []
   const inserts = []
 
   withChanges.forEach(entry => {
-    const existing = existingByPlayerId[entry.playerId]
+    const existing = existingByKey[`${entry.matchId}_${entry.playerId}`]
 
     if (existing) {
       const fields = {}
@@ -63,7 +78,8 @@ export async function addIndividualStatsDeltas(categoryId, entries) {
       const row = {
         player_id: entry.playerId,
         team_id: entry.teamId,
-        category_id: categoryId
+        category_id: categoryId,
+        match_id: entry.matchId
       }
       STAT_FIELDS.forEach(field => { row[field] = entry[field] || 0 })
       inserts.push(row)

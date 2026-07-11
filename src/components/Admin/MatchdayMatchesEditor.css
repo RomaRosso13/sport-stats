@@ -191,6 +191,18 @@
   white-space: nowrap;
 }
 
+.match-stage-badge {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-dark);
+  white-space: nowrap;
+}
+
 .match-teams .team {
   display: flex;
   align-items: center;

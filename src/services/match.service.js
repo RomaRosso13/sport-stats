@@ -31,6 +31,12 @@ export async function getMatchesByMatchDayIds(matchdayId) {
   )
 }
 
+export async function getMatchById(matchId) {
+  return runQuery(
+    supabase.from('Match').select(MATCH_SELECT).eq('id', matchId).single()
+  )
+}
+
 export async function updateMatches(matches) {
   const updates = matches.map(match => ({
     id: match.id,
@@ -48,7 +54,7 @@ export async function createMatches(matches, matchday) {
   const payload = matches.map(match => ({
     date: matchday.date,
     hour: match.time,
-    type: 'Regular',
+    type: match.type || 'Regular',
     local_team_id: match.homeTeamId,
     visit_team_id: match.awayTeamId,
     status: 'Pendiente',

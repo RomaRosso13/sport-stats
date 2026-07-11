@@ -8,7 +8,7 @@ export async function signInByPasswordForLeague(email, password, leagueId) {
     'Correo o contraseña incorrectos'
   )
 
-  const belongs = await userBelongsToLeague(leagueId)
+  const belongs = await userBelongsToLeague(data.user.id, leagueId)
 
   if (!belongs) {
     await supabase.auth.signOut()

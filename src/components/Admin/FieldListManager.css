@@ -1,0 +1,48 @@
+.field-manager {
+  margin-top: 32px;
+}
+
+.field-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.field-name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.field-row button {
+  flex-shrink: 0;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: #374151;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color .15s ease;
+}
+
+.field-row button:hover {
+  background: #f3f4f6;
+}
+
+@media (max-width: 640px) {
+  .field-row {
+    padding: 10px;
+  }
+}

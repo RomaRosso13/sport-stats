@@ -1,6 +1,28 @@
 import { supabase } from '../libs/supabase'
 import { runQuery } from '../libs/supabaseQuery'
 
+export async function getPlayerById(playerId) {
+  return runQuery(
+    supabase
+      .from('Player')
+      .select(`
+        *,
+        team:team_id (
+          id,
+          name,
+          logo_url,
+          category_id,
+          category:category_id (
+            id,
+            type
+          )
+        )
+      `)
+      .eq('id', playerId)
+      .single()
+  )
+}
+
 export async function createPlayer(teamId, { name, number, position, imageUrl }) {
   return runQuery(
     supabase

@@ -35,6 +35,11 @@ const QUICK_LINKS = [
     to: 'admin/equipos',
     label: 'Gestor de Equipos',
     description: 'Crea equipos y administra rosters'
+  },
+  {
+    to: 'admin/sedes',
+    label: 'Gestor de Sedes',
+    description: 'Crea sedes y sus canchas'
   }
 ]
 

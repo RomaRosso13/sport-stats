@@ -1,0 +1,58 @@
+.branch-manager-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #ffffff, #fafafa);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+  cursor: pointer;
+  transition: all .2s ease;
+  border: 2px solid transparent;
+}
+
+.branch-manager-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.08);
+}
+
+.branch-manager-card.selected {
+  border-color: var(--accent);
+  background: linear-gradient(180deg, var(--accent-soft), #ffffff);
+}
+
+.branch-manager-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.branch-manager-info h4 {
+  margin: 0 0 2px;
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.branch-manager-count {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.branch-manager-edit-btn {
+  flex-shrink: 0;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: #374151;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color .15s ease;
+}
+
+.branch-manager-edit-btn:hover {
+  background: #f3f4f6;
+}

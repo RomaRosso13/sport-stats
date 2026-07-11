@@ -1,11 +1,11 @@
 import { Navigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
+import { useLeagueMembership } from '../hooks/useLeagueMembership'
 
 function ProtectedRoute({ children }) {
-  const { user, loading } = useAuth()
+  const { isMember, loading } = useLeagueMembership()
 
   if (loading) return null
-  if (!user) return <Navigate to="/" replace />
+  if (!isMember) return <Navigate to="/" replace />
 
   return children
 }

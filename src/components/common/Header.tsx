@@ -3,6 +3,7 @@ import { useState } from 'react'
 
 import { useSeason } from '../../context/SeasonContext'
 import { useAuth } from "../../context/AuthContext"
+import { useLeagueMembership } from '../../hooks/useLeagueMembership'
 import { signOut } from '../../services/auth.service'
 
 import SeasonSelector from '../filters/SeasonSelector'
@@ -13,6 +14,7 @@ import './Header.css'
 function Header({ league }) {
   const { user } = useAuth()
   const { seasons, season, setSeason, loading } = useSeason()
+  const { isMember: isLeagueAdmin } = useLeagueMembership()
 
   const [menuOpen, setMenuOpen] = useState(false)
   const [showLoginForm, setShowLoginForm] = useState(false)
@@ -38,11 +40,13 @@ async function handleLogout() {
     <header className="header-liga">
       {/* IZQUIERDA */}
       <div className="header-left">
-        <img
-          src={league.image_url}
-          alt={league.name}
-          className="league-logo"
-        />
+        <div className="league-logo-badge">
+          <img
+            src={league.image_url}
+            alt={league.name}
+            className="league-logo"
+          />
+        </div>
 
         <div className="league-info">
           <h1 className="liga-nombre">{league.name}</h1>
@@ -83,6 +87,9 @@ async function handleLogout() {
               <Link to={`/${league.slug}/tabla`} onClick={() => setMenuOpen(false)}>
                 Tabla de Posiciones
               </Link>
+              <Link to={`/${league.slug}/playoffs`} onClick={() => setMenuOpen(false)}>
+                Playoffs
+              </Link>
               <Link to={`/${league.slug}/estadisticas`} onClick={() => setMenuOpen(false)}>
                 Estadísticas
               </Link>
@@ -90,7 +97,7 @@ async function handleLogout() {
                 Equipos
               </Link>
 
-              {user && (
+              {isLeagueAdmin && (
                 <>
                   <hr />
                   <Link to={`/${league.slug}/admin`} onClick={() => setMenuOpen(false)}>
@@ -107,6 +114,9 @@ async function handleLogout() {
                   </Link>
                   <Link to={`/${league.slug}/admin/equipos`} onClick={() => setMenuOpen(false)}>
                     Gestor de Equipos
+                  </Link>
+                  <Link to={`/${league.slug}/admin/sedes`} onClick={() => setMenuOpen(false)}>
+                    Gestor de Sedes
                   </Link>
                 </>
               )}

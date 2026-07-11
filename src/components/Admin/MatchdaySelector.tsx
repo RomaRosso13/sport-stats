@@ -1,21 +1,18 @@
+import PillDropdown from '../common/PillDropdown'
 import './MatchdaySelector.css'
 
 function MatchdaySelector({ matchdays, value, onChange }) {
+  if (!matchdays || matchdays.length === 0) return null
+
+  const options = matchdays.map(md => ({ id: md.id, label: md.name, original: md }))
+
   return (
     <div className="matchday-selector">
-      {matchdays.map(md => {
-        const active = md.id === value?.id
-
-        return (
-          <button
-            key={md.id}
-            className={`matchday-pill ${active ? 'active' : ''}`}
-            onClick={() => onChange({ id: md.id, name: md.name })}
-          >
-            {md.name}
-          </button>
-        )
-      })}
+      <PillDropdown
+        options={options}
+        activeId={value?.id}
+        onChange={option => onChange({ id: option.original.id, name: option.original.name })}
+      />
     </div>
   )
 }

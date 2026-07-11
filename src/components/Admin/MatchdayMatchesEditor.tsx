@@ -7,6 +7,8 @@ import { getTeamsByCategoryId } from '../../services/team.service.js'
 import { getBranchByLeagueId } from '../../services/branch.service.js'
 import { getFieldByBranchId } from '../../services/field.service.js'
 
+import { STAGE_OPTIONS, STAGE_LABELS } from '../../utils/matchStages'
+
 import TeamSelect from './TeamSelect'
 
 import './MatchdayMatchesEditor.css'
@@ -29,7 +31,8 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches }) {
     awayTeamId: '',
     branchId: '',
     field: '',
-    time: ''
+    time: '',
+    type: 'Regular'
   })
 
   /* =========================
@@ -281,6 +284,22 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches }) {
             />
           </div>
 
+          <div className="field-group">
+            <label>Fase</label>
+            <select
+              value={draftMatch.type}
+              onChange={(e) =>
+                setDraftMatch(prev => ({ ...prev, type: e.target.value }))
+              }
+            >
+              {STAGE_OPTIONS.map(stage => (
+                <option key={stage.value} value={stage.value}>
+                  {stage.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <div className="field-group add-match-group">
             <label>&nbsp;</label>
             <button
@@ -318,6 +337,10 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches }) {
             <div key={match.id} className="match-row">
               <div className="match-teams">
                 <div className="match-index">Partido {index + 1}</div>
+
+                {match.type && match.type !== 'Regular' && (
+                  <span className="match-stage-badge">{STAGE_LABELS[match.type]}</span>
+                )}
 
                 <div className="team">
                   {homeTeam?.logo_url && (

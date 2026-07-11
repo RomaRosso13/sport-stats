@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
 import './PlayerStatsTable.css'
 
 function getInitial(name) {
@@ -23,6 +24,7 @@ function PlayerAvatar({ photo, name }) {
 }
 
 function PlayerStatsTable({ title, statKey, statLabel, data }) {
+  const { leagueSlug } = useParams()
   const hasData = data && data.length > 0
 
   return (
@@ -54,11 +56,13 @@ function PlayerStatsTable({ title, statKey, statLabel, data }) {
                 <tr key={player.id} className={index === 0 ? 'leader' : ''}>
                   <td>{index + 1}</td>
                   <td className="jugador-cell">
-                    <PlayerAvatar photo={player.photo} name={player.name} />
-                    <span className="player-name">
-                      {player.number != null && <span className="player-number">#{player.number}</span>}
-                      {player.name}
-                    </span>
+                    <Link to={`/${leagueSlug}/jugadores/${player.id}`} className="jugador-link">
+                      <PlayerAvatar photo={player.photo} name={player.name} />
+                      <span className="player-name">
+                        {player.number != null && <span className="player-number">#{player.number}</span>}
+                        {player.name}
+                      </span>
+                    </Link>
                   </td>
                   <td>{player.team}</td>
                   <td className="stat-value">{player[statKey]}</td>

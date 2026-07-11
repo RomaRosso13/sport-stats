@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { Link, useParams } from "react-router-dom"
 import "./StatsTable.css"
 
 function getInitial(name) {
@@ -23,6 +24,7 @@ function LeaderAvatar({ photo, name }) {
 }
 
 function StatsTable({ title, statKey, data }) {
+  const { leagueSlug } = useParams()
   const hasData = data && data.length > 0
   const leader = hasData ? data[0] : null
   const rest = hasData ? data.slice(1, 3) : []
@@ -38,7 +40,7 @@ function StatsTable({ title, statKey, data }) {
       ) : (
         <>
           {/* Líder */}
-          <div className="stats-leader">
+          <Link to={`/${leagueSlug}/jugadores/${leader.id}`} className="stats-leader">
             <div className="leader-photo-wrap">
               <LeaderAvatar key={leader.photo} photo={leader.photo} name={leader.name} />
               <span className="leader-rank">1</span>
@@ -53,20 +55,20 @@ function StatsTable({ title, statKey, data }) {
             </div>
 
             <span className="leader-value">{leader[statKey]}</span>
-          </div>
+          </Link>
 
           {/* Resto */}
           {rest.length > 0 && (
             <div className="stats-rest">
               {rest.map((p, index) => (
-                <div key={p.id} className="stats-row">
+                <Link to={`/${leagueSlug}/jugadores/${p.id}`} key={p.id} className="stats-row">
                   <span className="rest-rank">{index + 2}</span>
                   <span className="rest-name">
                     {p.number != null && <span className="player-number">#{p.number}</span>}
                     {p.name}
                   </span>
                   <span className="rest-value">{p[statKey]}</span>
-                </div>
+                </Link>
               ))}
             </div>
           )}
