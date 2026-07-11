@@ -1,27 +1,27 @@
 import { useEffect } from 'react'
 import { useState } from "react"
 
-import Header from "../components/Header"
-import CategorySelector from "../components/CategorySelector"
-import ResultsDay from "../components/ResultDay"
-import Loader from '../components/Loader'
-import PageWrapper from '../components/PageWrapper'
+import Header from "../components/common/Header"
+import CategorySelector from "../components/filters/CategorySelector"
+import ResultsDay from "../components/match/ResultDay"
+import Loader from '../components/common/Loader'
+import PageWrapper from '../components/common/PageWrapper'
 
 import { useLeague } from '../context/LeagueContext'
-import { useSeason } from "../context/SeasonContext"
 import { useCategory } from '../context/CategoryContext'
 
 import { getMatchDaysByCategoryId } from '../services/matchday.service'
 import { getMatchesByMatchDayIds } from '../services/match.service'
+import { getTeamsByCategoryId } from '../services/team.service'
 
 import "./Results.css"
 
 function Results() {
-  const { league, loading: leagueLoading } = useLeague()
-  const { seasons, season, setSeason, loading } = useSeason()
-  const { categories, category, setCategory, categoryLoading } = useCategory()
+  const { league } = useLeague()
+  const { categories, category, setCategory } = useCategory()
   const [matchdays, setMatchdays] = useState([])
-  const [loadingMatchdays, setLoadingMatchdays] = useState(true)
+  const [, setLoadingMatchdays] = useState(true)
+  const [ teamData, setTeamData ] = useState([])
 
   useEffect(() => {
     if (!category) return
@@ -30,6 +30,7 @@ function Results() {
       try {
         setLoadingMatchdays(true)
 
+        const teams = await getTeamsByCategoryId(category.id)
         const matchdaysData = await getMatchDaysByCategoryId(category.id)
         const ids = matchdaysData.map(md => md.id)
         const matches = await getMatchesByMatchDayIds(ids)
@@ -46,6 +47,7 @@ function Results() {
         }))
 
         setMatchdays(combined)
+        setTeamData(teams)
 
       } catch (err) {
         console.error(err)
@@ -60,7 +62,6 @@ function Results() {
   const matchdaysWithResults = matchdays
     .map(j => ({
       ...j,
-      games: j.games.filter(p => p.status == 'Terminado')
     }))
     .filter(j => j.games.length > 0)
 
@@ -90,11 +91,12 @@ function Results() {
       <Header league={league}/>
       <main className="results-container">
         <CategorySelector categories={categories} active={category} onChange={setCategory}/>
+        <h2 className="results-title">Resultados</h2>
         {matchdaysWithResults.length === 0 ? (
           <p className="empty-results">Aún no hay resultados</p>
         ) : (
           matchdaysWithResults.map(matchday => (
-            <ResultsDay key={matchday.id} matchday={matchday} />
+            <ResultsDay key={matchday.id} matchday={matchday} teams={teamData} />
           ))
         )}
       </main>

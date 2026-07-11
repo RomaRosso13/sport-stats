@@ -1,0 +1,137 @@
+.schedule-row {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: #ffffff;
+  border-radius: 14px;
+  border-left: 4px solid transparent;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.schedule-row.win {
+  border-left-color: #16a34a;
+}
+
+.schedule-row.loss {
+  border-left-color: #dc2626;
+}
+
+.schedule-row.draw {
+  border-left-color: #64748b;
+}
+
+.schedule-row.pending {
+  border-left-color: #f59e0b;
+}
+
+.schedule-matchday {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.schedule-matchday-name {
+  font-weight: 700;
+  font-size: 13px;
+  color: #0f172a;
+}
+
+.schedule-date {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.schedule-opponent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.schedule-vs {
+  font-size: 11px;
+  font-weight: 700;
+  color: #9ca3af;
+}
+
+.schedule-opponent-logo {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.schedule-opponent-name {
+  font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.schedule-result {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-self: end;
+}
+
+.schedule-result-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.schedule-row.win .schedule-result-badge {
+  background: #16a34a;
+}
+
+.schedule-row.loss .schedule-result-badge {
+  background: #dc2626;
+}
+
+.schedule-row.draw .schedule-result-badge {
+  background: #64748b;
+}
+
+.schedule-score {
+  font-weight: 800;
+  font-size: 15px;
+  color: #0f172a;
+}
+
+.schedule-pending-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #b45309;
+  background: #fff7ed;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.schedule-meta {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 6px;
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+@media (max-width: 640px) {
+  .schedule-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .schedule-result {
+    justify-self: start;
+  }
+}

@@ -1,0 +1,139 @@
+.roster-manager {
+  margin-top: 32px;
+}
+
+.roster-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.roster-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  flex-wrap: wrap;
+}
+
+.roster-row.inactive {
+  opacity: 0.6;
+}
+
+.roster-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.roster-photo,
+.roster-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.roster-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.roster-number {
+  font-size: 12px;
+  font-weight: 800;
+  color: #9ca3af;
+  flex-shrink: 0;
+}
+
+.roster-name {
+  font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.roster-position {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-dark);
+  white-space: nowrap;
+}
+
+.roster-inactive-tag {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.roster-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.roster-actions button {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: #374151;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color .15s ease;
+}
+
+.roster-actions button:hover {
+  background: #f3f4f6;
+}
+
+.roster-actions .deactivate-btn {
+  color: #dc2626;
+  border-color: #fecaca;
+}
+
+.roster-actions .deactivate-btn:hover {
+  background: #fef2f2;
+}
+
+.roster-actions .activate-btn {
+  color: #16a34a;
+  border-color: #bbf7d0;
+}
+
+.roster-actions .activate-btn:hover {
+  background: #f0fdf4;
+}
+
+@media (max-width: 640px) {
+  .roster-row {
+    padding: 10px;
+  }
+
+  .roster-name {
+    font-size: 13px;
+  }
+
+  .roster-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}

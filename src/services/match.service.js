@@ -1,67 +1,34 @@
 import { supabase } from '../libs/supabase'
+import { runQuery } from '../libs/supabaseQuery'
+
+const MATCH_SELECT = `
+  *,
+  local_team:local_team_id (
+    id,
+    name,
+    logo_url
+  ),
+  visit_team:visit_team_id (
+    id,
+    name,
+    logo_url
+  ),
+  branch:branch_id (
+    id,
+    name
+  ),
+  field:field_id (
+    id,
+    name
+  )
+`
 
 export async function getMatchesByMatchDayIds(matchdayId) {
-  const ids = Array.isArray(matchdayId)
-  ? matchdayId
-  : [matchdayId]
+  const ids = Array.isArray(matchdayId) ? matchdayId : [matchdayId]
 
-  const { data, error } = await supabase
-    .from('Match')
-      .select(`
-        *,
-        local_team:local_team_id (
-          id,
-          name,
-          logo_url
-        ),
-        visit_team:visit_team_id (
-          id,
-          name,
-          logo_url
-        ),
-        branch:branch_id (
-          id,
-          name
-        ),
-        field:field_id (
-          id,
-          name
-        )
-      `)
-    .in('matchday_id', ids)
-
-  if (error) throw error
-  return data
-}
-
-export async function getMatchesByMatchDayId(matchdayId) {
-  const { data, error } = await supabase
-    .from('Match')
-      .select(`
-        *,
-        local_team:local_team_id (
-          id,
-          name,
-          logo_url
-        ),
-        visit_team:visit_team_id (
-          id,
-          name,
-          logo_url
-        ),
-        branch:branch_id (
-          id,
-          name
-        ),
-        field:field_id (
-          id,
-          name
-        )
-      `)
-    .eq('matchday_id', matchdayId)
-
-  if (error) throw error
-  return data
+  return runQuery(
+    supabase.from('Match').select(MATCH_SELECT).in('matchday_id', ids)
+  )
 }
 
 export async function updateMatches(matches) {
@@ -72,11 +39,26 @@ export async function updateMatches(matches) {
     status: match.status
   }))
 
-  const { error } = await supabase
-    .from('Match')
-    .upsert(updates, { onConflict: 'id' })
-
-  if (error) throw error
+  await runQuery(
+    supabase.from('Match').upsert(updates, { onConflict: 'id' })
+  )
 }
 
+export async function createMatches(matches, matchday) {
+  const payload = matches.map(match => ({
+    date: matchday.date,
+    hour: match.time,
+    type: 'Regular',
+    local_team_id: match.homeTeamId,
+    visit_team_id: match.awayTeamId,
+    status: 'Pendiente',
+    branch_id: Number(match.branchId),
+    field_id: Number(match.field),
+    matchday_id: matchday.id
+  }))
 
+  return runQuery(
+    supabase.from('Match').insert(payload).select(),
+    'Error al crear los partidos'
+  )
+}

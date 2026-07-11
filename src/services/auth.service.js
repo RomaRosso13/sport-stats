@@ -1,16 +1,14 @@
 import { supabase } from '../libs/supabase'
+import { runQuery } from '../libs/supabaseQuery'
 import { userBelongsToLeague } from './league_user.service'
 
-export async function signInByPasswordForLeague( email, password, leagueId) {
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password})
+export async function signInByPasswordForLeague(email, password, leagueId) {
+  const data = await runQuery(
+    supabase.auth.signInWithPassword({ email, password }),
+    'Correo o contraseña incorrectos'
+  )
 
-  if (error) {
-    throw new Error('Correo o contraseña incorrectos')
-  }
-
-  console.log('Data',data)
   const belongs = await userBelongsToLeague(leagueId)
-  console.log('Belongs', belongs)
 
   if (!belongs) {
     await supabase.auth.signOut()
@@ -21,7 +19,5 @@ export async function signInByPasswordForLeague( email, password, leagueId) {
 }
 
 export async function signOut() {
-  const { error } = await supabase.auth.signOut()
-  if (error) throw error
+  await runQuery(supabase.auth.signOut())
 }
-

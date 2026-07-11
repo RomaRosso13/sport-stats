@@ -1,0 +1,126 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal {
+  background: white;
+  border-radius: 16px;
+  padding: 22px;
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  --primary: var(--accent);
+  --primary-hover: var(--accent-dark);
+  --secondary: #e5e7eb;
+  --secondary-text: #374151;
+  --disabled: #9ca3af;
+}
+
+.modal h3 {
+  margin: 0 0 14px;
+}
+
+.modal form {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  margin-top: 10px;
+}
+
+.modal label:first-of-type {
+  margin-top: 0;
+}
+
+.modal input {
+  width: 100%;
+  padding: 8px 10px;
+  margin-top: 6px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+}
+
+.modal input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.15);
+}
+
+.image-upload-field {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+.image-upload-field input[type="file"] {
+  padding: 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.image-upload-preview {
+  margin-top: 10px;
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  padding: 4px;
+  align-self: flex-start;
+}
+
+.modal-error {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.modal-actions button {
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  transition: all .2s ease;
+}
+
+.modal-actions button[type="button"] {
+  background: var(--secondary);
+  color: var(--secondary-text);
+}
+
+.modal-actions button[type="button"]:hover {
+  background: #d1d5db;
+}
+
+.modal-actions button[type="submit"] {
+  background: var(--primary);
+  color: white;
+}
+
+.modal-actions button[type="submit"]:hover:not(:disabled) {
+  background: var(--primary-hover);
+}
+
+.modal-actions button:disabled {
+  background: var(--disabled);
+  cursor: not-allowed;
+}

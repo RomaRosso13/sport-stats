@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { getLeagueBySlug } from '../services/league.service'
-import { getSeasonsByLeagueId } from '../services/season.service'
+import { getActiveSeasonsByLeagueId } from '../services/season.service'
 
 const SeasonContext = createContext(null)
 
@@ -22,7 +22,7 @@ export function SeasonProvider({ children }) {
         setLoading(true)
 
         const league = await getLeagueBySlug(leagueSlug)
-        const seasonsData = await getSeasonsByLeagueId(league.id)
+        const seasonsData = await getActiveSeasonsByLeagueId(league.id)
 
         setSeasons(seasonsData)
 

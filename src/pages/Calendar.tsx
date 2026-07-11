@@ -1,11 +1,11 @@
 import { useEffect } from 'react'
 import { useState } from "react"
 
-import Header from "../components/Header"
-import CategorySelector from "../components/CategorySelector"
-import CalendarDay from "../components/CalendarDay"
-import Loader from '../components/Loader'
-import PageWrapper from '../components/PageWrapper'
+import Header from "../components/common/Header"
+import CategorySelector from "../components/filters/CategorySelector"
+import CalendarDay from "../components/calendar/CalendarDay"
+import Loader from '../components/common/Loader'
+import PageWrapper from '../components/common/PageWrapper'
 
 import { useLeague } from '../context/LeagueContext'
 import { useCategory } from '../context/CategoryContext'
@@ -17,37 +17,44 @@ import "./Calendar.css"
 
 function Calendar() {
   const { league } = useLeague()
-  const { categories, category, setCategory, categoryLoading } = useCategory()
+  const { categories, category, setCategory } = useCategory()
   const [matchdays, setMatchdays] = useState([])
+  const [loadingMatchdays, setLoadingMatchdays] = useState(true)
 
   useEffect(() => {
     if (!category) return
 
     async function loadMatchdays() {
-      const matchdaysData = await getMatchDaysByCategoryId(category.id)
-      const ids = matchdaysData.map(md => md.id)
-      const matches = await getMatchesByMatchDayIds(ids)
+      try {
+        setLoadingMatchdays(true)
 
-      const matchesMap = {}
-      matches.forEach(match => {
-        if (!matchesMap[match.matchday_id]) {
-          matchesMap[match.matchday_id] = []
-        }
-        matchesMap[match.matchday_id].push(match)
-      })
+        const matchdaysData = await getMatchDaysByCategoryId(category.id)
+        const ids = matchdaysData.map(md => md.id)
+        const matches = await getMatchesByMatchDayIds(ids)
 
-      setMatchdays(
-        matchdaysData.map(md => ({
-          ...md,
-          games: matchesMap[md.id] || []
-        }))
-      )
+        const matchesMap = {}
+        matches.forEach(match => {
+          if (!matchesMap[match.matchday_id]) {
+            matchesMap[match.matchday_id] = []
+          }
+          matchesMap[match.matchday_id].push(match)
+        })
+
+        setMatchdays(
+          matchdaysData.map(md => ({
+            ...md,
+            games: matchesMap[md.id] || []
+          }))
+        )
+      } finally {
+        setLoadingMatchdays(false)
+      }
     }
 
     loadMatchdays()
   }, [category?.id])
 
-  const isDataLoading = !league || !matchdays.length
+  const isDataLoading = !league || loadingMatchdays
   const [showLoader, setShowLoader] = useState(true)
 
   useEffect(() => {
@@ -79,9 +86,27 @@ function Calendar() {
           onChange={setCategory}
         />
 
-        {matchdays.map(md => (
-          <CalendarDay key={md.id} matchday={md} />
-        ))}
+        {matchdays.length > 1 && (
+          <nav className="jornada-nav">
+            {matchdays.map(md => (
+              <a key={md.id} href={`#jornada-${md.id}`} className="jornada-pill">
+                {md.name}
+              </a>
+            ))}
+          </nav>
+        )}
+
+        {!loadingMatchdays && matchdays.length === 0 ? (
+          <p className="empty-state">
+            Esta categoría aún no tiene jornadas programadas
+          </p>
+        ) : (
+          <div className="jornada-list">
+            {matchdays.map(md => (
+              <CalendarDay key={md.id} matchday={md} />
+            ))}
+          </div>
+        )}
       </main>
 
       <footer className="app-footer">

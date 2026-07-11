@@ -1,0 +1,120 @@
+.team-stats {
+  margin-top: 2px;
+}
+
+.record-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.record-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 4px;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.record-value {
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.1;
+}
+
+.record-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+
+.record-item.win .record-value {
+  color: #16a34a;
+}
+
+.record-item.loss .record-value {
+  color: #dc2626;
+}
+
+.record-item.draw .record-value {
+  color: #b45309;
+}
+
+.stats-bars {
+  display: flex;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  background: #f1f5f9;
+}
+
+.bar.win {
+  background: #16a34a;
+}
+
+.bar.loss {
+  background: #dc2626;
+}
+
+.bar.draw {
+  background: #f59e0b;
+}
+
+.points-row {
+  display: flex;
+  gap: 10px;
+}
+
+.points-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.points-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: #334155;
+}
+
+.points-value.diff.positive {
+  color: #16a34a;
+}
+
+.points-value.diff.negative {
+  color: #dc2626;
+}
+
+.points-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+
+@media (max-width: 640px) {
+  .record-value {
+    font-size: 17px;
+  }
+
+  .record-label {
+    font-size: 10px;
+  }
+
+  .stats-bars {
+    height: 8px;
+    margin-bottom: 10px;
+  }
+
+  .points-value {
+    font-size: 13px;
+  }
+}

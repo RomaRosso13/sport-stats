@@ -1,5 +1,5 @@
 .app-layout {
-  height: 100vh;          /* ocupa toda la pantalla */
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
@@ -9,7 +9,38 @@
   display: flex;
   padding: 24px;
   flex-direction: column;
-  overflow: hidden; /* desktop: scroll interno */
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.matchday-editor-intro {
+  margin-bottom: 20px;
+}
+
+.matchday-editor-intro h2 {
+  margin: 0 0 4px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.matchday-editor-intro p {
+  margin: 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.matchday-editor-empty,
+.match-list-empty {
+  margin-top: 8px;
+  padding: 32px 16px;
+  text-align: center;
+  border: 1px dashed #e5e7eb;
+  border-radius: 14px;
+  background: #ffffff;
+  color: #6b7280;
+  font-size: 14px;
 }
 
 .match-list {
@@ -28,6 +59,7 @@
   padding: 16px 20px;
   background: white;
   border-radius: 16px;
+  border-left: 4px solid transparent;
 
   box-shadow:
     0 10px 25px rgba(0, 0, 0, 0.08);
@@ -41,26 +73,46 @@
     0 14px 30px rgba(0, 0, 0, 0.12);
 }
 
+.match-card.pending {
+  border-left-color: #f59e0b;
+}
+
+.match-card.finished {
+  border-left-color: #16a34a;
+}
+
 /* Equipo */
 .team {
   display: flex;
   align-items: center;
   gap: 12px;
+  min-width: 0;
 }
 
 .team-logo {
   width: 48px;
   height: 48px;
   object-fit: contain;
+  flex-shrink: 0;
 }
 
 .team-name {
   font-weight: 700;
   font-size: 1rem;
   color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Marcador */
+.score-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
 .score {
   display: flex;
   align-items: center;
@@ -81,7 +133,14 @@
 
 .score input:focus {
   outline: none;
-  border-color: #2563eb;
+  border-color: var(--accent);
+}
+
+.score-locked-hint {
+  font-size: 11px;
+  color: #9ca3af;
+  text-align: center;
+  max-width: 180px;
 }
 
 .vs {
@@ -93,7 +152,15 @@
 /* Status */
 .status {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.status-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
 }
 
 /* Select principal */
@@ -125,8 +192,8 @@
 
   /* Flecha custom */
   background-image:
-    linear-gradient(45deg, transparent 50%, #2563eb 50%),
-    linear-gradient(135deg, #2563eb 50%, transparent 50%);
+    linear-gradient(45deg, transparent 50%, var(--accent) 50%),
+    linear-gradient(135deg, var(--accent) 50%, transparent 50%);
   background-position:
     calc(100% - 20px) 50%,
     calc(100% - 14px) 50%;
@@ -138,34 +205,69 @@
 
 /* Hover */
 .status-select:hover {
-  border-color: #2563eb;
-  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.18);
+  border-color: var(--accent);
+  box-shadow: 0 6px 18px rgba(var(--accent-rgb), 0.18);
   transform: translateY(-1px);
 }
 
 /* Focus */
 .status-select:focus {
   outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.25);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.25);
 }
 
 /* Cuando está en terminado */
-.status-select[value="finalizado"] {
+.status-select.finished {
   background-color: #f0fdf4;
   border-color: #22c55e;
   color: #166534;
 }
 
-
-/* Partido finalizado */
-.match-card.finished {
-  opacity: 0.6;
-}
-
 .match-card.finished input {
   background: #f1f5f9;
   cursor: not-allowed;
+}
+
+/* Estadísticas individuales */
+.stats-toggle-row {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.stats-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color .15s ease;
+}
+
+.stats-toggle-btn:hover {
+  background: var(--accent-soft);
+}
+
+.stats-toggle-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: white;
+  font-size: 11px;
+  font-weight: 800;
 }
 
 /* Responsive */
@@ -182,6 +284,10 @@
   .score {
     justify-content: center;
   }
+
+  .status {
+    align-items: center;
+  }
 }
 
 .app-footer {
@@ -196,55 +302,92 @@
   justify-content: center;
 }
 
-/* Botón guardar flotante */
-.save-button {
-  position: fixed;
-  bottom: 48px;
-  right: 24px;
+/* Guardar */
+.save-action {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  padding-top: 24px;
+}
 
-  padding: 12px 12px;
+.save-hint,
+.save-success {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.save-hint {
+  color: #6b7280;
+  background: #f3f4f6;
+}
+
+.save-success {
+  color: #166534;
+  background: #f0fdf4;
+}
+
+.save-button {
+  padding: 14px 20px;
   border-radius: 999px;
 
-  background: #2563eb;
+  background: var(--accent);
   color: white;
 
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 700;
+  white-space: nowrap;
 
   border: none;
   cursor: pointer;
 
   box-shadow:
-    0 12px 30px rgba(37, 99, 235, 0.4);
+    0 12px 30px rgba(var(--accent-rgb), 0.4);
 
   transition:
     transform 0.15s ease,
     box-shadow 0.15s ease,
     background-color 0.2s ease;
-
-  z-index: 1000;
 }
 
 /* Hover */
-.save-button:hover {
-  background-color: #1d4ed8;
+.save-button:hover:not(:disabled) {
+  background-color: var(--accent-dark);
   transform: translateY(-2px);
   box-shadow:
-    0 16px 36px rgba(37, 99, 235, 0.5);
+    0 16px 36px rgba(var(--accent-rgb), 0.5);
 }
 
 /* Active */
-.save-button:active {
+.save-button:active:not(:disabled) {
   transform: translateY(0);
   box-shadow:
-    0 10px 24px rgba(37, 99, 235, 0.4);
+    0 10px 24px rgba(var(--accent-rgb), 0.4);
+}
+
+.save-button:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
 /* Mobile */
 @media (max-width: 640px) {
+  .save-action {
+    align-items: stretch;
+  }
+
+  .save-hint,
+  .save-success {
+    text-align: center;
+    white-space: normal;
+  }
+
   .save-button {
-    right: 16px;
-    bottom: 16px;
+    width: 100%;
     padding: 12px 18px;
     font-size: 0.9rem;
   }

@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react"
 import { useSeason } from "./SeasonContext"
-import { getCategoriesBySeasonId } from "../services/category.service"
+import { getActiveCategoriesBySeasonId } from "../services/category.service"
 
 const CategoryContext = createContext(null)
 
@@ -11,38 +11,37 @@ export function CategoryProvider({ children }) {
   const [category, setCategory] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    if (!season) {
-      setCategories([])
-      setCategory(null)
-      return
-    }
+useEffect(() => {
+  if (!season?.id) {
+    setCategories([])
+    setCategory(null)
+    setLoading(false)
+    return
+  }
 
-    async function loadCategories() {
-      try {
-        setLoading(true)
+  async function loadCategories() {
+    try {
+      setLoading(true)
+      const data = await getActiveCategoriesBySeasonId(season.id)
 
-        const data = await getCategoriesBySeasonId(season.id)
-        setCategories(data)
+      setCategories(data)
 
-        if (data.length > 0) {
-          const defaultCategory =
-            data.find(c => c.type === "mixto") || data[0]
-
-          setCategory(defaultCategory)
-        } else {
-          setCategory(null)
-        }
-
-      } catch (err) {
-        console.error(err)
-      } finally {
-        setLoading(false)
+      if (data.length > 0) {
+        setCategory(data.find(c => c.type === "mixto") || data[0])
+      } else {
+        setCategory(null)
       }
-    }
 
-    loadCategories()
-  }, [season?.id])
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  loadCategories()
+}, [season?.id])
+
 
   return (
     <CategoryContext.Provider

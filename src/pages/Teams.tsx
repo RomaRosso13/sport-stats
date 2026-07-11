@@ -1,14 +1,13 @@
 import { useEffect } from 'react'
 import { useState } from "react"
 
-import Header from "../components/Header"
-import CategorySelector from "../components/CategorySelector"
-import TeamCard from "../components/TeamCard"
-import Loader from '../components/Loader'
-import PageWrapper from '../components/PageWrapper'
+import Header from "../components/common/Header"
+import CategorySelector from "../components/filters/CategorySelector"
+import TeamCard from "../components/team/TeamCard"
+import Loader from '../components/common/Loader'
+import PageWrapper from '../components/common/PageWrapper'
 
 import { useLeague } from '../context/LeagueContext'
-import { useSeason } from "../context/SeasonContext"
 import { useCategory } from '../context/CategoryContext'
 
 import { getMatchDaysByCategoryId } from '../services/matchday.service'
@@ -18,12 +17,11 @@ import { getTeamsByCategoryId } from '../services/team.service'
 import "./Teams.css"
 
 function Teams() {
-  const { seasons, season, setSeason, loading } = useSeason()
-  const { league, loading: leagueLoading } = useLeague()
-  const { categories, category, setCategory, categoryLoading } = useCategory()
+  const { league } = useLeague()
+  const { categories, category, setCategory } = useCategory()
   const [matchdays, setMatchdays] = useState([])
   const [teams, setTeams] = useState([])
-  const [loadingMatchdays, setLoadingMatchdays] = useState(true)
+  const [, setLoadingMatchdays] = useState(true)
 
   useEffect(() => {
     if (!category) return
@@ -79,7 +77,6 @@ function Teams() {
       return () => clearTimeout(timeout)
     }, [isDataLoading])
 
-
   return (
     <div className = 'app-layout'>
     <Loader show={showLoader} label="Cargando..." />
@@ -87,6 +84,7 @@ function Teams() {
     <Header league={league}/>
     <main className="teams-container">
       <CategorySelector categories={categories} active={category} onChange={setCategory}/>
+      <h2 className="teams-title">Equipos</h2>
         <div className="teams-grid">
           {teams.map(team => (
             <TeamCard key={team.id} team={team} matchdays={matchdays}/>

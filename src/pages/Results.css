@@ -3,9 +3,23 @@
   overflow-y: auto;       /* 👈 SOLO aquí hay scroll */
   padding: 24px;
 }
+
+.results-title {
+  margin: 32px 0 20px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
 .empty-results {
+  margin-top: 12px;
+  padding: 32px 16px;
+  text-align: center;
+  border: 1px dashed #e5e7eb;
+  border-radius: 14px;
+  background: #ffffff;
   color: #6b7280;
-  margin-top: 24px;
+  font-size: 14px;
 }
 
 /* Layout general */

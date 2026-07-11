@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { useEffect } from 'react'
 
-import Header from '../components/Header'
-import PositionTable from '../components/PositionTable'
-import NextGameDay from '../components/NextGameDay'
-import RecentResults from '../components/RecentResults'
-import StatsTable from '../components/StatsTable'
-import CategorySelector from "../components/CategorySelector"
-import Loader from '../components/Loader'
-import PageWrapper from '../components/PageWrapper'
-import LeagueNotFound from '../components/LeagueNotFound'
+import Header from '../components/common/Header'
+import PositionTable from '../components/team/PositionTable'
+import NextGameDay from '../components/calendar/NextGameDay'
+import RecentResults from '../components/calendar/RecentResults'
+import StatsTable from '../components/team/StatsTable'
+import CategorySelector from "../components/filters/CategorySelector"
+import Loader from '../components/common/Loader'
+import PageWrapper from '../components/common/PageWrapper'
+import LeagueNotFound from '../components/common/LeagueNotFound'
 
 import { useSeason } from "../context/SeasonContext"
 import { useLeague } from '../context/LeagueContext'
@@ -17,19 +17,24 @@ import { useCategory } from '../context/CategoryContext';
 
 import { getMatchDaysByCategoryId } from '../services/matchday.service'
 import { getMatchesByMatchDayIds } from '../services/match.service'
+import { getIndividualStatsByCategory } from '../services/individual_stats.service'
+import { getTeamsByCategoryId } from '../services/team.service'
 
 import { calculateTable } from '../utils/calculateTable'
 import { getNextGameDay } from '../utils/getNextGameDay'
 import { getRecentResults } from '../utils/getRecentResults'
+import { classifyTopPlayersByStats } from '../utils/classifyTopPlayersByStats'
 
 import './Home.css'
 
 function Home() {
-  const { seasons, season, setSeason, loading } = useSeason()
-  const { league, loading: leagueLoading } = useLeague()
-  const { categories, category, setCategory, categoryLoading } = useCategory()
+  const { season, loading } = useSeason()
+  const { league } = useLeague()
+  const { categories, category, setCategory } = useCategory()
   const [matchdays, setMatchdays] = useState([])
+  const [teams, setTeams] = useState([])
   const [loadingMatchdays, setLoadingMatchdays] = useState(true)
+  const [ stats, setStats ] = useState([])
 
   useEffect(() => {
     if (!category) return
@@ -37,7 +42,8 @@ function Home() {
     async function loadMatchdays() {
       try {
         setLoadingMatchdays(true)
-
+        const teamsData = await getTeamsByCategoryId(category.id)
+        const individualStats = await getIndividualStatsByCategory(category.id)
         const matchdaysData = await getMatchDaysByCategoryId(category.id)
         const ids = matchdaysData.map(md => md.id)
         const matches = await getMatchesByMatchDayIds(ids)
@@ -53,7 +59,9 @@ function Home() {
           games: matchesMap[md.id] || []
         }))
 
+        setTeams(teamsData || [])
         setMatchdays(combined)
+        setStats(individualStats)
 
       } catch (err) {
         console.error(err)
@@ -66,32 +74,10 @@ function Home() {
   }, [category?.id])
 
   const matches = matchdays.flatMap(j => j.games)
-  const calculatedTable = calculateTable(matches)
+  const calculatedTable = calculateTable(matches, teams)
   const nextGameDay = getNextGameDay(matchdays)
   const recentResults = getRecentResults(matchdays, 4)
-
-
-  const pasesTD = [
-    { id: 1, nombre: "Carlos Ramírez", equipo: "Halcones", touchdowns: 12 },
-    { id: 2, nombre: "Luis Ortega", equipo: "Tigres", touchdowns: 10 },
-    { id: 3, nombre: "Miguel Soto", equipo: "Panteras", touchdowns: 9 }
-  ]
-
-  const TD = [
-    { id: 1, nombre: "Carlos Ramírez", equipo: "Halcones", touchdowns: 12 },
-    { id: 2, nombre: "Luis Ortega", equipo: "Tigres", touchdowns: 10 },
-    { id: 3, nombre: "Miguel Soto", equipo: "Panteras", touchdowns: 9 }
-  ]
-
-  const intercepciones = [
-    { id: 1, nombre: "Jorge Díaz", equipo: "Leones", intercepciones: 5 },
-    { id: 2, nombre: "Raúl Pérez", equipo: "Halcones", intercepciones: 4 }
-  ];
-
-  const sacks = [
-    { id: 1, nombre: "Andrés Molina", equipo: "Tigres", sacks: 7 },
-    { id: 2, nombre: "Fernando Cruz", equipo: "Panteras", sacks: 6 }
-  ]
+  const leaderboard = classifyTopPlayersByStats( stats, ['touchdown', 'touchdown_pass', 'sacks', 'interceptions'])
 
   const isLoading = loading || !league || loadingMatchdays
 
@@ -112,11 +98,12 @@ return (
         onChange={setCategory}
       />
 
+      <h2 className="stats-section-title">Líderes de la Temporada</h2>
       <div className="cards-row">
-        <StatsTable title="Touchdowns" statKey="touchdowns" data={TD.slice(0, 3)} />
-        <StatsTable title="Pases de Touchdown" statKey="touchdowns" data={pasesTD.slice(0, 3)} />
-        <StatsTable title="Intercepciones" statKey="intercepciones" data={intercepciones.slice(0, 3)} />
-        <StatsTable title="Sacks" statKey="sacks" data={sacks.slice(0, 3)} />
+        <StatsTable title="Touchdowns" statKey="touchdown" data={leaderboard.touchdown} />
+        <StatsTable title="Pases de Touchdown" statKey="touchdown_pass" data={leaderboard.touchdown_pass} />
+        <StatsTable title="Intercepciones" statKey="interceptions" data={leaderboard.interceptions} />
+        <StatsTable title="Sacks" statKey="sacks" data={leaderboard.sacks} />
       </div>
 
       <div className="home-layout">
@@ -136,7 +123,7 @@ return (
         </div>
 
         <div className="home-card">
-          <h2 className="card-title">Próxima Jornada</h2>
+          <h2 className="card-title">Próximos partidos</h2>
           <div className="card-body">
             <NextGameDay data={nextGameDay} />
           </div>

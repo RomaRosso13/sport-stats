@@ -1,11 +1,23 @@
 .matchday-header {
   display: flex;
-  gap: 16px;
+  gap: 20px;
   padding: 16px 24px;
   background-color: #ffffff;
   border-bottom: 1px solid #e5e7eb;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.context-group {
+  display: flex;
+  gap: 16px;
   align-items: flex-end;
   flex-wrap: wrap;
+}
+
+.context-group + .context-group {
+  padding-left: 20px;
+  border-left: 1px solid #eef1f5;
 }
 
 /* Pills (Liga / Temporada) */
@@ -60,8 +72,8 @@
 .context-field select:focus,
 .context-field input:focus {
   outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.15);
 }
 
 .context-field select:disabled,
@@ -71,17 +83,41 @@
   cursor: not-allowed;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .matchday-header {
-    padding: 12px 16px;
-    gap: 12px;
-  }
+.required {
+  color: #dc2626;
+}
 
-  .context-pill,
-  .context-field {
-    min-width: 100%;
-  }
+/* Estado de jornada existente seleccionada */
+.matchday-status {
+  align-self: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: #166534;
+  background: #f0fdf4;
+  padding: 8px 12px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+/* Panel de nueva jornada */
+.new-matchday-panel {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 12px 16px;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-border-soft);
+  border-radius: 10px;
+  width: 100%;
+}
+
+.new-matchday-panel-title {
+  align-self: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent-dark);
+  white-space: nowrap;
 }
 
 .create-matchday-btn {
@@ -89,7 +125,7 @@
   padding: 0 18px;
   border-radius: 6px;
   border: none;
-  background-color: #2563eb; /* azul primario */
+  background-color: var(--accent); /* azul primario */
   color: #ffffff;
   font-size: 14px;
   font-weight: 600;
@@ -100,7 +136,7 @@
 
 /* Hover */
 .create-matchday-btn:hover:not(:disabled) {
-  background-color: #1d4ed8;
+  background-color: var(--accent-dark);
 }
 
 /* Disabled / Loading */
@@ -110,10 +146,35 @@
   opacity: 0.8;
 }
 
-/* Mobile: que no se vea enorme */
+/* Responsive */
 @media (max-width: 768px) {
+  .matchday-header {
+    padding: 12px 16px;
+    gap: 12px;
+  }
+
+  .context-group {
+    width: 100%;
+  }
+
+  .context-group + .context-group {
+    padding-left: 0;
+    border-left: none;
+    border-top: 1px solid #eef1f5;
+    padding-top: 12px;
+  }
+
+  .context-pill,
+  .context-field {
+    min-width: 100%;
+  }
+
+  .new-matchday-panel {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
   .create-matchday-btn {
     width: 100%;
   }
 }
-

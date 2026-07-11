@@ -1,0 +1,120 @@
+.tabla-wrapper {
+  margin-top: 24px;
+  overflow-x: auto;
+}
+
+.position-table-empty {
+  padding: 28px 16px;
+  text-align: center;
+  border: 1px dashed #e5e7eb;
+  border-radius: 14px;
+  background: #f9fafb;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.tabla-posiciones {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.tabla-posiciones th,
+.tabla-posiciones td {
+  padding: 12px;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+.tabla-posiciones tbody tr:nth-child(even) {
+  background-color: #f1f5f9;
+}
+
+.tabla-posiciones td:nth-child(2) {
+  text-align: left;
+  font-weight: 500;
+}
+
+.tabla-posiciones tr.leader {
+  background-color: #d1fae5; /* verde clarito para el líder */
+  font-weight: bold;
+}
+
+.tabla-posiciones tr:hover {
+  background-color: #f3f4f6;
+}
+
+.tabla-posiciones tr.playoffs {
+  background-color: #fef9c3; /* amarillo clarito para playoffs */
+}
+
+.equipo-cell {
+  font-weight: 600;
+}
+
+.equipo-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.equipo-link:hover .team-name {
+  text-decoration: underline;
+}
+
+.team-logo {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.team-name {
+  white-space: nowrap;
+}
+
+
+@media (max-width: 768px) {
+  .tabla-posiciones th,
+  .tabla-posiciones td {
+    padding: 8px 6px;
+    font-size: 0.75rem;
+  }
+
+  .team-logo {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 640px) {
+  .tabla-posiciones th:nth-child(3),
+  .tabla-posiciones td:nth-child(3), /* PJ */
+  .tabla-posiciones th:nth-child(6),
+  .tabla-posiciones td:nth-child(6), /* PF */
+  .tabla-posiciones th:nth-child(7),
+  .tabla-posiciones td:nth-child(7), /* PC */
+  .tabla-posiciones th:nth-child(8),
+  .tabla-posiciones td:nth-child(8), /* DIF */
+  .tabla-posiciones th:nth-child(9),
+  .tabla-posiciones td:nth-child(9) { /* DIF */
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .equipo-cell {
+    gap: 6px;
+  }
+
+  .team-name {
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

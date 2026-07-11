@@ -1,14 +1,10 @@
 import { supabase } from '../libs/supabase'
+import { runQuery } from '../libs/supabaseQuery'
 
 export async function userBelongsToLeague(leagueId) {
-  console.log('LeagueId', leagueId)
-  const { data, error } = await supabase
-    .from('League_User')
-    .select('id')
-    .eq('league_id', leagueId)
-    .limit(1)
-
-  if (error) throw error
+  const data = await runQuery(
+    supabase.from('League_User').select('id').eq('league_id', leagueId).limit(1)
+  )
 
   return data.length > 0
 }

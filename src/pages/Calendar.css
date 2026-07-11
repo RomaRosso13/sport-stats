@@ -12,6 +12,59 @@
   padding: 24px;
 }
 
+/* Navegación rápida entre jornadas */
+.jornada-nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 20px 0;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  padding: 8px 0;
+  background: #f8fafc;
+}
+
+.jornada-pill {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-soft);
+  padding: 6px 14px;
+  border-radius: 999px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background .15s ease, transform .15s ease;
+}
+
+.jornada-pill:hover {
+  background: var(--accent-soft-2);
+  transform: translateY(-1px);
+}
+
+.jornada-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.empty-state {
+  padding: 28px 16px;
+  text-align: center;
+  border: 1px dashed #e5e7eb;
+  border-radius: 14px;
+  background: #ffffff;
+  color: #6b7280;
+  font-size: 14px;
+  margin-top: 20px;
+}
+
+@media (max-width: 640px) {
+  .jornada-nav {
+    margin: 16px 0;
+  }
+}
+
 /* Footer fijo abajo */
 .app-footer {
   height: 40px;

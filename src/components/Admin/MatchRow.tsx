@@ -1,6 +1,17 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import MatchStatsPanel from './MatchStatsPanel'
 
-function MatchRow({ match, onChange }) {
+function MatchRow({
+  match,
+  onChange,
+  localPlayers = [],
+  visitPlayers = [],
+  statsEntries = [],
+  statsTotals = {},
+  onAddStatEntry,
+  onRemoveStatEntry
+}) {
+  const [statsOpen, setStatsOpen] = useState(false)
 
   // 🔑 Hidratación inicial del marcador
   useEffect(() => {
@@ -28,7 +39,7 @@ function MatchRow({ match, onChange }) {
   const isFinished = match.status === 'Terminado'
 
   return (
-    <div className={`match-card ${isFinished ? 'finished' : ''}`}>
+    <div className={`match-card ${isFinished ? 'finished' : 'pending'}`}>
       {/* Local */}
       <div className="team">
         <img
@@ -40,24 +51,36 @@ function MatchRow({ match, onChange }) {
       </div>
 
       {/* Marcador (SIEMPRE score) */}
-      <div className="score">
-        <input
-          type="number"
-          value={match.local_score ?? ''}
-          disabled={isFinished}
-          onChange={e =>
-            update('local_score', Number(e.target.value))
-          }
-        />
-        <span className="vs">–</span>
-        <input
-          type="number"
-          value={match.away_score ?? ''}
-          disabled={isFinished}
-          onChange={e =>
-            update('away_score', Number(e.target.value))
-          }
-        />
+      <div className="score-column">
+        <div className="score">
+          <input
+            type="number"
+            min="0"
+            aria-label={`Marcador de ${match.local_team.name}`}
+            value={match.local_score ?? ''}
+            disabled={isFinished}
+            onChange={e =>
+              update('local_score', Number(e.target.value))
+            }
+          />
+          <span className="vs">–</span>
+          <input
+            type="number"
+            min="0"
+            aria-label={`Marcador de ${match.visit_team.name}`}
+            value={match.away_score ?? ''}
+            disabled={isFinished}
+            onChange={e =>
+              update('away_score', Number(e.target.value))
+            }
+          />
+        </div>
+
+        {isFinished && (
+          <span className="score-locked-hint">
+            Cambia el estado a "Pendiente" para editar el marcador
+          </span>
+        )}
       </div>
 
       {/* Visitante */}
@@ -72,8 +95,9 @@ function MatchRow({ match, onChange }) {
 
       {/* Status: SOLO habilita / deshabilita */}
       <div className="status">
+        <label className="status-label">Estado</label>
         <select
-          className="status-select"
+          className={`status-select ${isFinished ? 'finished' : ''}`}
           value={match.status}
           onChange={e => update('status', e.target.value)}
         >
@@ -81,6 +105,32 @@ function MatchRow({ match, onChange }) {
           <option value="Terminado">Terminado</option>
         </select>
       </div>
+
+      {/* Estadísticas individuales */}
+      <div className="stats-toggle-row">
+        <button
+          type="button"
+          className="stats-toggle-btn"
+          onClick={() => setStatsOpen(prev => !prev)}
+        >
+          {statsOpen ? '− Ocultar estadísticas' : '+ Estadísticas'}
+          {statsEntries.length > 0 && (
+            <span className="stats-toggle-badge">{statsEntries.length}</span>
+          )}
+        </button>
+      </div>
+
+      {statsOpen && (
+        <MatchStatsPanel
+          match={match}
+          localPlayers={localPlayers}
+          visitPlayers={visitPlayers}
+          entries={statsEntries}
+          statsTotals={statsTotals}
+          onAddEntry={onAddStatEntry}
+          onRemoveEntry={onRemoveStatEntry}
+        />
+      )}
     </div>
   )
 }

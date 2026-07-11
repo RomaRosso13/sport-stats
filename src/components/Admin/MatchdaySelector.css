@@ -34,10 +34,10 @@
 
 /* Activo */
 .matchday-pill.active {
-  background: #2563eb;
+  background: var(--accent);
   color: white;
-  border-color: #2563eb;
-  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+  border-color: var(--accent);
+  box-shadow: 0 6px 16px rgba(var(--accent-rgb), 0.35);
 }
 
 /* Mobile */
@@ -51,19 +51,4 @@
     white-space: nowrap;
     flex-shrink: 0;
   }
-}
-
-.match-form select,
-.match-form input,
-.match-form button {
-  height: 60px;
-  font-size: 14px;
-  border-radius: 8px;
-}
-
-/* Botón */
-.add-match-btn {
-  padding: 0 16px;
-  font-weight: 600;
-  white-space: nowrap;
 }

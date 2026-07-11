@@ -1,0 +1,135 @@
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.team-profile-container {
+  flex: 1;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.team-profile-back {
+  display: inline-block;
+  margin-bottom: 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.team-profile-back:hover {
+  text-decoration: underline;
+}
+
+.team-profile-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.team-profile-logo {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.team-profile-header h2 {
+  margin: 2px 0 0;
+  font-size: 26px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.team-profile-category {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-dark);
+}
+
+.team-profile-layout {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.profile-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.profile-card-title {
+  margin: 0 0 16px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.profile-empty {
+  padding: 24px 16px;
+  text-align: center;
+  border: 1px dashed #e5e7eb;
+  border-radius: 12px;
+  background: #f9fafb;
+  color: #6b7280;
+  font-size: 13px;
+  margin: 0;
+}
+
+.team-schedule-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.team-leaders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.team-roster-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+@media (max-width: 900px) {
+  .team-profile-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .team-profile-container {
+    padding: 16px;
+  }
+
+  .team-profile-logo {
+    width: 56px;
+    height: 56px;
+  }
+
+  .team-profile-header h2 {
+    font-size: 20px;
+  }
+
+  .profile-card {
+    padding: 16px;
+  }
+}

@@ -4,25 +4,54 @@ import { useLeague } from '../../context/LeagueContext'
 
 import MatchdaySelector from '../../components/Admin/MatchdaySelector'
 import MatchList from '../../components/Admin/MatchList'
-import Header from '../../components/Header';
-import CategorySelector from '../../components/CategorySelector';
-import Loader from '../../components/Loader';
-import PageWrapper from '../../components/PageWrapper';
+import Header from '../../components/common/Header';
+import CategorySelector from '../../components/filters/CategorySelector';
+import Loader from '../../components/common/Loader';
+import PageWrapper from '../../components/common/PageWrapper';
 
 import { getMatchesByMatchDayIds, updateMatches } from '../../services/match.service'
 import { getMatchDaysByCategoryId } from '../../services/matchday.service'
+import { getTeamsByCategoryId } from '../../services/team.service'
+import { getIndividualStatsByCategory, addIndividualStatsDeltas } from '../../services/individual_stats.service'
 
 import './MatchdayEditor.css'
 
+const STAT_FIELDS = ['touchdown', 'touchdown_pass', 'sacks', 'interceptions'] as const
+type StatField = typeof STAT_FIELDS[number]
+
+type StatEntry = {
+  id: string
+  playerId: number
+  playerName: string
+  playerNumber: number
+  teamId: number
+  teamLabel: string
+  statKey: StatField
+  amount: number
+}
+
+type StatsDraft = Record<number, StatEntry[]>
+
+type PlayerStatsDelta = {
+  playerId: number
+  teamId: number
+  touchdown: number
+  touchdown_pass: number
+  sacks: number
+  interceptions: number
+}
+
 function EditMatchday() {
   const [matchdays, setMatchdays] = useState([]) // Jornadas con Partidos
-  const { categories, category, setCategory, categoryLoading } = useCategory()
+  const { categories, category, setCategory } = useCategory()
   const [selectedMatchday, setSelectedMatchday] = useState(null)
-  const [matches, setMatches] = useState([])
-  const { league, loading: leagueLoading } = useLeague()
+  const { league } = useLeague()
   const [saving, setSaving] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
 
+  const [teams, setTeams] = useState([])
+  const [statsTotals, setStatsTotals] = useState({})
+  const [statsDraft, setStatsDraft] = useState<StatsDraft>({})
 
   useEffect(() => {
     if (!category) return
@@ -51,6 +80,61 @@ function EditMatchday() {
     loadMatchdays()
   }, [category?.id])
 
+  async function loadRostersAndStats() {
+    if (!category) return
+
+    const [teamsData, statsData] = await Promise.all([
+      getTeamsByCategoryId(category.id),
+      getIndividualStatsByCategory(category.id)
+    ])
+
+    setTeams(teamsData || [])
+
+    const totals = {}
+    ;(statsData || []).forEach(row => {
+      const rowTotals = {}
+      STAT_FIELDS.forEach(field => { rowTotals[field] = row[field] || 0 })
+      totals[row.player_id] = rowTotals
+    })
+    setStatsTotals(totals)
+  }
+
+  useEffect(() => {
+    loadRostersAndStats()
+  }, [category?.id])
+
+  // Limpia el borrador de estadísticas al cambiar de jornada
+  useEffect(() => {
+    setStatsDraft({})
+  }, [selectedMatchday?.id])
+
+  function addStatEntry(matchId: number, entry: Omit<StatEntry, 'id'>) {
+    setStatsDraft(prev => {
+      const matchEntries = prev[matchId] || []
+      const existingIndex = matchEntries.findIndex(e =>
+        String(e.playerId) === String(entry.playerId) && e.statKey === entry.statKey
+      )
+
+      let updatedEntries: StatEntry[]
+      if (existingIndex >= 0) {
+        updatedEntries = matchEntries.map((e, i) =>
+          i === existingIndex ? { ...e, amount: e.amount + entry.amount } : e
+        )
+      } else {
+        updatedEntries = [...matchEntries, { id: window.crypto.randomUUID(), ...entry }]
+      }
+
+      return { ...prev, [matchId]: updatedEntries }
+    })
+  }
+
+  function removeStatEntry(matchId: number, entryId: string) {
+    setStatsDraft(prev => ({
+      ...prev,
+      [matchId]: (prev[matchId] || []).filter(e => e.id !== entryId)
+    }))
+  }
+
   const currentMatchday = matchdays.find( md => md.id === selectedMatchday?.id)
 
 async function handleSave() {
@@ -61,6 +145,30 @@ async function handleSave() {
     setSaveSuccess(false)
 
     await updateMatches(currentMatchday.games)
+
+    const allEntries: StatEntry[] = Object.values(statsDraft).flat()
+    const perPlayer: Record<number, PlayerStatsDelta> = {}
+    allEntries.forEach(entry => {
+      if (!perPlayer[entry.playerId]) {
+        perPlayer[entry.playerId] = {
+          playerId: entry.playerId,
+          teamId: entry.teamId,
+          touchdown: 0,
+          touchdown_pass: 0,
+          sacks: 0,
+          interceptions: 0
+        }
+      }
+      perPlayer[entry.playerId][entry.statKey] += entry.amount
+    })
+
+    const statEntries = Object.values(perPlayer)
+    if (statEntries.length) {
+      await addIndividualStatsDeltas(category.id, statEntries)
+    }
+
+    setStatsDraft({})
+    await loadRostersAndStats()
 
     setSaveSuccess(true)
 
@@ -83,9 +191,15 @@ async function handleSave() {
 
       <Header league={league}/>
       <main className="matchday-editor-container">
+        <div className="matchday-editor-intro">
+          <h2>Registrar Resultados</h2>
+          <p>Elige la jornada, captura el marcador de cada partido y marca cuáles ya terminaron.</p>
+        </div>
+
         <CategorySelector categories={categories} active={category} onChange={setCategory} />
         <MatchdaySelector matchdays={matchdays} value={selectedMatchday} onChange={setSelectedMatchday}/>
-        {currentMatchday?.games?.length > 0 && (
+
+        {currentMatchday ? (
           <MatchList
             matches={currentMatchday.games}
             onChange={updatedMatch => {
@@ -102,9 +216,31 @@ async function handleSave() {
                 )
               )
             }}
+            teams={teams}
+            statsDraft={statsDraft}
+            statsTotals={statsTotals}
+            onAddStatEntry={addStatEntry}
+            onRemoveStatEntry={removeStatEntry}
           />
+        ) : (
+          <p className="matchday-editor-empty">
+            Selecciona una jornada para registrar sus resultados
+          </p>
         )}
-        <button className="save-button" onClick={handleSave}> Guardar cambios</button>
+
+        <div className="save-action">
+          {saveSuccess && <span className="save-success">✓ Cambios guardados</span>}
+          {!saveSuccess && !currentMatchday?.games?.length && (
+            <span className="save-hint">Selecciona una jornada con partidos para poder guardar</span>
+          )}
+          <button
+            className="save-button"
+            onClick={handleSave}
+            disabled={saving || !currentMatchday?.games?.length}
+          >
+            {saving ? 'Guardando...' : 'Guardar cambios'}
+          </button>
+        </div>
       </main>
       <footer className="app-footer">
       © {new Date().getFullYear()} Liga · Todos los derechos reservados

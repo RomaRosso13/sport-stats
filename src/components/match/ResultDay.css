@@ -1,0 +1,148 @@
+.results-day {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.results-day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.day-title h3 {
+  margin: 0 0 2px;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  color: #0f172a;
+}
+
+.day-date {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.results-day-summary {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.summary-pill {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.summary-pill.total {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.summary-pill.finished {
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.summary-pill.pending {
+  background: #fff7ed;
+  color: #b45309;
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 16px;
+}
+
+.bye-section {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px dashed #e5e7eb;
+  font-size: 13px;
+  font-weight: 700;
+  color: #374151;
+}
+
+.bye-label {
+  font-weight: 600;
+  margin-right: 6px;
+}
+
+.bye-teams {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.bye-team {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f9fafb;
+  padding: 4px 8px;
+  border-radius: 999px;
+}
+
+.bye-team img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+@media (max-width: 768px) {
+  .results-day {
+    padding: 16px;
+    margin-bottom: 18px;
+  }
+
+  .day-title h3 {
+    font-size: 16px;
+  }
+
+  .day-date {
+    font-size: 11px;
+  }
+
+  .results-grid {
+    gap: 14px;
+  }
+}
+
+@media (max-width: 640px) {
+  .results-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .bye-section {
+    margin-top: 14px;
+    padding-top: 10px;
+    font-size: 12px;
+  }
+
+  .bye-teams {
+    gap: 8px;
+  }
+
+  .bye-team {
+    padding: 3px 7px;
+    gap: 5px;
+    font-size: 12px;
+  }
+
+  .bye-team img {
+    width: 16px;
+    height: 16px;
+  }
+}

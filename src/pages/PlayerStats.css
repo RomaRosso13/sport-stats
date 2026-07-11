@@ -1,0 +1,32 @@
+/* Layout general */
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.player-stats-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.player-stats-title {
+  margin: 32px 0 20px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* Footer fijo abajo */
+.app-footer {
+  height: 40px;
+  flex-shrink: 0;
+  border-top: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: #6b7280;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

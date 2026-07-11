@@ -1,7 +1,54 @@
 .app-layout {
-  height: 100vh;          /* ocupa toda la pantalla */
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+.matchday-creator-intro {
+  padding: 24px 24px 0;
+}
+
+.matchday-creator-intro h2 {
+  margin: 0 0 4px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.matchday-creator-intro p {
+  margin: 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.save-action {
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 16px 24px 32px;
+}
+
+.save-hint,
+.save-success {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.save-hint {
+  color: #6b7280;
+  background: #ffffff;
+}
+
+.save-success {
+  color: #166534;
+  background: #f0fdf4;
 }
 
 .app-footer {
@@ -14,4 +61,69 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Botón guardar */
+.create-button {
+  padding: 14px 20px;
+  border-radius: 999px;
+
+  background: var(--accent);
+  color: white;
+
+  font-size: 0.9rem;
+  font-weight: 700;
+  white-space: nowrap;
+
+  border: none;
+  cursor: pointer;
+
+  box-shadow:
+    0 12px 30px rgba(var(--accent-rgb), 0.4);
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background-color 0.2s ease;
+}
+
+/* Hover */
+.create-button:hover:not(:disabled) {
+  background-color: var(--accent-dark);
+  transform: translateY(-2px);
+  box-shadow:
+    0 16px 36px rgba(var(--accent-rgb), 0.5);
+}
+
+/* Active */
+.create-button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow:
+    0 10px 24px rgba(var(--accent-rgb), 0.4);
+}
+
+.create-button:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .save-action {
+    padding: 16px;
+    align-items: stretch;
+  }
+
+  .save-hint,
+  .save-success {
+    text-align: center;
+    white-space: normal;
+  }
+
+  .create-button {
+    padding: 12px 18px;
+    font-size: 0.85rem;
+    width: 100%;
+  }
 }

@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { getLeagueBySlug } from "../services/league.service"
+import { applyAccentColor } from "../utils/applyAccentColor"
+import { applyLeagueBranding } from "../utils/applyLeagueBranding"
 
 const LeagueContext = createContext(null)
 
@@ -26,6 +28,14 @@ export function LeagueProvider({ children }) {
 
     loadLeague()
   }, [leagueSlug])
+
+  useEffect(() => {
+    applyAccentColor(league?.primary_color)
+  }, [league?.primary_color])
+
+  useEffect(() => {
+    applyLeagueBranding(league?.name, league?.image_url)
+  }, [league?.name, league?.image_url])
 
   return (
     <LeagueContext.Provider value={{ league, loading }}>

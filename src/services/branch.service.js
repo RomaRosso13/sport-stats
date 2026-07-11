@@ -1,11 +1,8 @@
 import { supabase } from '../libs/supabase'
+import { runQuery } from '../libs/supabaseQuery'
 
 export async function getBranchByLeagueId(leagueId) {
-  const { data, error } = await supabase
-    .from('Branch')
-    .select('*')
-    .eq('league_id', leagueId)
-
-  if (error) throw error
-  return data
+  return runQuery(
+    supabase.from('Branch').select('*').eq('league_id', leagueId)
+  )
 }
