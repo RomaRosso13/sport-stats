@@ -79,6 +79,11 @@
 /* Menú */
 .nav {
   position: relative;
+  /* siempre al extremo derecho de .header-right, sin importar si hay
+     mensaje de bienvenida/botón de sesión a su lado, para que el
+     dropdown (anclado a este elemento) no quede desplazado a la
+     izquierda y termine fuera de la pantalla */
+  order: 1;
 }
 
 .menu-btn {
