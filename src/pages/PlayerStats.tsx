@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import Header from "../components/common/Header"
+import Footer from '../components/common/Footer'
 import CategorySwitcher from "../components/filters/CategorySwitcher"
 import PlayerStatsTable from "../components/team/PlayerStatsTable"
 import Loader from '../components/common/Loader'
@@ -86,9 +87,7 @@ function PlayerStats() {
           />
         ))}
       </main>
-      <footer className="app-footer">
-        © {new Date().getFullYear()} Liga · Todos los derechos reservados
-      </footer>
+      <Footer />
     </div>
   )
 }

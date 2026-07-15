@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import Header from "../components/common/Header"
+import Footer from '../components/common/Footer'
 import CategorySwitcher from "../components/filters/CategorySwitcher"
 import PlayoffBracket from "../components/match/PlayoffBracket"
 import Loader from '../components/common/Loader'
@@ -105,9 +106,7 @@ function Playoffs() {
           <PlayoffBracket matchesByStage={matchesByStage} />
         )}
       </main>
-      <footer className="app-footer">
-        © {new Date().getFullYear()} Liga · Todos los derechos reservados
-      </footer>
+      <Footer />
     </div>
   )
 }

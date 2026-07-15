@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import './MatchdayCreator.css'
 import Header from '../../components/common/Header'
+import Footer from '../../components/common/Footer'
 import MatchdayCreatorHeader from '../../components/Admin/MatchdayCreatorHeader'
 import MatchdayMatchesEditor from '../../components/Admin/MatchdayMatchesEditor'
 import Loader from '../../components/common/Loader'
@@ -84,9 +85,7 @@ function MatchDayCreator () {
         </button>
       </div>
 
-      <footer className="app-footer">
-        © {new Date().getFullYear()} Liga · Todos los derechos reservados
-      </footer>
+      <Footer />
     </div>
   )
 }

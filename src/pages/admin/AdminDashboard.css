@@ -154,18 +154,6 @@
   text-align: center;
 }
 
-.app-footer {
-  height: 40px;
-  flex-shrink: 0;
-  border-top: 1px solid #e5e7eb;
-  background: #ffffff;
-  color: #6b7280;
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 @media (max-width: 640px) {
   .admin-dashboard-container {
     padding: 16px;

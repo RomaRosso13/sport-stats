@@ -6,6 +6,7 @@ import { useLeagueMembership } from '../../hooks/useLeagueMembership'
 import MatchdaySelector from '../../components/Admin/MatchdaySelector'
 import MatchList from '../../components/Admin/MatchList'
 import Header from '../../components/common/Header';
+import Footer from '../../components/common/Footer';
 import CategorySwitcher from '../../components/filters/CategorySwitcher';
 import Loader from '../../components/common/Loader';
 import PageWrapper from '../../components/common/PageWrapper';
@@ -271,9 +272,7 @@ async function handleSave() {
           </button>
         </div>
       </main>
-      <footer className="app-footer">
-      © {new Date().getFullYear()} Liga · Todos los derechos reservados
-    </footer>
+      <Footer />
     </div>
   )
 }

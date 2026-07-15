@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { useLeague } from '../../context/LeagueContext'
 
 import Header from '../../components/common/Header'
+import Footer from '../../components/common/Footer'
 import BranchManagerCard from '../../components/Admin/BranchManagerCard'
 import BranchFormModal from '../../components/Admin/BranchFormModal'
 import FieldFormModal from '../../components/Admin/FieldFormModal'
@@ -166,9 +167,7 @@ function VenueManager() {
         />
       )}
 
-      <footer className="app-footer">
-        © {new Date().getFullYear()} Liga · Todos los derechos reservados
-      </footer>
+      <Footer />
     </div>
   )
 }

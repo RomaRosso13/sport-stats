@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useState } from "react"
 
 import Header from "../components/common/Header"
+import Footer from '../components/common/Footer'
 import CalendarDay from "../components/calendar/CalendarDay"
 import Loader from '../components/common/Loader'
 import PageWrapper from '../components/common/PageWrapper'
@@ -123,9 +124,7 @@ function Calendar() {
         )}
       </main>
 
-      <footer className="app-footer">
-        © {new Date().getFullYear()} Liga · Todos los derechos reservados
-      </footer>
+      <Footer />
     </div>
   )
 }

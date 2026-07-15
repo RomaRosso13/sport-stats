@@ -4,6 +4,7 @@ import { useLeague } from '../../context/LeagueContext'
 import { useCategory } from '../../context/CategoryContext'
 
 import Header from '../../components/common/Header'
+import Footer from '../../components/common/Footer'
 import CategorySwitcher from '../../components/filters/CategorySwitcher'
 import TeamManagerCard from '../../components/Admin/TeamManagerCard'
 import TeamFormModal from '../../components/Admin/TeamFormModal'
@@ -167,9 +168,7 @@ function TeamManager() {
         />
       )}
 
-      <footer className="app-footer">
-        © {new Date().getFullYear()} Liga · Todos los derechos reservados
-      </footer>
+      <Footer />
     </div>
   )
 }

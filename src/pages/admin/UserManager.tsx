@@ -4,6 +4,7 @@ import { useLeague } from '../../context/LeagueContext'
 import { useAuth } from '../../context/AuthContext'
 
 import Header from '../../components/common/Header'
+import Footer from '../../components/common/Footer'
 import AddUserModal from '../../components/Admin/AddUserModal'
 
 import {
@@ -154,9 +155,7 @@ function UserManager() {
         />
       )}
 
-      <footer className="app-footer">
-        © {new Date().getFullYear()} Liga · Todos los derechos reservados
-      </footer>
+      <Footer />
     </div>
   )
 }

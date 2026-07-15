@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import html2canvas from 'html2canvas'
 
 import Header from "../components/common/Header"
+import Footer from '../components/common/Footer'
 import CategorySwitcher from "../components/filters/CategorySwitcher"
 import PositionTable from "../components/team/PositionTable"
 import Loader from '../components/common/Loader'
@@ -134,9 +135,7 @@ function Standings() {
         <PositionTable table={calculatedTable} />
       </div>
     </main>
-    <footer className="app-footer">
-      © {new Date().getFullYear()} Liga · Todos los derechos reservados
-    </footer>
+    <Footer />
   </div>
   )
 }

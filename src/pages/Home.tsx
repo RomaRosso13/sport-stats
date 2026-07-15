@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useEffect } from 'react'
 
 import Header from '../components/common/Header'
+import Footer from '../components/common/Footer'
 import PositionTable from '../components/team/PositionTable'
 import NextGameDay from '../components/calendar/NextGameDay'
 import RecentResults from '../components/calendar/RecentResults'
@@ -132,9 +133,7 @@ return (
       </div>
     </main>
 
-    <footer className="app-footer">
-      © {new Date().getFullYear()} Liga · Todos los derechos reservados
-    </footer>
+    <Footer />
   </div>
 )
 

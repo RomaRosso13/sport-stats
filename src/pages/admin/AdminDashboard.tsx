@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import Header from '../../components/common/Header'
+import Footer from '../../components/common/Footer'
 import Loader from '../../components/common/Loader'
 import PageWrapper from '../../components/common/PageWrapper'
 
@@ -239,9 +240,7 @@ function AdminDashboard() {
         </section>
       </main>
 
-      <footer className="app-footer">
-        © {new Date().getFullYear()} Liga · Todos los derechos reservados
-      </footer>
+      <Footer />
     </div>
   )
 }
