@@ -5,6 +5,7 @@ import TeamStats from "./TeamStats"
 import PlayerRow from "../player/PlayerRow"
 
 import { calculateTeamStats } from "../../utils/calculateTeamStats"
+import { sortPlayersByNumber } from "../../utils/sortPlayers"
 
 import "./TeamCard.css"
 
@@ -12,6 +13,7 @@ function TeamCard({ team, matchdays }) {
   const { leagueSlug } = useParams()
   const [open, setOpen] = useState(false)
   const stats = calculateTeamStats(team.name, matchdays)
+  const sortedPlayers = sortPlayersByNumber(team.Player || [])
 
   return (
     <div className="team-card">
@@ -41,12 +43,12 @@ function TeamCard({ team, matchdays }) {
         onClick={() => setOpen(!open)}
         aria-expanded={open}
       >
-        {open ? "− Ocultar jugadores" : `+ Ver jugadores (${team.Player?.length || 0})`}
+        {open ? "− Ocultar jugadores" : `+ Ver jugadores (${sortedPlayers.length})`}
       </button>
 
       <div className={`players-section ${open ? "open" : ""}`}>
-        {team.Player && team.Player.length > 0 ? (
-          team.Player.map(player => (
+        {sortedPlayers.length > 0 ? (
+          sortedPlayers.map(player => (
             <PlayerRow key={player.id} player={player} />
           ))
         ) : (

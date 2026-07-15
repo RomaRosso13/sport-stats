@@ -19,6 +19,7 @@ import { getIndividualStatsByCategory } from '../services/individual_stats.servi
 
 import { calculateTeamStats } from '../utils/calculateTeamStats'
 import { classifyTopPlayersByStats } from '../utils/classifyTopPlayersByStats'
+import { sortPlayersByNumber } from '../utils/sortPlayers'
 
 import './TeamProfile.css'
 
@@ -93,7 +94,7 @@ function TeamProfile() {
     loadTeamProfile()
   }, [teamId])
 
-  const activePlayers = (team?.Player || []).filter(p => p.active)
+  const activePlayers = sortPlayersByNumber((team?.Player || []).filter(p => p.active))
 
   return (
     <div className="app-layout">

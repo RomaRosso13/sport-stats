@@ -7,7 +7,7 @@ import { getTeamsByCategoryIds } from '../../services/team.service.js'
 import { getBranchByLeagueId } from '../../services/branch.service.js'
 import { getFieldByBranchId } from '../../services/field.service.js'
 import { getMatchDaysByCategoryIds } from '../../services/matchday.service.js'
-import { getMatchesByMatchDayIds, updateMatchDetails } from '../../services/match.service.js'
+import { getMatchesByMatchDayIds, updateMatchDetails, deleteMatch } from '../../services/match.service.js'
 
 import { STAGE_OPTIONS, STAGE_LABELS } from '../../utils/matchStages'
 
@@ -48,6 +48,7 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches, reloadToken }) {
 
   const [editingMatchId, setEditingMatchId] = useState(null)
   const [savingEdit, setSavingEdit] = useState(false)
+  const [deletingId, setDeletingId] = useState(null)
 
   /* =========================
      CARGAR EQUIPOS, SEDES Y HISTORIAL DE PARTIDOS
@@ -355,6 +356,31 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches, reloadToken }) {
     }
   }
 
+  async function handleDeleteExisting(match) {
+    const homeName = match.local_team?.name || 'Local'
+    const awayName = match.visit_team?.name || 'Visitante'
+
+    if (!window.confirm(`¿Eliminar el partido ${homeName} vs ${awayName}? Esta acción no se puede deshacer.`)) {
+      return
+    }
+
+    try {
+      setDeletingId(match.id)
+      await deleteMatch(match.id)
+
+      setCategoryMatches(prev => prev.filter(m => m.id !== match.id))
+
+      if (String(editingMatchId) === String(match.id)) {
+        handleCancelEdit()
+      }
+    } catch (err) {
+      console.error('Error eliminando el partido', err)
+      alert('No se pudo eliminar el partido')
+    } finally {
+      setDeletingId(null)
+    }
+  }
+
   // El equipo de referencia para la ayuda de rivales es el local si ya se
   // eligió; si no, cae al visitante. Elegir una sugerencia llena el otro campo.
   const referenceIsHome = !!draftMatch.homeTeamId
@@ -603,13 +629,27 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches, reloadToken }) {
                     </span>
                   </div>
 
-                  <button
-                    type="button"
-                    className="edit-match-btn"
-                    onClick={() => handleEditExisting(match)}
-                  >
-                    Editar
-                  </button>
+                  <div className="existing-match-actions">
+                    <button
+                      type="button"
+                      className="edit-match-btn"
+                      onClick={() => handleEditExisting(match)}
+                      disabled={deletingId === match.id}
+                    >
+                      Editar
+                    </button>
+
+                    {match.status === 'Pendiente' && (
+                      <button
+                        type="button"
+                        className="delete-match-btn"
+                        onClick={() => handleDeleteExisting(match)}
+                        disabled={deletingId === match.id}
+                      >
+                        {deletingId === match.id ? 'Eliminando...' : 'Eliminar'}
+                      </button>
+                    )}
+                  </div>
                 </div>
               )
             })}

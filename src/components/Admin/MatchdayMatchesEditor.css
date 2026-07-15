@@ -256,8 +256,42 @@
   transition: background-color .15s ease;
 }
 
-.edit-match-btn:hover {
+.edit-match-btn:hover:not(:disabled) {
   background: var(--accent-soft-2);
+}
+
+.edit-match-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.existing-match-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.delete-match-btn {
+  height: 32px;
+  padding: 0 14px;
+  border-radius: 8px;
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #dc2626;
+  font-weight: 700;
+  font-size: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color .15s ease;
+}
+
+.delete-match-btn:hover:not(:disabled) {
+  background: #fee2e2;
+}
+
+.delete-match-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 /* Equipos */

@@ -20,6 +20,8 @@ export function classifyTopPlayersByStats( stats, statKeys = [], limit = 3) {
           number: row.player.number ?? null,
           photo: row.player.image_url ?? null,
           team: row.team?.name ?? null,
+          teamId: row.team?.id ?? null,
+          teamLogo: row.team?.logo_url ?? null,
           [statKey]: 0
         }
       }

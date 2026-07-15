@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { sortPlayersByNumber } from '../../utils/sortPlayers'
 import './PlayerRosterManager.css'
 
 function getInitial(name) {
@@ -23,7 +24,7 @@ function RosterAvatar({ imageUrl, name }) {
 }
 
 function PlayerRosterManager({ team, onAddPlayer, onEditPlayer, onToggleActive }) {
-  const players = team.Player || []
+  const players = sortPlayersByNumber(team.Player || [])
 
   return (
     <section className="roster-manager">

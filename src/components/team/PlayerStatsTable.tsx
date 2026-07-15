@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import './PlayerStatsTable.css'
 
+const INITIAL_LIMIT = 10
+
 function getInitial(name) {
   return name?.trim().charAt(0).toUpperCase() || "?"
 }
@@ -25,7 +27,10 @@ function PlayerAvatar({ photo, name }) {
 
 function PlayerStatsTable({ title, statKey, statLabel, data }) {
   const { leagueSlug } = useParams()
+  const [expanded, setExpanded] = useState(false)
   const hasData = data && data.length > 0
+  const hasMore = hasData && data.length > INITIAL_LIMIT
+  const visibleData = expanded ? data : (data || []).slice(0, INITIAL_LIMIT)
 
   return (
     <section className="player-stats-table">
@@ -41,36 +46,56 @@ function PlayerStatsTable({ title, statKey, statLabel, data }) {
       {!hasData ? (
         <p className="player-stats-empty">Aún no hay estadísticas registradas</p>
       ) : (
-        <div className="player-stats-wrapper">
-          <table className="tabla-jugadores">
-            <thead>
-              <tr>
-                <th>Pos</th>
-                <th>Jugador</th>
-                <th>Equipo</th>
-                <th>{statLabel}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((player, index) => (
-                <tr key={player.id} className={index === 0 ? 'leader' : ''}>
-                  <td>{index + 1}</td>
-                  <td className="jugador-cell">
-                    <Link to={`/${leagueSlug}/jugadores/${player.id}`} className="jugador-link">
-                      <PlayerAvatar photo={player.photo} name={player.name} />
-                      <span className="player-name">
-                        {player.number != null && <span className="player-number">#{player.number}</span>}
-                        {player.name}
-                      </span>
-                    </Link>
-                  </td>
-                  <td>{player.team}</td>
-                  <td className="stat-value">{player[statKey]}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <>
+          <ul className="player-stats-list">
+            {visibleData.map((player, index) => (
+              <li
+                key={player.id}
+                className={`player-stats-row ${index === 0 ? 'leader' : ''}`}
+              >
+                <span className={`stats-rank ${index < 3 ? `rank-${index + 1}` : ''}`}>
+                  {index + 1}
+                </span>
+
+                <Link to={`/${leagueSlug}/jugadores/${player.id}`} className="jugador-link">
+                  <PlayerAvatar photo={player.photo} name={player.name} />
+                  <span className="player-name">
+                    {player.number != null && <span className="player-number">#{player.number}</span>}
+                    {player.name}
+                  </span>
+                </Link>
+
+                {player.teamId ? (
+                  <Link to={`/${leagueSlug}/equipos/${player.teamId}`} className="stats-team-link">
+                    {player.teamLogo && (
+                      <img src={player.teamLogo} alt={player.team} className="stats-team-logo" />
+                    )}
+                    <span className="stats-team-name">{player.team}</span>
+                  </Link>
+                ) : (
+                  <span className="stats-team-link muted">
+                    <span className="stats-team-name">{player.team || '—'}</span>
+                  </span>
+                )}
+
+                <span className="stat-value">
+                  {player[statKey]}
+                  <span className="stat-value-label">{statLabel}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+
+          {hasMore && (
+            <button
+              type="button"
+              className="stats-toggle-btn"
+              onClick={() => setExpanded(prev => !prev)}
+            >
+              {expanded ? 'Ver menos' : `Ver los ${data.length} jugadores`}
+            </button>
+          )}
+        </>
       )}
     </section>
   )

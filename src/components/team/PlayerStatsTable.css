@@ -43,61 +43,78 @@
   margin: 0;
 }
 
-.player-stats-wrapper {
-  overflow-x: auto;
+/* =========================
+   LISTA DE FILAS
+   ========================= */
+.player-stats-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.tabla-jugadores {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: #ffffff;
+.player-stats-row {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1.3fr) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: #f8fafc;
+  transition: background-color .15s ease, transform .15s ease;
 }
 
-.tabla-jugadores th,
-.tabla-jugadores td {
-  padding: 12px;
-  text-align: center;
-  font-size: 0.85rem;
-  white-space: nowrap;
+.player-stats-row:hover {
+  background: #f1f5f9;
+  transform: translateX(2px);
 }
 
-.tabla-jugadores th {
-  color: #6b7280;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  border-bottom: 1px solid #e5e7eb;
+.player-stats-row.leader {
+  background: linear-gradient(90deg, #fffbeb, #f8fafc);
+  box-shadow: 0 0 0 1px #fde68a inset;
 }
 
-.tabla-jugadores tbody tr:nth-child(even) {
-  background-color: #f8fafc;
-}
-
-.tabla-jugadores tr.leader {
-  background-color: #d1fae5;
-  font-weight: bold;
-}
-
-.tabla-jugadores tr:hover {
-  background-color: #f3f4f6;
-}
-
-.tabla-jugadores td:nth-child(2) {
-  text-align: left;
-}
-
-.jugador-cell {
+/* Insignia de posición */
+.stats-rank {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-weight: 600;
-  white-space: nowrap;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  background: #e2e8f0;
+  color: #64748b;
+  flex-shrink: 0;
 }
 
+.stats-rank.rank-1 {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.45);
+}
+
+.stats-rank.rank-2 {
+  background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(100, 116, 139, 0.35);
+}
+
+.stats-rank.rank-3 {
+  background: linear-gradient(135deg, #fdba74, #ea580c);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(234, 88, 12, 0.35);
+}
+
+/* Jugador */
 .jugador-link {
   display: flex;
   align-items: center;
   gap: 10px;
+  min-width: 0;
   color: inherit;
   text-decoration: none;
 }
@@ -108,8 +125,8 @@
 
 .player-photo,
 .player-avatar {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 999px;
   object-fit: cover;
   flex-shrink: 0;
@@ -126,7 +143,12 @@
 }
 
 .player-name {
+  font-weight: 700;
+  font-size: 14px;
+  color: #0f172a;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .player-number {
@@ -135,10 +157,80 @@
   margin-right: 4px;
 }
 
+/* Equipo */
+.stats-team-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.stats-team-link:hover .stats-team-name {
+  text-decoration: underline;
+}
+
+.stats-team-link.muted {
+  color: #9ca3af;
+}
+
+.stats-team-logo {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.stats-team-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Valor de la estadística */
 .stat-value {
-  font-size: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.1;
+  font-size: 1.15rem;
   font-weight: 800;
   color: var(--accent);
+  white-space: nowrap;
+}
+
+.stat-value-label {
+  font-size: 9px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Botón ver más / ver menos */
+.stats-toggle-btn {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px dashed #d1d5db;
+  background: #f9fafb;
+  color: #374151;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+
+.stats-toggle-btn:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent-border-soft);
+  color: var(--accent-dark);
 }
 
 @media (max-width: 640px) {
@@ -146,15 +238,27 @@
     padding: 16px;
   }
 
-  .tabla-jugadores th,
-  .tabla-jugadores td {
-    padding: 8px;
-    font-size: 0.78rem;
+  .player-stats-row {
+    grid-template-columns: 26px minmax(0, 1fr) auto auto;
+    gap: 8px;
+    padding: 8px 10px;
+  }
+
+  .stats-team-name {
+    display: none;
   }
 
   .player-photo,
   .player-avatar {
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
+  }
+
+  .player-name {
+    font-size: 13px;
+  }
+
+  .stat-value {
+    font-size: 1rem;
   }
 }

@@ -102,6 +102,24 @@ export async function updateMatchDetails(matchId, { homeTeamId, awayTeamId, bran
   return result
 }
 
+export async function deleteMatch(matchId) {
+  // .select() fuerza a que la respuesta traiga las filas realmente borradas:
+  // si RLS bloquea el delete, Postgres no lanza error (solo afecta 0 filas),
+  // así que sin esto el fallo pasaría desapercibido y la UI lo daría por bueno.
+  const result = await runQuery(
+    supabase.from('Match').delete().eq('id', matchId).select(),
+    'No se pudo eliminar el partido.'
+  )
+
+  if (!result || result.length === 0) {
+    throw new Error('No se pudo eliminar el partido. Es posible que no tengas permisos suficientes.')
+  }
+
+  invalidate('getMatchesByMatchDayIds')
+  invalidate('getMatchById')
+  return result
+}
+
 export async function createMatches(matches) {
   const payload = matches.map(match => ({
     date: match.date,

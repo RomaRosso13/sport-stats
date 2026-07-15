@@ -12,7 +12,8 @@ const STATS_SELECT = `
   ),
   team:team_id (
     id,
-    name
+    name,
+    logo_url
   )
 `
 

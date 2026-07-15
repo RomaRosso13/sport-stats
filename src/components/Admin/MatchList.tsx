@@ -1,4 +1,5 @@
 import MatchRow from './MatchRow'
+import { sortPlayersByNumber } from '../../utils/sortPlayers'
 
 function MatchList({
   matches = [],
@@ -18,7 +19,7 @@ function MatchList({
 
   function getActivePlayers(teamId) {
     const team = teams.find(t => String(t.id) === String(teamId))
-    return (team?.Player || []).filter(p => p.active)
+    return sortPlayersByNumber((team?.Player || []).filter(p => p.active))
   }
 
   return (
