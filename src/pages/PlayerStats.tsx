@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import Header from "../components/common/Header"
-import CategorySelector from "../components/filters/CategorySelector"
+import CategorySwitcher from "../components/filters/CategorySwitcher"
 import PlayerStatsTable from "../components/team/PlayerStatsTable"
 import Loader from '../components/common/Loader'
 import PageWrapper from '../components/common/PageWrapper'
@@ -73,7 +73,7 @@ function PlayerStats() {
       <PageWrapper loading={showLoader}/>
       <Header league={league}/>
       <main className="player-stats-container">
-        <CategorySelector categories={categories} active={category} onChange={setCategory}/>
+        <CategorySwitcher categories={categories} active={category} onChange={setCategory}/>
         <h2 className="player-stats-title">Estadísticas Individuales</h2>
 
         {STAT_SECTIONS.map(section => (

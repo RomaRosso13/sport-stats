@@ -99,6 +99,24 @@
   color: #9ca3af;
 }
 
+.new-player-form {
+  display: flex;
+  align-items: end;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px dashed var(--accent-border-soft, #d1d5db);
+  background: var(--accent-soft, #f8fafc);
+}
+
+.new-player-error {
+  flex-basis: 100%;
+  font-size: 12px;
+  color: #ef4444;
+}
+
 .add-stat-btn {
   height: 38px;
   padding: 0 16px;

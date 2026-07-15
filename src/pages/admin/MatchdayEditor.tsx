@@ -6,7 +6,7 @@ import { useLeagueMembership } from '../../hooks/useLeagueMembership'
 import MatchdaySelector from '../../components/Admin/MatchdaySelector'
 import MatchList from '../../components/Admin/MatchList'
 import Header from '../../components/common/Header';
-import CategorySelector from '../../components/filters/CategorySelector';
+import CategorySwitcher from '../../components/filters/CategorySwitcher';
 import Loader from '../../components/common/Loader';
 import PageWrapper from '../../components/common/PageWrapper';
 
@@ -146,6 +146,16 @@ function EditMatchday() {
     }))
   }
 
+  function handlePlayerCreated(newPlayer) {
+    setTeams(prev =>
+      prev.map(team =>
+        team.id === newPlayer.team_id
+          ? { ...team, Player: [...(team.Player || []), newPlayer] }
+          : team
+      )
+    )
+  }
+
   const currentMatchday = matchdays.find( md => md.id === selectedMatchday?.id)
 
 async function handleSave() {
@@ -212,7 +222,7 @@ async function handleSave() {
           <p>Elige la jornada, captura el marcador de cada partido y marca cuáles ya terminaron.</p>
         </div>
 
-        <CategorySelector categories={categories} active={category} onChange={setCategory} />
+        <CategorySwitcher categories={categories} active={category} onChange={setCategory} label="Editando categoría" />
         <MatchdaySelector matchdays={matchdays} value={selectedMatchday} onChange={setSelectedMatchday}/>
 
         {currentMatchday ? (
@@ -238,6 +248,7 @@ async function handleSave() {
             statsByMatch={statsByMatch}
             onAddStatEntry={addStatEntry}
             onRemoveStatEntry={removeStatEntry}
+            onPlayerCreated={handlePlayerCreated}
             isStaff={isStaff}
           />
         ) : (

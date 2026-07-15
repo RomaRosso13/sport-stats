@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { useSeason } from '../../context/SeasonContext'
 import { useAuth } from "../../context/AuthContext"
@@ -18,6 +18,20 @@ function Header({ league }) {
 
   const [menuOpen, setMenuOpen] = useState(false)
   const [showLoginForm, setShowLoginForm] = useState(false)
+  const authRef = useRef(null)
+
+  useEffect(() => {
+    if (!showLoginForm) return
+
+    function handleClickOutside(e) {
+      if (authRef.current && !authRef.current.contains(e.target)) {
+        setShowLoginForm(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [showLoginForm])
 
   if (loading) return null
   if (!league) return null
@@ -149,16 +163,18 @@ async function handleLogout() {
 
         {/* AUTH */}
         {!user ? (
-          !showLoginForm ? (
+          <div className="auth-popover-wrapper" ref={authRef}>
             <button
               className="auth-btn"
-              onClick={() => setShowLoginForm(true)}
+              onClick={() => setShowLoginForm(prev => !prev)}
             >
               Inicia sesión
             </button>
-          ) : (
-            <LoginForm onClose={() => setShowLoginForm(false)} />
-          )
+
+            {showLoginForm && (
+              <LoginForm onClose={() => setShowLoginForm(false)} />
+            )}
+          </div>
         ) : (
           <div className="user-actions">
             <span className="user-name">

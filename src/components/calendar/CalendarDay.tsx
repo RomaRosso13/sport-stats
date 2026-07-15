@@ -1,14 +1,20 @@
 import type { CSSProperties } from "react"
 import "./CalendarDay.css"
 
+const CATEGORY_LABELS = {
+  Mixto: "Mixto",
+  Femenil: "Femenil",
+  Varonil: "Varonil"
+}
+
 function CalendarDay({ matchday }) {
 
   /* =========================
      CONFIG
   ========================= */
-  const START_HOUR = 7
-  const END_HOUR = 12
-  const STEP = 20
+  const START_HOUR = 20
+  const END_HOUR = 24
+  const STEP = 15
   const MATCH_DURATION = 40
 
   /* =========================
@@ -186,17 +192,26 @@ function CalendarDay({ matchday }) {
                         const isFinished = match.status === "Terminado"
                         const localWon = isFinished && match.local_points > match.visit_points
                         const visitWon = isFinished && match.visit_points > match.local_points
+                        const categoryType = match.category?.type
+                        const categoryClass = categoryType ? categoryType.toLowerCase() : ""
 
                         return (
                           <div
                             key={match.id}
-                            className={`match-item ${isFinished ? "finished" : "pending"}`}
+                            className={`match-item ${isFinished ? "finished" : "pending"} ${categoryClass ? `cat-${categoryClass}` : ""}`}
                             style={{
                               transform: `translateX(${offset * 100}%)`
                             }}
                           >
                             <div className="match-text">
-                              <div className="match-hour">{match.hour.slice(0, 5)}</div>
+                              <div className="match-meta-row">
+                                {categoryType && (
+                                  <span className={`category-tag cat-${categoryClass}`}>
+                                    {CATEGORY_LABELS[categoryType] || categoryType}
+                                  </span>
+                                )}
+                                <span className="match-hour">{match.hour.slice(0, 5)}</span>
+                              </div>
 
                               <div className={`team-row ${localWon ? "winner" : ""}`}>
                                 <img src={match.local_team.logo_url} alt="" className="team-logo" />

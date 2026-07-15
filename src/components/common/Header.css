@@ -28,23 +28,39 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 68px;
-  height: 68px;
-  padding: 7px;
-  border-radius: 18px;
+  width: 78px;
+  height: 78px;
+  padding: 8px;
+  border-radius: 20px;
   background: #ffffff;
   box-shadow:
-    0 8px 18px rgba(0, 0, 0, 0.28),
-    0 0 0 2px rgba(var(--accent-rgb), 0.55);
+    0 10px 24px rgba(0, 0, 0, 0.32),
+    0 0 0 3px rgba(var(--accent-rgb), 0.65),
+    0 0 26px rgba(var(--accent-rgb), 0.4);
 }
 
 .liga-nombre {
-  font-size: 2rem;
+  position: relative;
+  display: inline-block;
+  font-size: 2.3rem;
   font-weight: 900;
   line-height: 1.05;
   margin: 0;
-  letter-spacing: -0.6px;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  padding-bottom: 10px;
+  letter-spacing: -0.8px;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
+}
+
+.liga-nombre::after {
+  content: '';
+  position: absolute;
+  left: 1px;
+  bottom: 0;
+  width: 46px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--accent);
+  box-shadow: 0 0 12px rgba(var(--accent-rgb), 0.7);
 }
 
 .user-actions {
@@ -53,11 +69,10 @@
   gap: 10px; /* ajusta a gusto */
 }
 
-
-.liga-temporada {
-  font-size: 0.8rem;
-  opacity: 0.8;
+.auth-popover-wrapper {
+  position: relative;
 }
+
 
 .header-right {
   display: flex;
@@ -230,17 +245,6 @@
 }
 
 
-/* Botón login (si no lo tenías estilado) */
-.login-btn {
-  background: white;
-  color: var(--accent);
-  border: none;
-  padding: 6px 14px;
-  border-radius: 999px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
 .league-logo {
   width: 100%;
   height: 100%;
@@ -259,7 +263,7 @@
 .league-info {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 2px;
 }
 
 /* ===============================
@@ -310,16 +314,6 @@
     padding: 8px 12px;
     font-size: 0.8rem;
     white-space: nowrap;
-  }
-
-  .inline-login {
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    row-gap: 6px;
-  }
-
-  .inline-login input {
-    width: 130px;
   }
 
   .dropdown-menu,

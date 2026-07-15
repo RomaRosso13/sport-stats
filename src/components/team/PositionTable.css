@@ -95,14 +95,14 @@
 @media (max-width: 640px) {
   .tabla-posiciones th:nth-child(3),
   .tabla-posiciones td:nth-child(3), /* PJ */
-  .tabla-posiciones th:nth-child(6),
-  .tabla-posiciones td:nth-child(6), /* PF */
   .tabla-posiciones th:nth-child(7),
-  .tabla-posiciones td:nth-child(7), /* PC */
+  .tabla-posiciones td:nth-child(7), /* PF */
   .tabla-posiciones th:nth-child(8),
-  .tabla-posiciones td:nth-child(8), /* DIF */
+  .tabla-posiciones td:nth-child(8), /* PC */
   .tabla-posiciones th:nth-child(9),
-  .tabla-posiciones td:nth-child(9) { /* DIF */
+  .tabla-posiciones td:nth-child(9), /* DIF */
+  .tabla-posiciones th:nth-child(10),
+  .tabla-posiciones td:nth-child(10) { /* PROMEDIO */
     display: none;
   }
 }

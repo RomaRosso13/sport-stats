@@ -155,12 +155,23 @@
 
 .match-item.pending {
   border-left-color: #f59e0b;
-  background: linear-gradient(180deg, #fffbf5, #ffffff);
 }
 
 .match-item.finished {
   border-left-color: #16a34a;
-  background: linear-gradient(180deg, #f6fdf8, #ffffff);
+}
+
+/* La categoría tiñe toda la tarjeta para distinguirla de un vistazo */
+.match-item.cat-femenil {
+  background: linear-gradient(180deg, #fdf2f8, #fce7f3);
+}
+
+.match-item.cat-varonil {
+  background: linear-gradient(180deg, #eff6ff, #dbeafe);
+}
+
+.match-item.cat-mixto {
+  background: linear-gradient(180deg, #ecfdf5, #d1fae5);
 }
 
 /* TEXTO */
@@ -173,11 +184,43 @@
   text-align: center;
 }
 
-/* Hora exacta */
+/* Hora exacta + categoría */
+.match-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+}
+
 .match-hour {
   font-size: 10px;
   font-weight: 700;
   color: #94a3b8;
+}
+
+.category-tag {
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 2px 7px;
+  border-radius: 999px;
+  white-space: nowrap;
+  /* Fondo translúcido para que se lea bien sobre la tarjeta ya teñida por categoría */
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.category-tag.cat-femenil {
+  color: #be185d;
+}
+
+.category-tag.cat-varonil {
+  color: #1d4ed8;
+}
+
+.category-tag.cat-mixto {
+  color: #047857;
 }
 
 /* Fila de equipo */

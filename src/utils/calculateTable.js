@@ -41,11 +41,11 @@ export function calculateTable(matches, teams = []) {
 
       if (local_points > visit_points) {
         local.g += 1
-        local.puntos += 3
+        local.puntos += 2
         visit.p += 1
       } else if (visit_points > local_points) {
         visit.g += 1
-        visit.puntos += 3
+        visit.puntos += 2
         local.p += 1
       } else {
         // empate

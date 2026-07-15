@@ -76,9 +76,35 @@ export async function updateMatches(matches, currentUserId) {
   invalidate('getMatchById')
 }
 
-export async function createMatches(matches, matchday) {
+// Edita los datos de programación de un partido ya guardado (equipos, sede,
+// cancha, hora, fase, categoría/jornada) — distinto de updateMatches, que solo
+// toca marcador y estatus al registrar resultados.
+export async function updateMatchDetails(matchId, { homeTeamId, awayTeamId, branchId, field, time, type, matchdayId }) {
+  const result = await runQuery(
+    supabase
+      .from('Match')
+      .update({
+        local_team_id: homeTeamId,
+        visit_team_id: awayTeamId,
+        branch_id: Number(branchId),
+        field_id: Number(field),
+        hour: time,
+        type: type || 'Regular',
+        matchday_id: matchdayId
+      })
+      .eq('id', matchId)
+      .select(MATCH_SELECT)
+      .single()
+  )
+
+  invalidate('getMatchesByMatchDayIds')
+  invalidate('getMatchById')
+  return result
+}
+
+export async function createMatches(matches) {
   const payload = matches.map(match => ({
-    date: matchday.date,
+    date: match.date,
     hour: match.time,
     type: match.type || 'Regular',
     local_team_id: match.homeTeamId,
@@ -86,7 +112,7 @@ export async function createMatches(matches, matchday) {
     status: 'Pendiente',
     branch_id: Number(match.branchId),
     field_id: Number(match.field),
-    matchday_id: matchday.id
+    matchday_id: match.matchdayId
   }))
 
   const result = await runQuery(

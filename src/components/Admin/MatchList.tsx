@@ -9,6 +9,7 @@ function MatchList({
   statsByMatch = {},
   onAddStatEntry,
   onRemoveStatEntry,
+  onPlayerCreated,
   isStaff = false
 }) {
   if (!matches.length) {
@@ -34,6 +35,7 @@ function MatchList({
           savedStats={statsByMatch[match.id] || []}
           onAddStatEntry={onAddStatEntry}
           onRemoveStatEntry={onRemoveStatEntry}
+          onPlayerCreated={onPlayerCreated}
           isStaff={isStaff}
         />
       ))}

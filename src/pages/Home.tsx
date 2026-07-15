@@ -6,7 +6,7 @@ import PositionTable from '../components/team/PositionTable'
 import NextGameDay from '../components/calendar/NextGameDay'
 import RecentResults from '../components/calendar/RecentResults'
 import StatsTable from '../components/team/StatsTable'
-import CategorySelector from "../components/filters/CategorySelector"
+import CategorySwitcher from "../components/filters/CategorySwitcher"
 import Loader from '../components/common/Loader'
 import PageWrapper from '../components/common/PageWrapper'
 import LeagueNotFound from '../components/common/LeagueNotFound'
@@ -92,7 +92,7 @@ return (
     <Header league={league}/>
 
     <main className="home-container">
-      <CategorySelector
+      <CategorySwitcher
         categories={categories}
         active={category}
         onChange={setCategory}

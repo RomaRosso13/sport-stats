@@ -23,6 +23,30 @@ export async function getTeamsByCategoryId(categoryId) {
   )
 }
 
+export async function getTeamsByCategoryIds(categoryIds) {
+  const ids = Array.isArray(categoryIds) ? categoryIds : [categoryIds]
+  const sortedIds = [...ids].sort()
+
+  return cached('getTeamsByCategoryIds', [sortedIds], () =>
+    runQuery(
+      supabase
+        .from('Team')
+        .select(`
+          *,
+          Player (
+            id,
+            name,
+            position,
+            number,
+            image_url,
+            active
+          )
+        `)
+        .in('category_id', ids)
+    )
+  )
+}
+
 export async function getTeamById(teamId) {
   return cached('getTeamById', [teamId], () =>
     runQuery(
@@ -51,6 +75,7 @@ export async function getTeamById(teamId) {
 
 function invalidateTeamCaches() {
   invalidate('getTeamsByCategoryId')
+  invalidate('getTeamsByCategoryIds')
   invalidate('getTeamById')
 }
 

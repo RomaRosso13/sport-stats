@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useState } from "react"
 
 import Header from "../components/common/Header"
-import CategorySelector from "../components/filters/CategorySelector"
+import CategorySwitcher from "../components/filters/CategorySwitcher"
 import ResultsDay from "../components/match/ResultDay"
 import Loader from '../components/common/Loader'
 import PageWrapper from '../components/common/PageWrapper'
@@ -90,7 +90,7 @@ function Results() {
       <PageWrapper loading={showLoader}/>
       <Header league={league}/>
       <main className="results-container">
-        <CategorySelector categories={categories} active={category} onChange={setCategory}/>
+        <CategorySwitcher categories={categories} active={category} onChange={setCategory}/>
         <h2 className="results-title">Resultados</h2>
         {matchdaysWithResults.length === 0 ? (
           <p className="empty-results">Aún no hay resultados</p>

@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useState } from "react"
 
 import Header from "../components/common/Header"
-import CategorySelector from "../components/filters/CategorySelector"
+import CategorySwitcher from "../components/filters/CategorySwitcher"
 import TeamCard from "../components/team/TeamCard"
 import Loader from '../components/common/Loader'
 import PageWrapper from '../components/common/PageWrapper'
@@ -83,7 +83,7 @@ function Teams() {
     <PageWrapper loading={showLoader}/>
     <Header league={league}/>
     <main className="teams-container">
-      <CategorySelector categories={categories} active={category} onChange={setCategory}/>
+      <CategorySwitcher categories={categories} active={category} onChange={setCategory}/>
       <h2 className="teams-title">Equipos</h2>
         <div className="teams-grid">
           {teams.map(team => (

@@ -4,7 +4,7 @@ import { useLeague } from '../../context/LeagueContext'
 import { useCategory } from '../../context/CategoryContext'
 
 import Header from '../../components/common/Header'
-import CategorySelector from '../../components/filters/CategorySelector'
+import CategorySwitcher from '../../components/filters/CategorySwitcher'
 import TeamManagerCard from '../../components/Admin/TeamManagerCard'
 import TeamFormModal from '../../components/Admin/TeamFormModal'
 import PlayerFormModal from '../../components/Admin/PlayerFormModal'
@@ -109,7 +109,7 @@ function TeamManager() {
           <p>Crea equipos y administra sus rosters para {league?.name}</p>
         </div>
 
-        <CategorySelector categories={categories} active={category} onChange={setCategory}/>
+        <CategorySwitcher categories={categories} active={category} onChange={setCategory} label="Editando categoría"/>
 
         <div className="section-header">
           <h3>Equipos</h3>

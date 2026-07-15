@@ -41,6 +41,12 @@
   background: #f8fafc;
   border: 1px solid #eef1f5;
   border-radius: 14px;
+  transition: border-color .15s ease, background-color .15s ease;
+}
+
+.match-form.editing {
+  background: var(--accent-soft);
+  border-color: var(--accent-border-soft);
 }
 
 .match-form-row {
@@ -52,6 +58,11 @@
 .teams-row .field-group {
   flex: 1;
   min-width: 200px;
+}
+
+.teams-row .field-group.category-group {
+  flex: 0 0 170px;
+  min-width: 150px;
 }
 
 .details-row .field-group {
@@ -125,9 +136,42 @@
   transition: background-color .15s ease, transform .15s ease;
 }
 
-.add-match-btn:hover {
+.add-match-btn:hover:not(:disabled) {
   background: #15803d;
   transform: translateY(-1px);
+}
+
+.add-match-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.edit-match-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.cancel-edit-btn {
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #374151;
+  font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color .15s ease;
+}
+
+.cancel-edit-btn:hover:not(:disabled) {
+  background: #f3f4f6;
+}
+
+.cancel-edit-btn:disabled {
+  color: #9ca3af;
+  cursor: not-allowed;
 }
 
 /* Error del formulario */
@@ -172,6 +216,48 @@
   border-radius: 12px;
   background: #fff;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  border: 2px solid transparent;
+  transition: border-color .15s ease;
+}
+
+.match-row.editing {
+  border-color: var(--accent);
+}
+
+.status-pill {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.status-pill.pending {
+  background: #fff7ed;
+  color: #b45309;
+}
+
+.status-pill.review {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.edit-match-btn {
+  height: 32px;
+  padding: 0 14px;
+  border-radius: 8px;
+  border: 1px solid var(--accent-border-soft);
+  background: var(--accent-soft);
+  color: var(--accent-dark);
+  font-weight: 700;
+  font-size: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color .15s ease;
+}
+
+.edit-match-btn:hover {
+  background: var(--accent-soft-2);
 }
 
 /* Equipos */
@@ -201,6 +287,31 @@
   background: var(--accent-soft);
   color: var(--accent-dark);
   white-space: nowrap;
+}
+
+.category-tag {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 3px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.category-tag.cat-femenil {
+  background: #fce7f3;
+  color: #be185d;
+}
+
+.category-tag.cat-varonil {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.category-tag.cat-mixto {
+  background: #d1fae5;
+  color: #047857;
 }
 
 .match-teams .team {
@@ -270,6 +381,15 @@
 
   .add-match-btn {
     width: 100%;
+  }
+
+  .edit-match-actions {
+    width: 100%;
+  }
+
+  .edit-match-actions .add-match-btn,
+  .edit-match-actions .cancel-edit-btn {
+    flex: 1;
   }
 }
 

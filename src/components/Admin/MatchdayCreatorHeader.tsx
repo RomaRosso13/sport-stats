@@ -4,33 +4,59 @@ import { useLeague } from '../../context/LeagueContext'
 import { useCategory } from '../../context/CategoryContext'
 import { useSeason } from '../../context/SeasonContext'
 
-import { getMatchDaysByCategoryId, createMatchday } from '../../services/matchday.service.js'
+import { getMatchDaysByCategoryIds, createMatchdayForCategories } from '../../services/matchday.service.js'
 
 import './MatchdayCreatorHeader.css'
 
+const CATEGORY_LABELS = {
+  Mixto: 'Mixto',
+  Femenil: 'Femenil',
+  Varonil: 'Varonil'
+}
+
+// Cada jornada es compartida por todas las categorías activas de la
+// temporada: se agrupan los renglones de Matchday (uno por categoría) que
+// caen en la misma fecha, para tratarlos como una sola jornada en la UI.
+function groupMatchdaysByDate(matchdaysData) {
+  const byDate = new Map()
+
+  matchdaysData.forEach(md => {
+    if (!byDate.has(md.date)) {
+      byDate.set(md.date, { id: md.date, date: md.date, name: md.name, matchdaysByCategory: {} })
+    }
+    byDate.get(md.date).matchdaysByCategory[md.category_id] = md
+  })
+
+  return Array.from(byDate.values()).sort((a, b) => a.date.localeCompare(b.date))
+}
+
 function MatchdayCreatorHeader({ selectedMatchday, setSelectedMatchday }) {
   const { league, loading: leagueLoading } = useLeague()
-  const { categories, category, setCategory, categoryLoading } = useCategory()
+  const { categories, loading: categoriesLoading } = useCategory()
   const { season, loading: seasonLoading } = useSeason()
 
   const [matchdays, setMatchdays] = useState([])
   const [isSaving, setIsSaving] = useState(false)
 
-  /* Cargar jornadas por categoría */
+  /* Cargar jornadas compartidas por todas las categorías activas */
   useEffect(() => {
-    if (!category) return
+    if (!categories || categories.length === 0) {
+      setMatchdays([])
+      return
+    }
 
     async function loadMatchdays() {
-      const data = await getMatchDaysByCategoryId(category.id)
-      setMatchdays(data || [])
+      const categoryIds = categories.map(cat => cat.id)
+      const data = await getMatchDaysByCategoryIds(categoryIds)
+      setMatchdays(groupMatchdaysByDate(data || []))
     }
 
     loadMatchdays()
-  }, [category?.id])
+  }, [categories])
 
-  /* Resetear jornada al cambiar categoría */
+  /* Seleccionar la primera jornada disponible, o forzar la creación de una */
   useEffect(() => {
-    if (!category) return
+    if (!categories || categories.length === 0) return
 
     if (matchdays.length === 0) {
       setSelectedMatchday({
@@ -43,29 +69,14 @@ function MatchdayCreatorHeader({ selectedMatchday, setSelectedMatchday }) {
     } else {
       setSelectedMatchday(matchdays[0])
     }
-  }, [matchdays, category?.id])
-
-
-  /* Si no hay jornadas, forzar creación */
-  useEffect(() => {
-    if (!category) return
-
-    if (matchdays.length === 0) {
-      setSelectedMatchday({
-        id: 'new',
-        number: 1,
-        name: '',
-        date: '',
-        isDraft: true
-      })
-    }
-  }, [matchdays, category])
+  }, [matchdays, categories])
 
   const isNew = selectedMatchday?.id === 'new'
   const canCreate =
     isNew &&
     selectedMatchday.name?.trim() &&
-    selectedMatchday.date
+    selectedMatchday.date &&
+    categories.length > 0
 
   const handleCreateMatchday = async () => {
     if (!canCreate) return
@@ -73,10 +84,25 @@ function MatchdayCreatorHeader({ selectedMatchday, setSelectedMatchday }) {
     try {
       setIsSaving(true)
 
-      const newMatchday = await createMatchday(selectedMatchday.name, selectedMatchday.date, category.id)
+      const categoryIds = categories.map(cat => cat.id)
+      const createdRows = await createMatchdayForCategories(
+        selectedMatchday.name,
+        selectedMatchday.date,
+        categoryIds
+      )
 
-      setMatchdays(prev => [...prev, newMatchday])
-      setSelectedMatchday(newMatchday)
+      const matchdaysByCategory = {}
+      createdRows.forEach(row => { matchdaysByCategory[row.category_id] = row })
+
+      const newJornada = {
+        id: selectedMatchday.date,
+        date: selectedMatchday.date,
+        name: selectedMatchday.name,
+        matchdaysByCategory
+      }
+
+      setMatchdays(prev => [...prev, newJornada])
+      setSelectedMatchday(newJornada)
 
     } catch (err) {
       console.error('Error creando jornada', err)
@@ -104,28 +130,7 @@ function MatchdayCreatorHeader({ selectedMatchday, setSelectedMatchday }) {
       </div>
 
       <div className="context-group">
-        {/* Categoría */}
-        <div className="context-field">
-          <label>Categoría</label>
-          <select
-            value={category ? String(category.id) : ''}
-            onChange={(e) => {
-              const selected = categories.find(
-                cat => String(cat.id) === e.target.value
-              )
-              if (selected) setCategory(selected)
-            }}
-            disabled={categoryLoading || categories.length === 0}
-          >
-            {categories.map(cat => (
-              <option key={cat.id} value={String(cat.id)}>
-                {cat.type}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Jornada */}
+        {/* Jornada (compartida por todas las categorías activas) */}
         <div className="context-field">
           <label>Jornada</label>
           <select
@@ -152,7 +157,7 @@ function MatchdayCreatorHeader({ selectedMatchday, setSelectedMatchday }) {
                 setSelectedMatchday(existing)
               }
             }}
-            disabled={!category}
+            disabled={categoriesLoading || categories.length === 0}
           >
             {matchdays.map(md => (
               <option key={md.id} value={String(md.id)}>
@@ -175,6 +180,9 @@ function MatchdayCreatorHeader({ selectedMatchday, setSelectedMatchday }) {
       {isNew && (
         <div className="new-matchday-panel">
           <span className="new-matchday-panel-title">Nueva jornada</span>
+          <span className="new-matchday-panel-hint">
+            Estará disponible para: {categories.map(cat => CATEGORY_LABELS[cat.type] || cat.type).join(', ')}
+          </span>
 
           <div className="context-field">
             <label>

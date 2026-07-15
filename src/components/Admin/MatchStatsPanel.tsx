@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { createPlayer } from '../../services/player.service.js'
 import './MatchStatsPanel.css'
 
 const STAT_OPTIONS = [
@@ -13,6 +14,8 @@ const STAT_LABELS = STAT_OPTIONS.reduce((map, opt) => {
   return map
 }, {})
 
+const NEW_PLAYER_VALUE = '__new__'
+
 function TeamStatsColumn({
   matchId,
   side,
@@ -25,16 +28,65 @@ function TeamStatsColumn({
   draftEntries,
   statsTotals,
   onAddEntry,
-  onRemoveEntry
+  onRemoveEntry,
+  onPlayerCreated
 }) {
   const [playerId, setPlayerId] = useState('')
   const [statKey, setStatKey] = useState('touchdown')
   const [amount, setAmount] = useState<number | string>(1)
 
+  const [showNewPlayerForm, setShowNewPlayerForm] = useState(false)
+  const [newPlayerNumber, setNewPlayerNumber] = useState('')
+  const [newPlayerName, setNewPlayerName] = useState('')
+  const [creatingPlayer, setCreatingPlayer] = useState(false)
+  const [newPlayerError, setNewPlayerError] = useState('')
+
   const selectedPlayer = players.find(p => String(p.id) === String(playerId))
   const currentTotal = playerId
     ? (statsTotals[playerId]?.[statKey] || 0)
     : null
+
+  function handlePlayerSelectChange(value) {
+    if (value === NEW_PLAYER_VALUE) {
+      setShowNewPlayerForm(true)
+      setNewPlayerError('')
+      setPlayerId('')
+      return
+    }
+
+    setShowNewPlayerForm(false)
+    setPlayerId(value)
+  }
+
+  async function handleCreatePlayer() {
+    if (!newPlayerNumber.trim()) {
+      setNewPlayerError('El número es obligatorio')
+      return
+    }
+
+    try {
+      setCreatingPlayer(true)
+      setNewPlayerError('')
+
+      const created = await createPlayer(teamId, {
+        name: newPlayerName.trim() || `Jugador #${newPlayerNumber.trim()}`,
+        number: newPlayerNumber.trim(),
+        position: '',
+        imageUrl: ''
+      })
+
+      onPlayerCreated(created)
+      setPlayerId(created.id)
+      setShowNewPlayerForm(false)
+      setNewPlayerNumber('')
+      setNewPlayerName('')
+    } catch (err) {
+      console.error(err)
+      setNewPlayerError('No se pudo crear al jugador')
+    } finally {
+      setCreatingPlayer(false)
+    }
+  }
 
   function handleAdd() {
     if (!selectedPlayer || !amount) return
@@ -76,13 +128,17 @@ function TeamStatsColumn({
       <div className="stats-column-form">
         <div className="stats-field-group">
           <label>Jugador</label>
-          <select value={playerId} onChange={e => setPlayerId(e.target.value)}>
+          <select
+            value={showNewPlayerForm ? NEW_PLAYER_VALUE : playerId}
+            onChange={e => handlePlayerSelectChange(e.target.value)}
+          >
             <option value="">Selecciona un jugador</option>
             {players.map(p => (
               <option key={p.id} value={p.id}>
                 #{p.number} {p.name}
               </option>
             ))}
+            <option value={NEW_PLAYER_VALUE}>+ Jugador nuevo (no está en el roster)</option>
           </select>
           {players.length === 0 && (
             <span className="stats-empty-hint">{teamName} no tiene jugadores activos</span>
@@ -120,6 +176,47 @@ function TeamStatsColumn({
           </button>
         </div>
       </div>
+
+      {showNewPlayerForm && (
+        <div className="new-player-form">
+          <div className="stats-field-group">
+            <label>Número *</label>
+            <input
+              type="number"
+              min="0"
+              placeholder="Ej. 7"
+              value={newPlayerNumber}
+              onChange={e => setNewPlayerNumber(e.target.value)}
+            />
+          </div>
+
+          <div className="stats-field-group">
+            <label>Nombre (opcional)</label>
+            <input
+              type="text"
+              placeholder="Aún no lo saben"
+              value={newPlayerName}
+              onChange={e => setNewPlayerName(e.target.value)}
+            />
+          </div>
+
+          <div className="stats-field-group add-stat-group">
+            <label>&nbsp;</label>
+            <button
+              type="button"
+              className="add-stat-btn"
+              onClick={handleCreatePlayer}
+              disabled={creatingPlayer}
+            >
+              {creatingPlayer ? 'Creando…' : 'Crear y usar'}
+            </button>
+          </div>
+
+          {newPlayerError && (
+            <span className="new-player-error">{newPlayerError}</span>
+          )}
+        </div>
+      )}
 
       {playerId && (
         <span className="stats-total-hint">
@@ -163,7 +260,8 @@ function MatchStatsPanel({
   savedStats = [],
   statsTotals = {},
   onAddEntry,
-  onRemoveEntry
+  onRemoveEntry,
+  onPlayerCreated
 }) {
   const localDraft = entries.filter(e => String(e.teamId) === String(match.local_team.id))
   const visitDraft = entries.filter(e => String(e.teamId) === String(match.visit_team.id))
@@ -186,6 +284,7 @@ function MatchStatsPanel({
           statsTotals={statsTotals}
           onAddEntry={onAddEntry}
           onRemoveEntry={onRemoveEntry}
+          onPlayerCreated={onPlayerCreated}
         />
 
         <TeamStatsColumn
@@ -201,6 +300,7 @@ function MatchStatsPanel({
           statsTotals={statsTotals}
           onAddEntry={onAddEntry}
           onRemoveEntry={onRemoveEntry}
+          onPlayerCreated={onPlayerCreated}
         />
       </div>
     </div>

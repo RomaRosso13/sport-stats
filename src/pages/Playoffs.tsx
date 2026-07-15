@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import Header from "../components/common/Header"
-import CategorySelector from "../components/filters/CategorySelector"
+import CategorySwitcher from "../components/filters/CategorySwitcher"
 import PlayoffBracket from "../components/match/PlayoffBracket"
 import Loader from '../components/common/Loader'
 import PageWrapper from '../components/common/PageWrapper'
@@ -83,7 +83,7 @@ function Playoffs() {
       <PageWrapper loading={showLoader}/>
       <Header league={league}/>
       <main className="playoffs-container">
-        <CategorySelector categories={categories} active={category} onChange={setCategory}/>
+        <CategorySwitcher categories={categories} active={category} onChange={setCategory}/>
         <h2 className="playoffs-title">Playoffs</h2>
 
         {champion && (

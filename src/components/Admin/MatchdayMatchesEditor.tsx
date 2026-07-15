@@ -3,11 +3,11 @@ import { useEffect, useState } from 'react'
 import { useCategory } from '../../context/CategoryContext'
 import { useLeague } from '../../context/LeagueContext'
 
-import { getTeamsByCategoryId } from '../../services/team.service.js'
+import { getTeamsByCategoryIds } from '../../services/team.service.js'
 import { getBranchByLeagueId } from '../../services/branch.service.js'
 import { getFieldByBranchId } from '../../services/field.service.js'
-import { getMatchDaysByCategoryId } from '../../services/matchday.service.js'
-import { getMatchesByMatchDayIds } from '../../services/match.service.js'
+import { getMatchDaysByCategoryIds } from '../../services/matchday.service.js'
+import { getMatchesByMatchDayIds, updateMatchDetails } from '../../services/match.service.js'
 
 import { STAGE_OPTIONS, STAGE_LABELS } from '../../utils/matchStages'
 
@@ -16,9 +16,15 @@ import MatchupHelper from './MatchupHelper'
 
 import './MatchdayMatchesEditor.css'
 
-function MatchdayMatchesEditor({ matchday, matches, setMatches }) {
+const CATEGORY_LABELS = {
+  Mixto: 'Mixto',
+  Femenil: 'Femenil',
+  Varonil: 'Varonil'
+}
+
+function MatchdayMatchesEditor({ matchday, matches, setMatches, reloadToken }) {
   const { league } = useLeague()
-  const { category } = useCategory()
+  const { categories } = useCategory()
 
   const [teams, setTeams] = useState([])
   const [branches, setBranches] = useState([])
@@ -31,6 +37,7 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches }) {
   const [formError, setFormError] = useState('')
 
   const [draftMatch, setDraftMatch] = useState({
+    categoryId: '',
     homeTeamId: '',
     awayTeamId: '',
     branchId: '',
@@ -39,31 +46,42 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches }) {
     type: 'Regular'
   })
 
+  const [editingMatchId, setEditingMatchId] = useState(null)
+  const [savingEdit, setSavingEdit] = useState(false)
+
   /* =========================
      CARGAR EQUIPOS, SEDES Y HISTORIAL DE PARTIDOS
+     (de TODAS las categorías activas, ya que una jornada es compartida)
      ========================= */
   useEffect(() => {
-    if (!category || !league) return
+    if (!categories || categories.length === 0 || !league) return
 
     async function loadFormData() {
       try {
         setLoadingData(true)
 
+        const categoryIds = categories.map(cat => cat.id)
+
         const [teamsData, branchData, matchdaysData] = await Promise.all([
-          getTeamsByCategoryId(category.id),
+          getTeamsByCategoryIds(categoryIds),
           getBranchByLeagueId(league.id),
-          getMatchDaysByCategoryId(category.id)
+          getMatchDaysByCategoryIds(categoryIds)
         ])
 
         setTeams(teamsData || [])
         setBranches(branchData || [])
+
+        const matchdayCategoryById = new Map()
+        ;(matchdaysData || []).forEach(md => matchdayCategoryById.set(md.id, md.category_id))
 
         const matchdayIds = (matchdaysData || []).map(md => md.id)
         const matchesData = matchdayIds.length
           ? await getMatchesByMatchDayIds(matchdayIds)
           : []
 
-        setCategoryMatches(matchesData || [])
+        setCategoryMatches(
+          (matchesData || []).map(m => ({ ...m, category_id: matchdayCategoryById.get(m.matchday_id) }))
+        )
       } catch (err) {
         console.error('Error cargando datos del formulario', err)
       } finally {
@@ -72,14 +90,32 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches }) {
     }
 
     loadFormData()
-  }, [category?.id, league?.id])
+  }, [categories, league?.id, reloadToken])
+
+  // Equipos disponibles para la categoría elegida en el partido que se está armando
+  const categoryTeams = teams.filter(t => String(t.category_id) === String(draftMatch.categoryId))
+
+  // Partidos ya guardados de ESTA jornada (cualquier categoría) que aún no
+  // terminan, para poder corregirlos si hubo un error al crearlos.
+  const currentJornadaMatchdayIds = matchday?.matchdaysByCategory
+    ? Object.keys(matchday.matchdaysByCategory).map(catId => matchday.matchdaysByCategory[catId].id)
+    : []
+
+  const existingMatches = categoryMatches.filter(m =>
+    currentJornadaMatchdayIds.includes(m.matchday_id) && m.status !== 'Terminado'
+  )
 
   // Partidos ya guardados en la BD + los que se llevan agregados en esta
-  // sesión (aún sin guardar), para que la ayuda de rivales no sugiera un
-  // enfrentamiento que ya se acaba de armar pero todavía no se ha guardado.
+  // sesión (aún sin guardar), filtrados a la categoría del partido en curso,
+  // para que la ayuda de rivales no sugiera un enfrentamiento que ya se
+  // acaba de armar pero todavía no se ha guardado.
   const allKnownMatches = [
-    ...categoryMatches.map(m => ({ local_team_id: m.local_team_id, visit_team_id: m.visit_team_id })),
-    ...matches.map(m => ({ local_team_id: m.homeTeamId, visit_team_id: m.awayTeamId }))
+    ...categoryMatches
+      .filter(m => String(m.category_id) === String(draftMatch.categoryId))
+      .map(m => ({ local_team_id: m.local_team_id, visit_team_id: m.visit_team_id })),
+    ...matches
+      .filter(m => String(m.categoryId) === String(draftMatch.categoryId))
+      .map(m => ({ local_team_id: m.homeTeamId, visit_team_id: m.awayTeamId }))
   ]
 
   /* =========================
@@ -149,6 +185,7 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches }) {
 
     setMatches([])
     setFormError('')
+    setEditingMatchId(null)
 
     setDraftMatch(prev => ({
       ...prev,
@@ -160,6 +197,11 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches }) {
      ========================= */
   const handleAddMatch = () => {
     setFormError('')
+
+    if (!draftMatch.categoryId) {
+      setFormError('Selecciona la categoría del partido')
+      return
+    }
 
     if (!draftMatch.homeTeamId || !draftMatch.awayTeamId) {
       setFormError('Selecciona el equipo local y el visitante')
@@ -181,6 +223,12 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches }) {
       return
     }
 
+    const matchdayForCategory = matchday?.matchdaysByCategory?.[draftMatch.categoryId]
+    if (!matchdayForCategory) {
+      setFormError('Esta categoría no tiene una jornada creada para esta fecha')
+      return
+    }
+
     const hasConflict = matches.some(match =>
       String(match.branchId) === String(draftMatch.branchId) &&
       String(match.field) === String(draftMatch.field) &&
@@ -196,7 +244,9 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches }) {
       ...prev,
       {
         id: window.crypto.randomUUID(),
-        ...draftMatch
+        ...draftMatch,
+        matchdayId: matchdayForCategory.id,
+        date: matchday.date
       }
     ])
 
@@ -208,6 +258,101 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches }) {
 
   const handleRemoveMatch = (id) => {
     setMatches(prev => prev.filter(m => m.id !== id))
+  }
+
+  // Categoría a la que pertenece un matchday_id ya existente, según el mapa
+  // de la jornada seleccionada (cada categoría tiene su propio renglón).
+  function categoryIdForMatchday(matchdayId) {
+    if (!matchday?.matchdaysByCategory) return ''
+    const catId = Object.keys(matchday.matchdaysByCategory)
+      .find(key => matchday.matchdaysByCategory[key].id === matchdayId)
+    return catId || ''
+  }
+
+  function handleEditExisting(match) {
+    setFormError('')
+    setEditingMatchId(match.id)
+    setDraftMatch({
+      categoryId: categoryIdForMatchday(match.matchday_id),
+      homeTeamId: match.local_team_id,
+      awayTeamId: match.visit_team_id,
+      branchId: match.branch_id,
+      field: match.field_id,
+      time: (match.hour || '').slice(0, 5),
+      type: match.type || 'Regular'
+    })
+  }
+
+  function handleCancelEdit() {
+    setEditingMatchId(null)
+    setFormError('')
+    setDraftMatch(prev => ({
+      ...prev,
+      categoryId: '',
+      homeTeamId: '',
+      awayTeamId: '',
+      time: ''
+    }))
+  }
+
+  async function handleUpdateMatch() {
+    setFormError('')
+
+    if (!draftMatch.categoryId) {
+      setFormError('Selecciona la categoría del partido')
+      return
+    }
+
+    if (!draftMatch.homeTeamId || !draftMatch.awayTeamId) {
+      setFormError('Selecciona el equipo local y el visitante')
+      return
+    }
+
+    if (String(draftMatch.homeTeamId) === String(draftMatch.awayTeamId)) {
+      setFormError('El equipo local y el visitante deben ser diferentes')
+      return
+    }
+
+    if (!draftMatch.branchId || !draftMatch.field) {
+      setFormError('Selecciona la sede y la cancha')
+      return
+    }
+
+    if (!draftMatch.time) {
+      setFormError('Selecciona la hora del partido')
+      return
+    }
+
+    const matchdayForCategory = matchday?.matchdaysByCategory?.[draftMatch.categoryId]
+    if (!matchdayForCategory) {
+      setFormError('Esta categoría no tiene una jornada creada para esta fecha')
+      return
+    }
+
+    try {
+      setSavingEdit(true)
+
+      const updated = await updateMatchDetails(editingMatchId, {
+        homeTeamId: draftMatch.homeTeamId,
+        awayTeamId: draftMatch.awayTeamId,
+        branchId: draftMatch.branchId,
+        field: draftMatch.field,
+        time: draftMatch.time,
+        type: draftMatch.type,
+        matchdayId: matchdayForCategory.id
+      })
+
+      setCategoryMatches(prev => prev.map(m =>
+        m.id === updated.id ? { ...updated, category_id: Number(draftMatch.categoryId) } : m
+      ))
+
+      handleCancelEdit()
+    } catch (err) {
+      console.error('Error actualizando el partido', err)
+      setFormError('No se pudo guardar el partido')
+    } finally {
+      setSavingEdit(false)
+    }
   }
 
   // El equipo de referencia para la ayuda de rivales es el local si ya se
@@ -230,21 +375,48 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches }) {
     )
   }
 
+  const isEditing = !!editingMatchId
+
   return (
     <div className="matches-editor">
-      <h3>Agregar partido</h3>
+      <h3>{isEditing ? 'Editar partido' : 'Agregar partido'}</h3>
       <p className="matches-editor-subtitle">
-        Completa los datos del partido y presiona "Agregar" para sumarlo a la lista de abajo.
+        {isEditing
+          ? 'Corrige los datos del partido y presiona "Guardar cambios".'
+          : 'Completa los datos del partido y presiona "Agregar" para sumarlo a la lista de abajo. Esta jornada es compartida por todas las categorías: cada partido lleva la suya propia.'}
       </p>
 
-      <div className="match-form">
+      <div className={`match-form ${isEditing ? 'editing' : ''}`}>
         <div className="match-form-row teams-row">
+          <div className="field-group category-group">
+            <label>Categoría</label>
+            <select
+              value={draftMatch.categoryId}
+              onChange={(e) =>
+                setDraftMatch(prev => ({
+                  ...prev,
+                  categoryId: e.target.value,
+                  homeTeamId: '',
+                  awayTeamId: ''
+                }))
+              }
+            >
+              <option value="">Selecciona una categoría</option>
+              {categories.map(cat => (
+                <option key={cat.id} value={cat.id}>
+                  {CATEGORY_LABELS[cat.type] || cat.type}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <div className="field-group">
             <label>Equipo local</label>
             <TeamSelect
-              teams={teams}
+              teams={categoryTeams}
               value={draftMatch.homeTeamId}
               placeholder="Selecciona un equipo"
+              disabled={!draftMatch.categoryId}
               onChange={(teamId) =>
                 setDraftMatch(prev => ({ ...prev, homeTeamId: teamId }))
               }
@@ -256,9 +428,10 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches }) {
           <div className="field-group">
             <label>Equipo visitante</label>
             <TeamSelect
-              teams={teams}
+              teams={categoryTeams}
               value={draftMatch.awayTeamId}
               placeholder="Selecciona un equipo"
+              disabled={!draftMatch.categoryId}
               onChange={(teamId) =>
                 setDraftMatch(prev => ({ ...prev, awayTeamId: teamId }))
               }
@@ -267,7 +440,7 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches }) {
         </div>
 
         <MatchupHelper
-          teams={teams}
+          teams={categoryTeams}
           matches={allKnownMatches}
           teamId={referenceTeamId}
           onSelectOpponent={handleSelectOpponent}
@@ -341,19 +514,107 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches }) {
 
           <div className="field-group add-match-group">
             <label>&nbsp;</label>
-            <button
-              type="button"
-              className="add-match-btn"
-              onClick={handleAddMatch}
-            >
-              + Agregar
-            </button>
+            {isEditing ? (
+              <div className="edit-match-actions">
+                <button
+                  type="button"
+                  className="add-match-btn"
+                  onClick={handleUpdateMatch}
+                  disabled={savingEdit}
+                >
+                  {savingEdit ? 'Guardando...' : 'Guardar cambios'}
+                </button>
+                <button
+                  type="button"
+                  className="cancel-edit-btn"
+                  onClick={handleCancelEdit}
+                  disabled={savingEdit}
+                >
+                  Cancelar
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                className="add-match-btn"
+                onClick={handleAddMatch}
+              >
+                + Agregar
+              </button>
+            )}
           </div>
         </div>
       </div>
 
       {formError && (
         <div className="form-error">⚠️ {formError}</div>
+      )}
+
+      {existingMatches.length > 0 && (
+        <>
+          <h3 className="matches-list-title">
+            Partidos sin terminar de esta jornada ({existingMatches.length})
+          </h3>
+          <p className="matches-editor-subtitle">
+            Ya están guardados. Puedes editarlos si hubo algún error al crearlos.
+          </p>
+
+          <div className="matches-list">
+            {existingMatches.map(match => {
+              const matchCategoryId = categoryIdForMatchday(match.matchday_id)
+              const matchCategory = categories.find(cat => String(cat.id) === String(matchCategoryId))
+
+              return (
+                <div key={match.id} className={`match-row ${String(editingMatchId) === String(match.id) ? 'editing' : ''}`}>
+                  <div className="match-teams">
+                    {matchCategory && (
+                      <span className={`category-tag cat-${(matchCategory.type || '').toLowerCase()}`}>
+                        {CATEGORY_LABELS[matchCategory.type] || matchCategory.type}
+                      </span>
+                    )}
+
+                    {match.type && match.type !== 'Regular' && (
+                      <span className="match-stage-badge">{STAGE_LABELS[match.type]}</span>
+                    )}
+
+                    <div className="team">
+                      {match.local_team?.logo_url && (
+                        <img src={match.local_team.logo_url} alt={match.local_team.name} />
+                      )}
+                      <span>{match.local_team?.name}</span>
+                    </div>
+
+                    <span className="vs">vs</span>
+
+                    <div className="team">
+                      {match.visit_team?.logo_url && (
+                        <img src={match.visit_team.logo_url} alt={match.visit_team.name} />
+                      )}
+                      <span>{match.visit_team?.name}</span>
+                    </div>
+                  </div>
+
+                  <div className="match-info">
+                    <span>{match.branch?.name}</span>
+                    <span>{match.field?.name}</span>
+                    <span>{(match.hour || '').slice(0, 5)}</span>
+                    <span className={`status-pill ${match.status === 'Por aprobar' ? 'review' : 'pending'}`}>
+                      {match.status}
+                    </span>
+                  </div>
+
+                  <button
+                    type="button"
+                    className="edit-match-btn"
+                    onClick={() => handleEditExisting(match)}
+                  >
+                    Editar
+                  </button>
+                </div>
+              )
+            })}
+          </div>
+        </>
       )}
 
       <h3 className="matches-list-title">
@@ -371,11 +632,18 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches }) {
           const awayTeam = teams.find(t => String(t.id) === String(match.awayTeamId))
           const branch = branches.find(b => String(b.id) === String(match.branchId))
           const field = fields.find(f => String(f.id) === String(match.field))
+          const matchCategory = categories.find(cat => String(cat.id) === String(match.categoryId))
 
           return (
             <div key={match.id} className="match-row">
               <div className="match-teams">
                 <div className="match-index">Partido {index + 1}</div>
+
+                {matchCategory && (
+                  <span className={`category-tag cat-${(matchCategory.type || '').toLowerCase()}`}>
+                    {CATEGORY_LABELS[matchCategory.type] || matchCategory.type}
+                  </span>
+                )}
 
                 {match.type && match.type !== 'Regular' && (
                   <span className="match-stage-badge">{STAGE_LABELS[match.type]}</span>

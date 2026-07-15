@@ -120,6 +120,13 @@
   white-space: nowrap;
 }
 
+.new-matchday-panel-hint {
+  align-self: center;
+  font-size: 12px;
+  color: var(--accent-dark);
+  opacity: 0.75;
+}
+
 .create-matchday-btn {
   height: 36px;
   padding: 0 18px;

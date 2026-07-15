@@ -31,30 +31,51 @@ export default function InlineLoginForm({ onClose }) {
   }
 
   return (
-    <form className="inline-login" onSubmit={handleSubmit}>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={e => setEmail(e.target.value)}
-        required
-      />
+    <div className="login-popover">
+      <div className="login-popover-header">
+        <span>Iniciar sesión</span>
+        <button
+          type="button"
+          className="login-close-btn"
+          onClick={onClose}
+          aria-label="Cerrar"
+        >
+          ✕
+        </button>
+      </div>
 
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-        required
-      />
+      <form className="login-form" onSubmit={handleSubmit}>
+        <label className="login-field">
+          <span>Email</span>
+          <input
+            type="email"
+            placeholder="tucorreo@ejemplo.com"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            autoFocus
+            required
+          />
+        </label>
 
-      <button type="submit" disabled={loading}>
-        {loading ? "…" : "Entrar"}
-      </button>
+        <label className="login-field">
+          <span>Contraseña</span>
+          <input
+            type="password"
+            placeholder="••••••••"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            required
+          />
+        </label>
 
-      {errorMessage && (
-        <p className="login-error">{errorMessage}</p>
-      )}
-    </form>
+        {errorMessage && (
+          <p className="login-error">{errorMessage}</p>
+        )}
+
+        <button type="submit" className="login-submit-btn" disabled={loading}>
+          {loading ? "Ingresando..." : "Entrar"}
+        </button>
+      </form>
+    </div>
   )
 }

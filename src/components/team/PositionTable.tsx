@@ -17,6 +17,7 @@ function PositionTable({ table }) {
             <th>Equipo</th>
             <th>PJ</th>
             <th>PG</th>
+            <th>PE</th>
             <th>PP</th>
             <th>PA</th>
             <th>PC</th>
@@ -44,6 +45,7 @@ function PositionTable({ table }) {
               </td>
               <td>{fila.pj}</td>
               <td>{fila.g}</td>
+              <td>{fila.e}</td>
               <td>{fila.p}</td>
               <td>{fila.pf}</td>
               <td>{fila.pc}</td>
