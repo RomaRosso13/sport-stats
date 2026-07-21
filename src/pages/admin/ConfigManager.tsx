@@ -7,6 +7,8 @@ import Header from '../../components/common/Header'
 import Footer from '../../components/common/Footer'
 
 import { updateSeasonCalendarConfig } from '../../services/season.service'
+import { updateLeagueStatLabels } from '../../services/league.service'
+import { STAT_KEYS, DEFAULT_STAT_LABELS, getStatLabels } from '../../constants/statFields'
 
 import './ConfigManager.css'
 
@@ -20,6 +22,38 @@ const DEFAULT_CALENDAR_CONFIG = {
 function ConfigManager() {
   const { league } = useLeague()
   const { seasons, season: activeSeason } = useSeason()
+
+  // --- Nombres de estadísticas ---
+  const [statLabels, setStatLabels] = useState(getStatLabels(league))
+  const [savingStatLabels, setSavingStatLabels] = useState(false)
+  const [statLabelsError, setStatLabelsError] = useState('')
+  const [statLabelsSaved, setStatLabelsSaved] = useState(false)
+
+  function handleStatLabelChange(key, value) {
+    setStatLabels(prev => ({ ...prev, [key]: value }))
+    setStatLabelsSaved(false)
+  }
+
+  async function handleSaveStatLabels(e) {
+    e.preventDefault()
+
+    try {
+      setSavingStatLabels(true)
+      setStatLabelsError('')
+      setStatLabelsSaved(false)
+
+      await updateLeagueStatLabels(league.id, statLabels)
+
+      setStatLabelsSaved(true)
+      // Recarga para que toda la app (Header, Inicio, etc.) tome los nombres nuevos.
+      window.location.reload()
+    } catch (err) {
+      console.error(err)
+      setStatLabelsError(err.message || 'No se pudieron guardar los nombres de las estadísticas')
+    } finally {
+      setSavingStatLabels(false)
+    }
+  }
 
   // --- Calendario por temporada ---
   const [selectedSeasonId, setSelectedSeasonId] = useState(activeSeason?.id || seasons[0]?.id || '')
@@ -82,8 +116,40 @@ function ConfigManager() {
       <main className="config-manager-container">
         <div className="config-manager-intro">
           <h2>Configuración General</h2>
-          <p>Ajusta el calendario de partidos por temporada</p>
+          <p>Ajusta los nombres de estadísticas y el calendario de partidos por temporada</p>
         </div>
+
+        <section className="config-card">
+          <h3>Nombres de estadísticas</h3>
+          <p className="config-card-subtitle">
+            Personaliza cómo se llama cada estadística en toda la app (Inicio, Estadísticas, perfiles y al capturar resultados)
+          </p>
+
+          <form onSubmit={handleSaveStatLabels}>
+            <div className="config-fields-row">
+              {STAT_KEYS.map(key => (
+                <div className="config-field" key={key}>
+                  <label>Nombre para "{DEFAULT_STAT_LABELS[key]}"</label>
+                  <input
+                    type="text"
+                    value={statLabels[key]}
+                    placeholder={DEFAULT_STAT_LABELS[key]}
+                    onChange={e => handleStatLabelChange(key, e.target.value)}
+                  />
+                </div>
+              ))}
+            </div>
+
+            {statLabelsError && <p className="modal-error">{statLabelsError}</p>}
+            {statLabelsSaved && <p className="config-success">✓ Guardado</p>}
+
+            <div className="config-card-actions">
+              <button type="submit" disabled={savingStatLabels}>
+                {savingStatLabels ? 'Guardando...' : 'Guardar nombres'}
+              </button>
+            </div>
+          </form>
+        </section>
 
         <section className="config-card">
           <h3>Calendario de partidos</h3>

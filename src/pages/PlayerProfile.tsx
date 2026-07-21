@@ -11,6 +11,7 @@ import { useLeague } from '../context/LeagueContext'
 import { getPlayerById } from '../services/player.service.js'
 import { getIndividualStatsByCategory } from '../services/individual_stats.service'
 import { classifyTopPlayersByStats } from '../utils/classifyTopPlayersByStats'
+import { STAT_KEYS, getStatLabels } from '../constants/statFields'
 
 import './PlayerProfile.css'
 
@@ -18,18 +19,11 @@ function getInitial(name) {
   return name?.trim().charAt(0).toUpperCase() || "?"
 }
 
-const STAT_SECTIONS = [
-  { key: 'touchdown', label: 'Touchdowns' },
-  { key: 'touchdown_pass', label: 'Pases de TD' },
-  { key: 'interceptions', label: 'Intercepciones' },
-  { key: 'sacks', label: 'Sacks' }
-]
-
-const STAT_KEYS = STAT_SECTIONS.map(s => s.key)
-
 function PlayerProfile() {
   const { league } = useLeague()
   const { playerId } = useParams()
+  const statLabels = getStatLabels(league)
+  const STAT_SECTIONS = STAT_KEYS.map(key => ({ key, label: statLabels[key] }))
 
   const [player, setPlayer] = useState(null)
   const [stats, setStats] = useState(null)
@@ -59,7 +53,7 @@ function PlayerProfile() {
           const ownStats = {}
           const rankInfo = {}
 
-          STAT_SECTIONS.forEach(({ key }) => {
+          STAT_KEYS.forEach(key => {
             const ranked = leaderboards[key] || []
             const position = ranked.findIndex(
               row => String(row.id) === String(playerId)

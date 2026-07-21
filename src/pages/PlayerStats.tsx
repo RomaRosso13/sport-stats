@@ -12,23 +12,17 @@ import { useCategory } from '../context/CategoryContext'
 
 import { getIndividualStatsByCategory } from '../services/individual_stats.service'
 import { classifyTopPlayersByStats } from '../utils/classifyTopPlayersByStats'
+import { STAT_KEYS, getStatLabels } from '../constants/statFields'
 
 import "./PlayerStats.css"
-
-const STAT_SECTIONS = [
-  { key: 'touchdown', title: 'Touchdowns', label: 'TD' },
-  { key: 'touchdown_pass', title: 'Pases de Touchdown', label: 'PTD' },
-  { key: 'interceptions', title: 'Intercepciones', label: 'INT' },
-  { key: 'sacks', title: 'Sacks', label: 'SK' }
-]
-
-const STAT_KEYS = STAT_SECTIONS.map(s => s.key)
 
 function PlayerStats() {
   const { league } = useLeague()
   const { categories, category, setCategory } = useCategory()
   const [stats, setStats] = useState([])
   const [loadingStats, setLoadingStats] = useState(true)
+  const statLabels = getStatLabels(league)
+  const STAT_SECTIONS = STAT_KEYS.map(key => ({ key, title: statLabels[key], label: statLabels[key] }))
 
   useEffect(() => {
     if (!category) return

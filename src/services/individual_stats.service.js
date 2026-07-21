@@ -1,6 +1,7 @@
 import { supabase } from '../libs/supabase'
 import { runQuery } from '../libs/supabaseQuery'
 import { cached, invalidate } from '../utils/queryCache'
+import { STAT_KEYS } from '../constants/statFields'
 
 const STATS_SELECT = `
   *,
@@ -39,8 +40,6 @@ export async function getIndividualStatsByMatchId(matchId) {
   )
 }
 
-const STAT_FIELDS = ['touchdown', 'touchdown_pass', 'sacks', 'interceptions']
-
 // `entries`: [{ matchId, playerId, teamId, touchdown, touchdown_pass, sacks, interceptions }]
 // IndividualStats stores one row per player per match, so season/category totals are
 // simply the sum across every match row for that player (see classifyTopPlayersByStats).
@@ -48,7 +47,7 @@ const STAT_FIELDS = ['touchdown', 'touchdown_pass', 'sacks', 'interceptions']
 // re-opening and re-saving the stats panel for the same match keeps accumulating correctly.
 export async function saveIndividualStatsForMatch(categoryId, entries) {
   const withChanges = entries.filter(entry =>
-    STAT_FIELDS.some(field => entry[field])
+    STAT_KEYS.some(field => entry[field])
   )
 
   if (!withChanges.length) return []
@@ -76,7 +75,7 @@ export async function saveIndividualStatsForMatch(categoryId, entries) {
 
     if (existing) {
       const fields = {}
-      STAT_FIELDS.forEach(field => {
+      STAT_KEYS.forEach(field => {
         fields[field] = (existing[field] || 0) + (entry[field] || 0)
       })
       updates.push({ id: existing.id, fields })
@@ -87,7 +86,7 @@ export async function saveIndividualStatsForMatch(categoryId, entries) {
         category_id: categoryId,
         match_id: entry.matchId
       }
-      STAT_FIELDS.forEach(field => { row[field] = entry[field] || 0 })
+      STAT_KEYS.forEach(field => { row[field] = entry[field] || 0 })
       inserts.push(row)
     }
   })

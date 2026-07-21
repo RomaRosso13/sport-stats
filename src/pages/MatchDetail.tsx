@@ -11,20 +11,14 @@ import { useLeague } from '../context/LeagueContext'
 import { getMatchById } from '../services/match.service'
 import { getIndividualStatsByMatchId } from '../services/individual_stats.service'
 import { STAGE_LABELS } from '../utils/matchStages'
+import { STAT_KEYS, getStatLabels } from '../constants/statFields'
 
 import './MatchDetail.css'
 
-const STAT_SECTIONS = [
-  { key: 'touchdown', label: 'Touchdowns' },
-  { key: 'touchdown_pass', label: 'Pases de TD' },
-  { key: 'interceptions', label: 'Intercepciones' },
-  { key: 'sacks', label: 'Sacks' }
-]
-
-function buildTeamBoxScore(stats, teamId) {
+function buildTeamBoxScore(stats, teamId, statSections) {
   const rows = stats.filter(row => String(row.team_id) === String(teamId))
 
-  return STAT_SECTIONS
+  return statSections
     .map(({ key, label }) => ({
       key,
       label,
@@ -39,6 +33,8 @@ function buildTeamBoxScore(stats, teamId) {
 function MatchDetail() {
   const { league } = useLeague()
   const { matchId } = useParams()
+  const statLabels = getStatLabels(league)
+  const STAT_SECTIONS = STAT_KEYS.map(key => ({ key, label: statLabels[key] }))
 
   const [match, setMatch] = useState(null)
   const [stats, setStats] = useState([])
@@ -131,7 +127,7 @@ function MatchDetail() {
 
           <section className="match-detail-boxscore">
             {[match.local_team, match.visit_team].map(team => {
-              const sections = buildTeamBoxScore(stats, team.id)
+              const sections = buildTeamBoxScore(stats, team.id, STAT_SECTIONS)
 
               return (
                 <div key={team.id} className="boxscore-team">

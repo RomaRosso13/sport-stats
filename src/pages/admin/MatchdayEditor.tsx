@@ -15,6 +15,7 @@ import { getMatchesByMatchDayIds, updateMatches } from '../../services/match.ser
 import { getMatchDaysByCategoryId } from '../../services/matchday.service'
 import { getTeamsByCategoryId } from '../../services/team.service'
 import { getIndividualStatsByCategory, saveIndividualStatsForMatch } from '../../services/individual_stats.service'
+import { getStatLabels } from '../../constants/statFields'
 
 import './MatchdayEditor.css'
 
@@ -50,6 +51,7 @@ function EditMatchday() {
   const [selectedMatchday, setSelectedMatchday] = useState(null)
   const { league } = useLeague()
   const { isReferee, userId } = useLeagueMembership()
+  const statLabels = getStatLabels(league)
   const [saving, setSaving] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
   const [isDirty, setIsDirty] = useState(false)
@@ -293,6 +295,7 @@ async function handleSave() {
             onRemoveStatEntry={removeStatEntry}
             onPlayerCreated={handlePlayerCreated}
             isReferee={isReferee}
+            statLabels={statLabels}
           />
         ) : (
           <p className="matchday-editor-empty">

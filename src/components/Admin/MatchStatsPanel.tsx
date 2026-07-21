@@ -1,18 +1,7 @@
 import { useState } from 'react'
 import { createPlayer } from '../../services/player.service.js'
+import { STAT_KEYS } from '../../constants/statFields'
 import './MatchStatsPanel.css'
-
-const STAT_OPTIONS = [
-  { key: 'touchdown', label: 'Touchdown' },
-  { key: 'touchdown_pass', label: 'Pase de touchdown' },
-  { key: 'sacks', label: 'Sack' },
-  { key: 'interceptions', label: 'Intercepción' }
-]
-
-const STAT_LABELS = STAT_OPTIONS.reduce((map, opt) => {
-  map[opt.key] = opt.label
-  return map
-}, {})
 
 const NEW_PLAYER_VALUE = '__new__'
 
@@ -27,10 +16,13 @@ function TeamStatsColumn({
   savedEntries,
   draftEntries,
   statsTotals,
+  statLabels,
   onAddEntry,
   onRemoveEntry,
   onPlayerCreated
 }) {
+  const STAT_OPTIONS = STAT_KEYS.map(key => ({ key, label: statLabels[key] }))
+
   const [playerId, setPlayerId] = useState('')
   const [statKey, setStatKey] = useState('touchdown')
   const [amount, setAmount] = useState<number | string>(1)
@@ -220,7 +212,7 @@ function TeamStatsColumn({
 
       {playerId && (
         <span className="stats-total-hint">
-          Total actual de {selectedPlayer?.name}: {currentTotal} {STAT_LABELS[statKey].toLowerCase()}
+          Total actual de {selectedPlayer?.name}: {currentTotal} {statLabels[statKey]}
         </span>
       )}
 
@@ -236,7 +228,7 @@ function TeamStatsColumn({
           {draftEntries.map(entry => (
             <li key={entry.id} className="stats-entry draft">
               <span className="stats-entry-player">#{entry.playerNumber} {entry.playerName}</span>
-              <span className="stats-entry-amount">+{entry.amount} {STAT_LABELS[entry.statKey]}</span>
+              <span className="stats-entry-amount">+{entry.amount} {statLabels[entry.statKey]}</span>
               <button
                 type="button"
                 className="remove-stat-btn"
@@ -259,6 +251,7 @@ function MatchStatsPanel({
   entries = [],
   savedStats = [],
   statsTotals = {},
+  statLabels,
   onAddEntry,
   onRemoveEntry,
   onPlayerCreated
@@ -282,6 +275,7 @@ function MatchStatsPanel({
           savedEntries={localSaved}
           draftEntries={localDraft}
           statsTotals={statsTotals}
+          statLabels={statLabels}
           onAddEntry={onAddEntry}
           onRemoveEntry={onRemoveEntry}
           onPlayerCreated={onPlayerCreated}
@@ -298,6 +292,7 @@ function MatchStatsPanel({
           savedEntries={visitSaved}
           draftEntries={visitDraft}
           statsTotals={statsTotals}
+          statLabels={statLabels}
           onAddEntry={onAddEntry}
           onRemoveEntry={onRemoveEntry}
           onPlayerCreated={onPlayerCreated}

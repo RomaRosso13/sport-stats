@@ -21,19 +21,15 @@ import { getCoachAssignmentsByLeagueId } from '../services/league_user.service.j
 import { calculateTeamStats } from '../utils/calculateTeamStats'
 import { classifyTopPlayersByStats } from '../utils/classifyTopPlayersByStats'
 import { sortPlayersByNumber } from '../utils/sortPlayers'
+import { STAT_KEYS, getStatLabels } from '../constants/statFields'
 
 import './TeamProfile.css'
-
-const STAT_SECTIONS = [
-  { key: 'touchdown', title: 'Touchdowns' },
-  { key: 'touchdown_pass', title: 'Pases de TD' },
-  { key: 'interceptions', title: 'Intercepciones' },
-  { key: 'sacks', title: 'Sacks' }
-]
 
 function TeamProfile() {
   const { league } = useLeague()
   const { teamId } = useParams()
+  const statLabels = getStatLabels(league)
+  const STAT_SECTIONS = STAT_KEYS.map(key => ({ key, title: statLabels[key] }))
 
   const [team, setTeam] = useState(null)
   const [schedule, setSchedule] = useState([])
@@ -83,7 +79,7 @@ function TeamProfile() {
           row => String(row.team_id) === String(teamId)
         )
         setLeaderboards(
-          classifyTopPlayersByStats(teamPlayerStats, STAT_SECTIONS.map(s => s.key), 3)
+          classifyTopPlayersByStats(teamPlayerStats, STAT_KEYS, 3)
         )
 
       } catch (err) {

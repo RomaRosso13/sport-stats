@@ -25,6 +25,7 @@ import { calculateTable } from '../utils/calculateTable'
 import { getNextGameDay } from '../utils/getNextGameDay'
 import { getRecentResults } from '../utils/getRecentResults'
 import { classifyTopPlayersByStats } from '../utils/classifyTopPlayersByStats'
+import { STAT_KEYS, getStatLabels } from '../constants/statFields'
 
 import './Home.css'
 
@@ -84,7 +85,8 @@ function Home() {
   const calculatedTable = calculateTable(matches, teams)
   const nextGameDay = getNextGameDay(matchdays)
   const recentResults = getRecentResults(matchdays, 4)
-  const leaderboard = classifyTopPlayersByStats( stats, ['touchdown', 'touchdown_pass', 'sacks', 'interceptions'])
+  const leaderboard = classifyTopPlayersByStats(stats, STAT_KEYS)
+  const statLabels = getStatLabels(league)
 
   const isLoading = leagueLoading || seasonLoading || !league || loadingMatchdays
 
@@ -107,10 +109,10 @@ return (
 
       <h2 className="stats-section-title">Líderes de la Temporada</h2>
       <div className="cards-row">
-        <StatsTable title="Touchdowns" statKey="touchdown" data={leaderboard.touchdown} />
-        <StatsTable title="Pases de Touchdown" statKey="touchdown_pass" data={leaderboard.touchdown_pass} />
-        <StatsTable title="Intercepciones" statKey="interceptions" data={leaderboard.interceptions} />
-        <StatsTable title="Sacks" statKey="sacks" data={leaderboard.sacks} />
+        <StatsTable title={statLabels.touchdown} statKey="touchdown" data={leaderboard.touchdown} />
+        <StatsTable title={statLabels.touchdown_pass} statKey="touchdown_pass" data={leaderboard.touchdown_pass} />
+        <StatsTable title={statLabels.interceptions} statKey="interceptions" data={leaderboard.interceptions} />
+        <StatsTable title={statLabels.sacks} statKey="sacks" data={leaderboard.sacks} />
       </div>
 
       <div className="home-layout">
