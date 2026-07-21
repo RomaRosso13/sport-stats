@@ -14,7 +14,7 @@ import './Header.css'
 function Header({ league }) {
   const { user } = useAuth()
   const { seasons, season, setSeason, loading } = useSeason()
-  const { isMember, isFullAdmin } = useLeagueMembership()
+  const { isMember, isFullAdmin, isReferee, isPhotographer, isCoach } = useLeagueMembership()
 
   const [menuOpen, setMenuOpen] = useState(false)
   const [showLoginForm, setShowLoginForm] = useState(false)
@@ -137,9 +137,11 @@ async function handleLogout() {
                       Gestor de Jornadas
                     </Link>
                   )}
-                  <Link to={`/${league.slug}/admin/editar`} onClick={() => setMenuOpen(false)}>
-                    Registrar resultados
-                  </Link>
+                  {(isFullAdmin || isReferee) && (
+                    <Link to={`/${league.slug}/admin/editar`} onClick={() => setMenuOpen(false)}>
+                      Registrar resultados
+                    </Link>
+                  )}
                   {isFullAdmin && (
                     <Link to={`/${league.slug}/admin/equipos`} onClick={() => setMenuOpen(false)}>
                       Gestor de Equipos
@@ -153,6 +155,21 @@ async function handleLogout() {
                   {isFullAdmin && (
                     <Link to={`/${league.slug}/admin/usuarios`} onClick={() => setMenuOpen(false)}>
                       Gestor de Usuarios
+                    </Link>
+                  )}
+                  {(isFullAdmin || isPhotographer) && (
+                    <Link to={`/${league.slug}/admin/fotos`} onClick={() => setMenuOpen(false)}>
+                      Gestión de Fotos
+                    </Link>
+                  )}
+                  {isFullAdmin && (
+                    <Link to={`/${league.slug}/admin/configuracion`} onClick={() => setMenuOpen(false)}>
+                      Configuración General
+                    </Link>
+                  )}
+                  {(isFullAdmin || isCoach) && (
+                    <Link to={`/${league.slug}/admin/mi-equipo`} onClick={() => setMenuOpen(false)}>
+                      Mi Equipo
                     </Link>
                   )}
                 </div>

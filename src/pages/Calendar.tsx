@@ -8,6 +8,7 @@ import Loader from '../components/common/Loader'
 import PageWrapper from '../components/common/PageWrapper'
 
 import { useLeague } from '../context/LeagueContext'
+import { useSeason } from '../context/SeasonContext'
 import { useCategory } from '../context/CategoryContext'
 
 import { getMatchDaysByCategoryIds } from '../services/matchday.service'
@@ -17,7 +18,15 @@ import "./Calendar.css"
 
 function Calendar() {
   const { league } = useLeague()
+  const { season } = useSeason()
   const { categories } = useCategory()
+
+  const calendarConfig = {
+    startHour: season?.start_hour,
+    endHour: season?.end_hour,
+    stepMinutes: season?.step_minutes,
+    matchDuration: season?.match_duration_minutes
+  }
   const [matchdays, setMatchdays] = useState([])
   const [loadingMatchdays, setLoadingMatchdays] = useState(true)
 
@@ -118,7 +127,7 @@ function Calendar() {
         ) : (
           <div className="jornada-list">
             {matchdays.map(md => (
-              <CalendarDay key={md.id} matchday={md} />
+              <CalendarDay key={md.id} matchday={md} calendarConfig={calendarConfig} />
             ))}
           </div>
         )}

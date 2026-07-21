@@ -11,7 +11,7 @@ function MatchList({
   onAddStatEntry,
   onRemoveStatEntry,
   onPlayerCreated,
-  isStaff = false
+  isReferee = false
 }) {
   if (!matches.length) {
     return <p className="match-list-empty">No hay partidos en esta jornada</p>
@@ -37,7 +37,7 @@ function MatchList({
           onAddStatEntry={onAddStatEntry}
           onRemoveStatEntry={onRemoveStatEntry}
           onPlayerCreated={onPlayerCreated}
-          isStaff={isStaff}
+          isReferee={isReferee}
         />
       ))}
     </div>

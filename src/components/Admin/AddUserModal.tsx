@@ -3,11 +3,11 @@ import { findUserByEmail, addLeagueMember } from '../../services/league_user.ser
 
 import './AddUserModal.css'
 
-const ROLE_OPTIONS = ['Staff', 'Admin', 'SuperAdmin']
+const ROLE_OPTIONS = ['Referi', 'Admin', 'SuperAdmin', 'Fotografo', 'Coach']
 
 function AddUserModal({ leagueId, existingUserIds = [], onClose, onAdded }) {
   const [email, setEmail] = useState('')
-  const [role, setRole] = useState('Staff')
+  const [role, setRole] = useState('Referi')
   const [foundUser, setFoundUser] = useState(null)
   const [searched, setSearched] = useState(false)
   const [loading, setLoading] = useState(false)

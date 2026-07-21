@@ -9,7 +9,7 @@ import { sortPlayersByNumber } from "../../utils/sortPlayers"
 
 import "./TeamCard.css"
 
-function TeamCard({ team, matchdays }) {
+function TeamCard({ team, matchdays, coach }) {
   const { leagueSlug } = useParams()
   const [open, setOpen] = useState(false)
   const stats = calculateTeamStats(team.name, matchdays)
@@ -29,7 +29,7 @@ function TeamCard({ team, matchdays }) {
         <div className="team-text">
           <h3 className="team-name">{team.name}</h3>
           <span className="coach">
-            Coach: {team.coach || "Sin asignar"}
+            Coach: {coach ? (coach.name || coach.email) : "Sin asignar"}
           </span>
         </div>
       </Link>

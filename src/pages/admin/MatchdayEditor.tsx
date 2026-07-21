@@ -49,9 +49,10 @@ function EditMatchday() {
   const { categories, category, setCategory } = useCategory()
   const [selectedMatchday, setSelectedMatchday] = useState(null)
   const { league } = useLeague()
-  const { isStaff, userId } = useLeagueMembership()
+  const { isReferee, userId } = useLeagueMembership()
   const [saving, setSaving] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
+  const [isDirty, setIsDirty] = useState(false)
 
   const [teams, setTeams] = useState([])
   const [statsTotals, setStatsTotals] = useState({})
@@ -121,6 +122,7 @@ function EditMatchday() {
   }, [selectedMatchday?.id])
 
   function addStatEntry(matchId: number, entry: Omit<StatEntry, 'id'>) {
+    setIsDirty(true)
     setStatsDraft(prev => {
       const matchEntries = prev[matchId] || []
       const existingIndex = matchEntries.findIndex(e =>
@@ -141,6 +143,7 @@ function EditMatchday() {
   }
 
   function removeStatEntry(matchId: number, entryId: string) {
+    setIsDirty(true)
     setStatsDraft(prev => ({
       ...prev,
       [matchId]: (prev[matchId] || []).filter(e => e.id !== entryId)
@@ -158,6 +161,43 @@ function EditMatchday() {
   }
 
   const currentMatchday = matchdays.find( md => md.id === selectedMatchday?.id)
+
+  // Advierte al cerrar/recargar la pestaña si hay cambios sin guardar.
+  useEffect(() => {
+    function handleBeforeUnload(e) {
+      if (!isDirty) return
+      e.preventDefault()
+      e.returnValue = ''
+    }
+
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+  }, [isDirty])
+
+  // Advierte al navegar a otra pantalla dentro de la app (links del Header/Footer)
+  // si hay cambios sin guardar.
+  useEffect(() => {
+    function handleClickCapture(e) {
+      if (!isDirty) return
+
+      const link = e.target.closest('a')
+      if (!link || link.target === '_blank') return
+
+      const destination = new URL(link.href, window.location.href)
+      if (destination.pathname === window.location.pathname) return
+
+      const confirmed = window.confirm(
+        'Tienes cambios sin guardar. Si sales de esta pantalla, todos los datos no guardados se perderán. ¿Deseas continuar?'
+      )
+      if (!confirmed) {
+        e.preventDefault()
+        e.stopPropagation()
+      }
+    }
+
+    document.addEventListener('click', handleClickCapture, true)
+    return () => document.removeEventListener('click', handleClickCapture, true)
+  }, [isDirty])
 
 async function handleSave() {
   if (!currentMatchday) return
@@ -197,6 +237,7 @@ async function handleSave() {
     setStatsDraft({})
     await loadRostersAndStats()
 
+    setIsDirty(false)
     setSaveSuccess(true)
 
     // Oculta success después de 2s
@@ -230,6 +271,7 @@ async function handleSave() {
           <MatchList
             matches={currentMatchday.games}
             onChange={updatedMatch => {
+              setIsDirty(true)
               setMatchdays(prev =>
                 prev.map(md =>
                   md.id === currentMatchday.id
@@ -250,7 +292,7 @@ async function handleSave() {
             onAddStatEntry={addStatEntry}
             onRemoveStatEntry={removeStatEntry}
             onPlayerCreated={handlePlayerCreated}
-            isStaff={isStaff}
+            isReferee={isReferee}
           />
         ) : (
           <p className="matchday-editor-empty">

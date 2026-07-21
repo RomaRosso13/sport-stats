@@ -13,6 +13,7 @@ import PlayerRosterManager from '../../components/Admin/PlayerRosterManager'
 
 import { getTeamsByCategoryId, deleteTeam } from '../../services/team.service.js'
 import { setPlayerActive } from '../../services/player.service.js'
+import { getCoachAssignmentsByLeagueId } from '../../services/league_user.service.js'
 
 import './TeamManager.css'
 
@@ -23,6 +24,7 @@ function TeamManager() {
   const [teams, setTeams] = useState([])
   const [loadingTeams, setLoadingTeams] = useState(true)
   const [selectedTeamId, setSelectedTeamId] = useState(null)
+  const [coachesByTeamId, setCoachesByTeamId] = useState({})
 
   const [editingTeam, setEditingTeam] = useState(null)
   const [showTeamModal, setShowTeamModal] = useState(false)
@@ -48,6 +50,23 @@ function TeamManager() {
     loadTeams()
     setSelectedTeamId(null)
   }, [category?.id])
+
+  useEffect(() => {
+    if (!league?.id) return
+
+    async function loadCoaches() {
+      try {
+        const assignments = await getCoachAssignmentsByLeagueId(league.id)
+        const map = {}
+        ;(assignments || []).forEach(a => { map[a.team_id] = a.user })
+        setCoachesByTeamId(map)
+      } catch (err) {
+        console.error(err)
+      }
+    }
+
+    loadCoaches()
+  }, [league?.id])
 
   const selectedTeam = teams.find(t => t.id === selectedTeamId)
 
@@ -131,6 +150,7 @@ function TeamManager() {
               <TeamManagerCard
                 key={team.id}
                 team={team}
+                coach={coachesByTeamId[team.id]}
                 isSelected={selectedTeamId === team.id}
                 onSelect={t => setSelectedTeamId(t.id)}
                 onEdit={t => { setEditingTeam(t); setShowTeamModal(true) }}

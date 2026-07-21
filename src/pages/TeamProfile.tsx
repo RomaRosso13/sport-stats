@@ -16,6 +16,7 @@ import { getTeamById } from '../services/team.service'
 import { getMatchDaysByCategoryId } from '../services/matchday.service'
 import { getMatchesByMatchDayIds } from '../services/match.service'
 import { getIndividualStatsByCategory } from '../services/individual_stats.service'
+import { getCoachAssignmentsByLeagueId } from '../services/league_user.service.js'
 
 import { calculateTeamStats } from '../utils/calculateTeamStats'
 import { classifyTopPlayersByStats } from '../utils/classifyTopPlayersByStats'
@@ -39,6 +40,7 @@ function TeamProfile() {
   const [teamStats, setTeamStats] = useState(null)
   const [leaderboards, setLeaderboards] = useState({})
   const [loading, setLoading] = useState(true)
+  const [coach, setCoach] = useState(null)
 
   useEffect(() => {
     if (!teamId) return
@@ -94,6 +96,22 @@ function TeamProfile() {
     loadTeamProfile()
   }, [teamId])
 
+  useEffect(() => {
+    if (!league?.id || !teamId) return
+
+    async function loadCoach() {
+      try {
+        const assignments = await getCoachAssignmentsByLeagueId(league.id)
+        const match = (assignments || []).find(a => String(a.team_id) === String(teamId))
+        setCoach(match?.user || null)
+      } catch (err) {
+        console.error(err)
+      }
+    }
+
+    loadCoach()
+  }, [league?.id, teamId])
+
   const activePlayers = sortPlayersByNumber((team?.Player || []).filter(p => p.active))
 
   return (
@@ -115,6 +133,9 @@ function TeamProfile() {
                 <span className="team-profile-category">{team.category.type}</span>
               )}
               <h2>{team.name}</h2>
+              <span className="team-profile-coach-tag">
+                Coach: {coach ? (coach.name || coach.email) : 'Sin asignar'}
+              </span>
             </div>
           </div>
 

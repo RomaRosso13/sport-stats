@@ -1,0 +1,169 @@
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.config-manager-container {
+  flex: 1;
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.config-manager-intro h2 {
+  margin: 0 0 4px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.config-manager-intro p {
+  margin: 0 0 24px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.config-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 22px;
+  margin-bottom: 20px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.config-card h3 {
+  margin: 0 0 4px;
+  font-size: 17px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.config-card-subtitle {
+  margin: 0 0 16px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.config-card form {
+  display: flex;
+  flex-direction: column;
+}
+
+.config-card label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  margin-top: 14px;
+}
+
+.config-card label:first-of-type {
+  margin-top: 10px;
+}
+
+.config-card input[type="text"],
+.config-card input[type="number"],
+.config-card select {
+  width: 100%;
+  padding: 8px 10px;
+  margin-top: 6px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.config-card input:focus,
+.config-card select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.15);
+}
+
+.color-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.color-field input[type="color"] {
+  width: 44px;
+  height: 38px;
+  padding: 2px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+}
+
+.color-hex-input {
+  flex: 1;
+  margin-top: 0 !important;
+}
+
+.config-fields-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.config-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-error {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.config-success {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: #166534;
+  font-weight: 600;
+}
+
+.config-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 18px;
+}
+
+.config-card-actions button {
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: var(--accent);
+  color: white;
+  transition: background-color .2s ease;
+}
+
+.config-card-actions button:hover:not(:disabled) {
+  background: var(--accent-dark);
+}
+
+.config-card-actions button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+  .config-manager-container {
+    padding: 16px;
+  }
+
+  .config-card {
+    padding: 16px;
+  }
+
+  .config-fields-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

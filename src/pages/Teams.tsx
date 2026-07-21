@@ -14,6 +14,7 @@ import { useCategory } from '../context/CategoryContext'
 import { getMatchDaysByCategoryId } from '../services/matchday.service'
 import { getMatchesByMatchDayIds } from '../services/match.service'
 import { getTeamsByCategoryId } from '../services/team.service'
+import { getCoachAssignmentsByLeagueId } from '../services/league_user.service.js'
 
 import "./Teams.css"
 
@@ -23,6 +24,7 @@ function Teams() {
   const [matchdays, setMatchdays] = useState([])
   const [teams, setTeams] = useState([])
   const [, setLoadingMatchdays] = useState(true)
+  const [coachesByTeamId, setCoachesByTeamId] = useState({})
 
   useEffect(() => {
     if (!category) return
@@ -60,6 +62,23 @@ function Teams() {
     loadMatchdays()
   }, [category?.id])
 
+  useEffect(() => {
+    if (!league?.id) return
+
+    async function loadCoaches() {
+      try {
+        const assignments = await getCoachAssignmentsByLeagueId(league.id)
+        const map = {}
+        ;(assignments || []).forEach(a => { map[a.team_id] = a.user })
+        setCoachesByTeamId(map)
+      } catch (err) {
+        console.error(err)
+      }
+    }
+
+    loadCoaches()
+  }, [league?.id])
+
     const isDataLoading = !league || !matchdays.length
     const [showLoader, setShowLoader] = useState(true)
   
@@ -88,7 +107,7 @@ function Teams() {
       <h2 className="teams-title">Equipos</h2>
         <div className="teams-grid">
           {teams.map(team => (
-            <TeamCard key={team.id} team={team} matchdays={matchdays}/>
+            <TeamCard key={team.id} team={team} matchdays={matchdays} coach={coachesByTeamId[team.id]}/>
           ))}
         </div>
       </main>

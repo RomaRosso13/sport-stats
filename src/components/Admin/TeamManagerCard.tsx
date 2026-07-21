@@ -1,6 +1,6 @@
 import './TeamManagerCard.css'
 
-function TeamManagerCard({ team, isSelected, onSelect, onEdit, onDelete }) {
+function TeamManagerCard({ team, coach, isSelected, onSelect, onEdit, onDelete }) {
   const playerCount = team.Player?.length || 0
 
   return (
@@ -19,6 +19,15 @@ function TeamManagerCard({ team, isSelected, onSelect, onEdit, onDelete }) {
         <span className="team-manager-count">
           {playerCount} jugador{playerCount === 1 ? '' : 'es'}
         </span>
+        {coach ? (
+          <span className="team-manager-coach-tag assigned" title={coach.email}>
+            Coach: {coach.name || coach.email}
+          </span>
+        ) : (
+          <span className="team-manager-coach-tag pending">
+            Sin coach asignado
+          </span>
+        )}
       </div>
 
       <div className="team-manager-actions">

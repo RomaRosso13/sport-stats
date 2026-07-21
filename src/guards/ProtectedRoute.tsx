@@ -1,12 +1,12 @@
 import { Navigate } from 'react-router-dom'
 import { useLeagueMembership } from '../hooks/useLeagueMembership'
 
-function ProtectedRoute({ children, allowStaff = false }) {
-  const { isStaff, isFullAdmin, loading } = useLeagueMembership()
+function ProtectedRoute({ children, allowReferee = false, allowPhotographer = false, allowCoach = false }) {
+  const { isReferee, isFullAdmin, isPhotographer, isCoach, loading } = useLeagueMembership()
 
   if (loading) return null
 
-  const authorized = isFullAdmin || (allowStaff && isStaff)
+  const authorized = isFullAdmin || (allowReferee && isReferee) || (allowPhotographer && isPhotographer) || (allowCoach && isCoach)
   if (!authorized) return <Navigate to="/" replace />
 
   return children

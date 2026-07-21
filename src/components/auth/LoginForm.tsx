@@ -22,7 +22,11 @@ export default function InlineLoginForm({ onClose }) {
       setLoading(true)
       const { role } = await signInByPasswordForLeague(email, password, league.id)
       onClose()
-      navigate(role === 'Staff' ? `/${league.slug}/admin/editar` : `/${league.slug}/admin`)
+      const dest = role === 'Referi' ? `/${league.slug}/admin/editar`
+        : role === 'Fotografo' ? `/${league.slug}/admin/fotos`
+        : role === 'Coach' ? `/${league.slug}/admin/mi-equipo`
+        : `/${league.slug}/admin`
+      navigate(dest)
     } catch (err) {
       setErrorMessage(err.message)
     } finally {

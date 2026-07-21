@@ -58,6 +58,14 @@
   color: var(--accent-dark);
 }
 
+.team-profile-coach-tag {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+}
+
 .team-profile-layout {
   display: grid;
   grid-template-columns: 1.6fr 1fr;

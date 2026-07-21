@@ -58,3 +58,28 @@ export async function setSeasonActive(seasonId, active) {
   invalidateSeasonCaches()
   return result
 }
+
+// Configuración del calendario (horario/duración de partidos) propia de cada
+// temporada — los campos vacíos se guardan como null para que CalendarDay
+// caiga en sus valores por defecto.
+export async function updateSeasonCalendarConfig(seasonId, { startHour, endHour, stepMinutes, matchDurationMinutes }) {
+  const toIntOrNull = value => (value === '' || value === null || value === undefined) ? null : Number(value)
+
+  const result = await runQuery(
+    supabase
+      .from('Season')
+      .update({
+        start_hour: toIntOrNull(startHour),
+        end_hour: toIntOrNull(endHour),
+        step_minutes: toIntOrNull(stepMinutes),
+        match_duration_minutes: toIntOrNull(matchDurationMinutes)
+      })
+      .eq('id', seasonId)
+      .select()
+      .single(),
+    'No se pudo guardar la configuración del calendario'
+  )
+
+  invalidateSeasonCaches()
+  return result
+}

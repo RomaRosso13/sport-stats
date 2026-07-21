@@ -12,7 +12,7 @@ function MatchRow({
   onAddStatEntry,
   onRemoveStatEntry,
   onPlayerCreated,
-  isStaff = false
+  isReferee = false
 }) {
   const [statsOpen, setStatsOpen] = useState(false)
 
@@ -33,9 +33,17 @@ function MatchRow({
   }, []) // 👈 SOLO una vez
 
   function update(field, value) {
+    const changes: Record<string, unknown> = { [field]: value }
+
+    // Un referi no marca manualmente "Por aprobar": en cuanto ajusta el
+    // marcador de un partido pendiente, el estado avanza solo.
+    if (isReferee && (field === 'local_score' || field === 'away_score') && match.status === 'Pendiente') {
+      changes.status = 'Por aprobar'
+    }
+
     onChange({
       ...match,
-      [field]: value
+      ...changes
     })
   }
 
@@ -104,15 +112,15 @@ function MatchRow({
         <select
           className={`status-select ${cardStatusClass}`}
           value={match.status}
-          disabled={isStaff && isFinished}
+          disabled={isReferee}
           onChange={e => update('status', e.target.value)}
         >
           <option value="Pendiente">Pendiente</option>
           <option value="Por aprobar">Por aprobar</option>
-          <option value="Terminado" disabled={isStaff}>Terminado</option>
+          <option value="Terminado">Terminado</option>
         </select>
-        {isStaff && (
-          <span className="status-staff-hint">
+        {isReferee && (
+          <span className="status-referee-hint">
             {isFinished
               ? 'Un administrador ya aprobó este resultado'
               : 'Un administrador debe aprobar el resultado para marcarlo como Terminado'}

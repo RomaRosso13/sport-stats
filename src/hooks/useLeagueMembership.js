@@ -10,6 +10,7 @@ export function useLeagueMembership() {
 
   const [role, setRole] = useState(null)
   const [userId, setUserId] = useState(null)
+  const [teamIds, setTeamIds] = useState([])
   const [checking, setChecking] = useState(true)
 
   useEffect(() => {
@@ -18,6 +19,7 @@ export function useLeagueMembership() {
     if (!user || !league) {
       setRole(null)
       setUserId(null)
+      setTeamIds([])
       setChecking(false)
       return
     }
@@ -31,12 +33,14 @@ export function useLeagueMembership() {
         if (isMounted) {
           setRole(membership?.role || null)
           setUserId(membership?.userId || null)
+          setTeamIds(membership?.teamIds || [])
         }
       } catch (err) {
         console.error(err)
         if (isMounted) {
           setRole(null)
           setUserId(null)
+          setTeamIds([])
         }
       } finally {
         if (isMounted) setChecking(false)
@@ -53,9 +57,12 @@ export function useLeagueMembership() {
   return {
     role,
     userId,
+    teamIds,
     isMember: !!role,
-    isStaff: role === 'Staff',
+    isReferee: role === 'Referi',
     isFullAdmin: role === 'Admin' || role === 'SuperAdmin',
+    isPhotographer: role === 'Fotografo',
+    isCoach: role === 'Coach',
     loading: authLoading || leagueLoading || checking
   }
 }

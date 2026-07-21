@@ -7,15 +7,15 @@ const CATEGORY_LABELS = {
   Varonil: "Varonil"
 }
 
-function CalendarDay({ matchday }) {
+function CalendarDay({ matchday, calendarConfig }) {
 
   /* =========================
-     CONFIG
+     CONFIG (con valores por defecto si la temporada no los personalizó)
   ========================= */
-  const START_HOUR = 20
-  const END_HOUR = 24
-  const STEP = 15
-  const MATCH_DURATION = 40
+  const START_HOUR = calendarConfig?.startHour ?? 20
+  const END_HOUR = calendarConfig?.endHour ?? 24
+  const STEP = calendarConfig?.stepMinutes ?? 15
+  const MATCH_DURATION = calendarConfig?.matchDuration ?? 40
 
   /* =========================
      HELPERS

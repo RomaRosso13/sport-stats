@@ -60,6 +60,22 @@
   transform: translateY(-1px);
 }
 
+.user-manager-header-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.primary-btn.secondary-action {
+  background: #f1f5f9;
+  color: #374151;
+  box-shadow: none;
+}
+
+.primary-btn.secondary-action:hover:not(:disabled) {
+  background: #e2e8f0;
+}
+
 .empty-state {
   padding: 28px 16px;
   text-align: center;
@@ -166,6 +182,23 @@
   background: #f3f4f6;
   color: #9ca3af;
   cursor: not-allowed;
+}
+
+.edit-teams-btn {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--accent-border-soft);
+  background: var(--accent-soft);
+  color: var(--accent-dark);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color .15s ease;
+  white-space: nowrap;
+}
+
+.edit-teams-btn:hover {
+  background: var(--accent-soft-2);
 }
 
 .remove-user-btn {

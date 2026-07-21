@@ -21,6 +21,9 @@ import TeamManager from "./pages/admin/TeamManager"
 import VenueManager from "./pages/admin/VenueManager"
 import UserManager from "./pages/admin/UserManager"
 import AdminDashboard from "./pages/admin/AdminDashboard"
+import PhotoManager from "./pages/admin/PhotoManager"
+import ConfigManager from "./pages/admin/ConfigManager"
+import CoachTeamManager from "./pages/admin/CoachTeamManager"
 
 function App() {
   return (
@@ -40,11 +43,14 @@ function App() {
           <Route path="jugadores/:playerId" element={<PlayerProfile />} />
           <Route path="/:leagueSlug/admin" element={ <ProtectedRoute> <AdminDashboard /> </ProtectedRoute> }/>
           <Route path="/:leagueSlug/admin/gestor" element={ <ProtectedRoute> <SeasonAdministrator /> </ProtectedRoute> }/>
-          <Route path="/:leagueSlug/admin/editar" element={ <ProtectedRoute allowStaff> <MatchDayEditor /> </ProtectedRoute> }/>
+          <Route path="/:leagueSlug/admin/editar" element={ <ProtectedRoute allowReferee> <MatchDayEditor /> </ProtectedRoute> }/>
           <Route path="/:leagueSlug/admin/crear" element={ <ProtectedRoute> <MatchDayCreator /> </ProtectedRoute> }/>
           <Route path="/:leagueSlug/admin/equipos" element={ <ProtectedRoute> <TeamManager /> </ProtectedRoute> }/>
           <Route path="/:leagueSlug/admin/sedes" element={ <ProtectedRoute> <VenueManager /> </ProtectedRoute> }/>
           <Route path="/:leagueSlug/admin/usuarios" element={ <ProtectedRoute> <UserManager /> </ProtectedRoute> }/>
+          <Route path="/:leagueSlug/admin/fotos" element={ <ProtectedRoute allowPhotographer> <PhotoManager /> </ProtectedRoute> }/>
+          <Route path="/:leagueSlug/admin/configuracion" element={ <ProtectedRoute> <ConfigManager /> </ProtectedRoute> }/>
+          <Route path="/:leagueSlug/admin/mi-equipo" element={ <ProtectedRoute allowCoach> <CoachTeamManager /> </ProtectedRoute> }/>
         </Route>
 
         <Route path="*" element={<p>Liga no encontrada</p>} />

@@ -57,6 +57,23 @@
   color: #6b7280;
 }
 
+.team-manager-coach-tag {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.team-manager-coach-tag.assigned {
+  color: #166534;
+}
+
+.team-manager-coach-tag.pending {
+  color: #9ca3af;
+  font-weight: 600;
+}
+
 .team-manager-actions {
   display: flex;
   gap: 8px;

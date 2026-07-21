@@ -29,8 +29,8 @@ import { classifyTopPlayersByStats } from '../utils/classifyTopPlayersByStats'
 import './Home.css'
 
 function Home() {
-  const { season, loading } = useSeason()
-  const { league } = useLeague()
+  const { loading: seasonLoading } = useSeason()
+  const { league, loading: leagueLoading } = useLeague()
   const { categories, category, setCategory } = useCategory()
   const [matchdays, setMatchdays] = useState([])
   const [teams, setTeams] = useState([])
@@ -38,7 +38,13 @@ function Home() {
   const [ stats, setStats ] = useState([])
 
   useEffect(() => {
-    if (!category) return
+    if (!category) {
+      setTeams([])
+      setMatchdays([])
+      setStats([])
+      setLoadingMatchdays(false)
+      return
+    }
 
     async function loadMatchdays() {
       try {
@@ -80,9 +86,9 @@ function Home() {
   const recentResults = getRecentResults(matchdays, 4)
   const leaderboard = classifyTopPlayersByStats( stats, ['touchdown', 'touchdown_pass', 'sacks', 'interceptions'])
 
-  const isLoading = loading || !league || loadingMatchdays
+  const isLoading = leagueLoading || seasonLoading || !league || loadingMatchdays
 
-  if (!season) {
+  if (!leagueLoading && !league) {
     return <LeagueNotFound/>
   }
 

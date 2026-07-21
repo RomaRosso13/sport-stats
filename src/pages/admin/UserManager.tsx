@@ -6,16 +6,18 @@ import { useAuth } from '../../context/AuthContext'
 import Header from '../../components/common/Header'
 import Footer from '../../components/common/Footer'
 import AddUserModal from '../../components/Admin/AddUserModal'
+import CreateUserModal from '../../components/Admin/CreateUserModal'
+import CoachTeamsModal from '../../components/Admin/CoachTeamsModal'
 
 import {
   getLeagueMembers,
-  updateLeagueMemberRole,
-  removeLeagueMember
+  updateLeagueMemberRole
 } from '../../services/league_user.service.js'
+import { deleteUserFromLeague } from '../../services/create_user.service.js'
 
 import './UserManager.css'
 
-const ROLE_OPTIONS = ['Staff', 'Admin', 'SuperAdmin']
+const ROLE_OPTIONS = ['Referi', 'Admin', 'SuperAdmin', 'Fotografo', 'Coach']
 
 function getInitial(name) {
   return name?.trim().charAt(0).toUpperCase() || '?'
@@ -28,7 +30,9 @@ function UserManager() {
   const [members, setMembers] = useState([])
   const [loadingMembers, setLoadingMembers] = useState(true)
   const [showAddModal, setShowAddModal] = useState(false)
+  const [showCreateModal, setShowCreateModal] = useState(false)
   const [updatingId, setUpdatingId] = useState(null)
+  const [editingTeamsMember, setEditingTeamsMember] = useState(null)
 
   useEffect(() => {
     if (!league) return
@@ -52,6 +56,14 @@ function UserManager() {
     setMembers(prev => [...prev, newMember])
   }
 
+  function handleUserCreated({ user, membership }) {
+    setMembers(prev => [...prev, {
+      id: membership.id,
+      role: membership.role,
+      user: { id: user.id, name: user.name, email: user.email, auth_user_id: user.auth_user_id }
+    }])
+  }
+
   async function handleRoleChange(member, role) {
     try {
       setUpdatingId(member.id)
@@ -66,15 +78,20 @@ function UserManager() {
   }
 
   async function handleRemove(member) {
-    if (!window.confirm(`¿Quitar a ${member.user?.name || member.user?.email} de la liga?`)) return
+    const name = member.user?.name || member.user?.email
+    const confirmed = window.confirm(
+      `¿Quitar a ${name} de la liga? Si no pertenece a ninguna otra liga, su cuenta se eliminará ` +
+      `por completo (incluyendo su acceso para iniciar sesión). Esta acción no se puede deshacer.`
+    )
+    if (!confirmed) return
 
     try {
       setUpdatingId(member.id)
-      await removeLeagueMember(member.id)
+      await deleteUserFromLeague(member.id)
       setMembers(prev => prev.filter(m => m.id !== member.id))
     } catch (err) {
       console.error(err)
-      alert('No se pudo quitar al usuario')
+      alert(err.message || 'No se pudo quitar al usuario')
     } finally {
       setUpdatingId(null)
     }
@@ -93,9 +110,14 @@ function UserManager() {
 
         <div className="section-header">
           <h3>Usuarios</h3>
-          <button className="primary-btn" onClick={() => setShowAddModal(true)}>
-            + Agregar usuario
-          </button>
+          <div className="user-manager-header-actions">
+            <button className="primary-btn" onClick={() => setShowCreateModal(true)}>
+              + Crear usuario
+            </button>
+            <button className="primary-btn secondary-action" onClick={() => setShowAddModal(true)}>
+              + Agregar usuario existente
+            </button>
+          </div>
         </div>
 
         {!loadingMembers && members.length === 0 ? (
@@ -130,6 +152,16 @@ function UserManager() {
                       ))}
                     </select>
 
+                    {member.role === 'Coach' && (
+                      <button
+                        type="button"
+                        className="edit-teams-btn"
+                        onClick={() => setEditingTeamsMember(member)}
+                      >
+                        Equipos
+                      </button>
+                    )}
+
                     <button
                       type="button"
                       className="remove-user-btn"
@@ -152,6 +184,23 @@ function UserManager() {
           existingUserIds={existingUserIds}
           onClose={() => setShowAddModal(false)}
           onAdded={handleMemberAdded}
+        />
+      )}
+
+      {showCreateModal && (
+        <CreateUserModal
+          leagueId={league?.id}
+          onClose={() => setShowCreateModal(false)}
+          onCreated={handleUserCreated}
+        />
+      )}
+
+      {editingTeamsMember && (
+        <CoachTeamsModal
+          leagueId={league?.id}
+          member={editingTeamsMember}
+          onClose={() => setEditingTeamsMember(null)}
+          onSaved={() => {}}
         />
       )}
 
