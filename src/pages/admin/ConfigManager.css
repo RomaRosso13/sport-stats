@@ -81,27 +81,6 @@
   box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.15);
 }
 
-.color-field {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 6px;
-}
-
-.color-field input[type="color"] {
-  width: 44px;
-  height: 38px;
-  padding: 2px;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  cursor: pointer;
-}
-
-.color-hex-input {
-  flex: 1;
-  margin-top: 0 !important;
-}
-
 .config-fields-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
