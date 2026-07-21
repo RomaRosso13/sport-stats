@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { useLeague } from '../../context/LeagueContext'
 import { useAuth } from '../../context/AuthContext'
+import { useLeagueMembership } from '../../hooks/useLeagueMembership'
 
 import Header from '../../components/common/Header'
 import Footer from '../../components/common/Footer'
@@ -26,6 +27,8 @@ function getInitial(name) {
 function UserManager() {
   const { league } = useLeague()
   const { user } = useAuth()
+  const { role: viewerRole } = useLeagueMembership()
+  const viewerIsSuperAdmin = viewerRole === 'SuperAdmin'
 
   const [members, setMembers] = useState([])
   const [loadingMembers, setLoadingMembers] = useState(true)
@@ -126,6 +129,8 @@ function UserManager() {
           <div className="user-list">
             {members.map(member => {
               const isSelf = member.user?.auth_user_id === user?.id
+              const isProtected = !isSelf && !viewerIsSuperAdmin && (member.role === 'Admin' || member.role === 'SuperAdmin')
+              const isLocked = isSelf || isProtected
 
               return (
                 <div key={member.id} className="user-row">
@@ -135,6 +140,11 @@ function UserManager() {
                       <span className="user-name">
                         {member.user?.name || 'Sin nombre'}
                         {isSelf && <span className="user-self-tag">Tú</span>}
+                        {isProtected && (
+                          <span className="user-protected-tag" title="Solo un SuperAdmin puede modificar a otro Admin o SuperAdmin">
+                            Protegido
+                          </span>
+                        )}
                       </span>
                       <span className="user-email">{member.user?.email}</span>
                     </div>
@@ -144,7 +154,7 @@ function UserManager() {
                     <select
                       className="role-select"
                       value={member.role || ''}
-                      disabled={isSelf || updatingId === member.id}
+                      disabled={isLocked || updatingId === member.id}
                       onChange={e => handleRoleChange(member, e.target.value)}
                     >
                       {ROLE_OPTIONS.map(role => (
@@ -165,7 +175,7 @@ function UserManager() {
                     <button
                       type="button"
                       className="remove-user-btn"
-                      disabled={isSelf || updatingId === member.id}
+                      disabled={isLocked || updatingId === member.id}
                       onClick={() => handleRemove(member)}
                     >
                       Quitar
