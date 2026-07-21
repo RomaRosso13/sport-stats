@@ -13,6 +13,8 @@ function MatchRow({
   onRemoveStatEntry,
   onPlayerCreated,
   isReferee = false,
+  canManageSavedStats = false,
+  onUpdateSavedStat,
   statLabels
 }) {
   const [statsOpen, setStatsOpen] = useState(false)
@@ -160,6 +162,8 @@ function MatchRow({
           onAddEntry={onAddStatEntry}
           onRemoveEntry={onRemoveStatEntry}
           onPlayerCreated={onPlayerCreated}
+          canManageSavedStats={canManageSavedStats}
+          onUpdateSavedStat={onUpdateSavedStat}
         />
       )}
     </div>

@@ -14,7 +14,7 @@ import PageWrapper from '../../components/common/PageWrapper';
 import { getMatchesByMatchDayIds, updateMatches } from '../../services/match.service'
 import { getMatchDaysByCategoryId } from '../../services/matchday.service'
 import { getTeamsByCategoryId } from '../../services/team.service'
-import { getIndividualStatsByCategory, saveIndividualStatsForMatch } from '../../services/individual_stats.service'
+import { getIndividualStatsByCategory, saveIndividualStatsForMatch, updateIndividualStatField } from '../../services/individual_stats.service'
 import { getStatLabels } from '../../constants/statFields'
 
 import './MatchdayEditor.css'
@@ -50,7 +50,7 @@ function EditMatchday() {
   const { categories, category, setCategory } = useCategory()
   const [selectedMatchday, setSelectedMatchday] = useState(null)
   const { league } = useLeague()
-  const { isReferee, userId } = useLeagueMembership()
+  const { isReferee, isFullAdmin, userId } = useLeagueMembership()
   const statLabels = getStatLabels(league)
   const [saving, setSaving] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
@@ -150,6 +150,16 @@ function EditMatchday() {
       ...prev,
       [matchId]: (prev[matchId] || []).filter(e => e.id !== entryId)
     }))
+  }
+
+  async function handleUpdateSavedStat(rowId: number, statKey: StatField, amount: number) {
+    try {
+      await updateIndividualStatField(rowId, statKey, amount)
+      await loadRostersAndStats()
+    } catch (error) {
+      console.error(error)
+      alert('Error al actualizar la estadística')
+    }
   }
 
   function handlePlayerCreated(newPlayer) {
@@ -295,6 +305,8 @@ async function handleSave() {
             onRemoveStatEntry={removeStatEntry}
             onPlayerCreated={handlePlayerCreated}
             isReferee={isReferee}
+            canManageSavedStats={isFullAdmin}
+            onUpdateSavedStat={handleUpdateSavedStat}
             statLabels={statLabels}
           />
         ) : (

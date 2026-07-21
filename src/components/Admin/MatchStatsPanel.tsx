@@ -19,7 +19,9 @@ function TeamStatsColumn({
   statLabels,
   onAddEntry,
   onRemoveEntry,
-  onPlayerCreated
+  onPlayerCreated,
+  canManageSavedStats = false,
+  onUpdateSavedStat
 }) {
   const STAT_OPTIONS = STAT_KEYS.map(key => ({ key, label: statLabels[key] }))
 
@@ -101,12 +103,25 @@ function TeamStatsColumn({
       .filter(opt => (row[opt.key] || 0) > 0)
       .map(opt => ({
         id: `saved-${row.id}-${opt.key}`,
+        rowId: row.id,
+        statKey: opt.key,
         playerName: row.player?.name,
         playerNumber: row.player?.number,
         label: opt.label,
         amount: row[opt.key]
       }))
   )
+
+  function handleSavedAmountBlur(line, rawValue) {
+    const newAmount = Number(rawValue)
+    if (Number.isNaN(newAmount) || newAmount === line.amount) return
+    onUpdateSavedStat(line.rowId, line.statKey, newAmount)
+  }
+
+  function handleSavedDelete(line) {
+    if (!window.confirm(`¿Eliminar ${line.amount} ${line.label} de ${line.playerName}?`)) return
+    onUpdateSavedStat(line.rowId, line.statKey, 0)
+  }
 
   const hasEntries = savedLines.length > 0 || draftEntries.length > 0
 
@@ -221,7 +236,28 @@ function TeamStatsColumn({
           {savedLines.map(line => (
             <li key={line.id} className="stats-entry saved">
               <span className="stats-entry-player">#{line.playerNumber} {line.playerName}</span>
-              <span className="stats-entry-amount">{line.amount} {line.label}</span>
+              {canManageSavedStats ? (
+                <>
+                  <input
+                    type="number"
+                    min="0"
+                    className="stats-entry-edit-input"
+                    aria-label={`${line.label} de ${line.playerName}`}
+                    defaultValue={line.amount}
+                    onBlur={e => handleSavedAmountBlur(line, e.target.value)}
+                  />
+                  <span className="stats-entry-amount-label">{line.label}</span>
+                  <button
+                    type="button"
+                    className="remove-stat-btn"
+                    onClick={() => handleSavedDelete(line)}
+                  >
+                    ✕
+                  </button>
+                </>
+              ) : (
+                <span className="stats-entry-amount">{line.amount} {line.label}</span>
+              )}
             </li>
           ))}
 
@@ -254,7 +290,9 @@ function MatchStatsPanel({
   statLabels,
   onAddEntry,
   onRemoveEntry,
-  onPlayerCreated
+  onPlayerCreated,
+  canManageSavedStats = false,
+  onUpdateSavedStat
 }) {
   const localDraft = entries.filter(e => String(e.teamId) === String(match.local_team.id))
   const visitDraft = entries.filter(e => String(e.teamId) === String(match.visit_team.id))
@@ -279,6 +317,8 @@ function MatchStatsPanel({
           onAddEntry={onAddEntry}
           onRemoveEntry={onRemoveEntry}
           onPlayerCreated={onPlayerCreated}
+          canManageSavedStats={canManageSavedStats}
+          onUpdateSavedStat={onUpdateSavedStat}
         />
 
         <TeamStatsColumn
@@ -296,6 +336,8 @@ function MatchStatsPanel({
           onAddEntry={onAddEntry}
           onRemoveEntry={onRemoveEntry}
           onPlayerCreated={onPlayerCreated}
+          canManageSavedStats={canManageSavedStats}
+          onUpdateSavedStat={onUpdateSavedStat}
         />
       </div>
     </div>

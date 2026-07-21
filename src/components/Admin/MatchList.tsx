@@ -12,6 +12,8 @@ function MatchList({
   onRemoveStatEntry,
   onPlayerCreated,
   isReferee = false,
+  canManageSavedStats = false,
+  onUpdateSavedStat,
   statLabels
 }) {
   if (!matches.length) {
@@ -39,6 +41,8 @@ function MatchList({
           onRemoveStatEntry={onRemoveStatEntry}
           onPlayerCreated={onPlayerCreated}
           isReferee={isReferee}
+          canManageSavedStats={canManageSavedStats}
+          onUpdateSavedStat={onUpdateSavedStat}
           statLabels={statLabels}
         />
       ))}

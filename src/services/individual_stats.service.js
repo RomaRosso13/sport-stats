@@ -113,3 +113,18 @@ export async function saveIndividualStatsForMatch(categoryId, entries) {
 
   return results
 }
+
+// Permite a Admin/SuperAdmin corregir o "eliminar" (poniendo amount en 0)
+// una estadística individual después de guardada, sobreescribiendo el valor
+// exacto en vez de sumar un delta como hace saveIndividualStatsForMatch.
+export async function updateIndividualStatField(rowId, statKey, amount) {
+  const result = await runQuery(
+    supabase.from('IndividualStats').update({ [statKey]: amount }).eq('id', rowId).select().single(),
+    'No se pudo actualizar la estadística'
+  )
+
+  invalidate('getIndividualStatsByCategory')
+  invalidate('getIndividualStatsByMatchId')
+
+  return result
+}
