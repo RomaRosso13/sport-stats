@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom"
 import { AuthProvider } from "./context/AuthContext"
 
 import LeagueLayout from "./layouts/LeagueLayout"
+import Landing from "./pages/Landing"
 import Home from "./pages/Home"
 import Calendar from "./pages/Calendar"
 import Results from "./pages/Results"
@@ -29,6 +30,8 @@ function App() {
   return (
     <AuthProvider>
       <Routes>
+        <Route path="/" element={<Landing />} />
+
         <Route path="/:leagueSlug" element={<LeagueLayout />}>
           <Route index element={<Home />} />
           <Route path="calendario" element={<Calendar />} />

@@ -12,6 +12,15 @@ export async function getLeagueBySlug(slug) {
   )
 }
 
+export async function getActiveLeagues() {
+  return cached('getActiveLeagues', [], () =>
+    runQuery(
+      supabase.from('League').select('id, name, slug, image_url').eq('active', true).order('name')
+    ),
+    5 * 60_000
+  )
+}
+
 export async function updateLeague(leagueId, { name, imageUrl, primaryColor }) {
   const result = await runQuery(
     supabase
