@@ -45,6 +45,20 @@ function ResultsDay({ matchday, teams }) {
         </div>
       </header>
 
+      {matchday.summary && (
+        <div className="chronicle">
+          <div className="chronicle-header">
+            <svg className="chronicle-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 2.5 11.4 7 16 8.4 11.4 9.8 10 14.3 8.6 9.8 4 8.4 8.6 7 10 2.5Z" fill="currentColor" />
+              <path d="M16.2 12.3 16.8 14.2 18.7 14.8 16.8 15.4 16.2 17.3 15.6 15.4 13.7 14.8 15.6 14.2 16.2 12.3Z" fill="currentColor" />
+            </svg>
+            <span className="chronicle-label">Crónica de la jornada</span>
+            <span className="chronicle-badge">Generado con IA</span>
+          </div>
+          <p className="chronicle-text">{matchday.summary}</p>
+        </div>
+      )}
+
       <div className="results-grid">
         {matchday.games.map(match => (
           <ResultCard key={match.id} match={match} />

@@ -15,6 +15,7 @@ import { getMatchesByMatchDayIds, updateMatches } from '../../services/match.ser
 import { getMatchDaysByCategoryId } from '../../services/matchday.service'
 import { getTeamsByCategoryId } from '../../services/team.service'
 import { getIndividualStatsByCategory, saveIndividualStatsForMatch, updateIndividualStatField } from '../../services/individual_stats.service'
+import { generateMatchdaySummary, publishMatchdaySummary } from '../../services/matchday_summary.service'
 import { getStatLabels } from '../../constants/statFields'
 
 import './MatchdayEditor.css'
@@ -55,6 +56,12 @@ function EditMatchday() {
   const [saving, setSaving] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
   const [isDirty, setIsDirty] = useState(false)
+
+  const [summaryDraft, setSummaryDraft] = useState('')
+  const [generatingSummary, setGeneratingSummary] = useState(false)
+  const [publishingSummary, setPublishingSummary] = useState(false)
+  const [summaryError, setSummaryError] = useState('')
+  const [summaryPublished, setSummaryPublished] = useState(false)
 
   const [teams, setTeams] = useState([])
   const [statsTotals, setStatsTotals] = useState({})
@@ -123,6 +130,13 @@ function EditMatchday() {
     setStatsDraft({})
   }, [selectedMatchday?.id])
 
+  // Precarga el resumen ya publicado (si existe) al cambiar de jornada
+  useEffect(() => {
+    setSummaryDraft(selectedMatchday?.summary || '')
+    setSummaryError('')
+    setSummaryPublished(false)
+  }, [selectedMatchday?.id])
+
   function addStatEntry(matchId: number, entry: Omit<StatEntry, 'id'>) {
     setIsDirty(true)
     setStatsDraft(prev => {
@@ -173,6 +187,46 @@ function EditMatchday() {
   }
 
   const currentMatchday = matchdays.find( md => md.id === selectedMatchday?.id)
+
+  const allGamesFinished = !!currentMatchday?.games?.length &&
+    currentMatchday.games.every(g => g.status === 'Terminado')
+
+  async function handleGenerateSummary() {
+    if (!currentMatchday) return
+
+    try {
+      setGeneratingSummary(true)
+      setSummaryError('')
+      setSummaryPublished(false)
+      const summary = await generateMatchdaySummary(currentMatchday.id)
+      setSummaryDraft(summary)
+    } catch (error) {
+      console.error(error)
+      setSummaryError(error.message || 'No se pudo generar el resumen')
+    } finally {
+      setGeneratingSummary(false)
+    }
+  }
+
+  async function handlePublishSummary() {
+    if (!currentMatchday) return
+
+    try {
+      setPublishingSummary(true)
+      setSummaryError('')
+      await publishMatchdaySummary(currentMatchday.id, summaryDraft)
+      setMatchdays(prev =>
+        prev.map(md => md.id === currentMatchday.id ? { ...md, summary: summaryDraft } : md)
+      )
+      setSummaryPublished(true)
+      setTimeout(() => setSummaryPublished(false), 2000)
+    } catch (error) {
+      console.error(error)
+      setSummaryError(error.message || 'No se pudo publicar el resumen')
+    } finally {
+      setPublishingSummary(false)
+    }
+  }
 
   // Advierte al cerrar/recargar la pestaña si hay cambios sin guardar.
   useEffect(() => {
@@ -328,6 +382,51 @@ async function handleSave() {
             {saving ? 'Guardando...' : 'Guardar cambios'}
           </button>
         </div>
+
+        {isFullAdmin && currentMatchday && (
+          <div className="summary-section">
+            <h3>Resumen con IA</h3>
+            <p className="summary-hint">
+              {allGamesFinished
+                ? 'Genera un borrador de crónica a partir de los resultados y estadísticas de esta jornada, revísalo y publícalo.'
+                : 'Todos los partidos de esta jornada deben estar "Terminado" para poder generar el resumen.'}
+            </p>
+
+            <button
+              type="button"
+              className="summary-generate-button"
+              onClick={handleGenerateSummary}
+              disabled={!allGamesFinished || generatingSummary}
+            >
+              {generatingSummary ? 'Generando...' : 'Generar resumen con IA'}
+            </button>
+
+            {summaryError && <p className="summary-error">{summaryError}</p>}
+
+            {(summaryDraft || generatingSummary) && (
+              <>
+                <textarea
+                  className="summary-textarea"
+                  value={summaryDraft}
+                  onChange={e => setSummaryDraft(e.target.value)}
+                  rows={5}
+                  placeholder="El resumen generado aparecerá aquí. Puedes editarlo antes de publicarlo."
+                />
+                <div className="summary-publish-action">
+                  {summaryPublished && <span className="save-success">✓ Resumen publicado</span>}
+                  <button
+                    type="button"
+                    className="summary-publish-button"
+                    onClick={handlePublishSummary}
+                    disabled={publishingSummary || !summaryDraft.trim()}
+                  >
+                    {publishingSummary ? 'Publicando...' : 'Publicar resumen'}
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        )}
       </main>
       <Footer />
     </div>
