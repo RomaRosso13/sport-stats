@@ -163,7 +163,11 @@ ${leadersText || 'No hay líderes de estadísticas individuales capturados para 
 Responde solo con el párrafo de la crónica, sin encabezados ni firma.`
 
     const geminiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
+      // Fijo a una versión concreta (no al alias "latest"): "Flash Lite" trae
+      // 500 peticiones/día gratis vs. las 20/día de los "Flash" normales, y
+      // fijar la versión evita que Google la cambie sola a un modelo con
+      // peor cuota (como pasó con gemini-flash-latest).
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
