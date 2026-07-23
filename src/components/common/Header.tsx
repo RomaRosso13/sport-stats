@@ -5,6 +5,7 @@ import { useSeason } from '../../context/SeasonContext'
 import { useAuth } from "../../context/AuthContext"
 import { useLeagueMembership } from '../../hooks/useLeagueMembership'
 import { signOut } from '../../services/auth.service'
+import { clearDefaultLeagueSlug } from '../../utils/defaultLeague'
 
 import SeasonSelector from '../filters/SeasonSelector'
 import LoginForm from '../auth/LoginForm'
@@ -35,6 +36,11 @@ function Header({ league }) {
 
   if (loading) return null
   if (!league) return null
+
+function handleChangeLeague() {
+  clearDefaultLeagueSlug()
+  window.location.href = '/'
+}
 
 async function handleLogout() {
   try {
@@ -91,6 +97,9 @@ async function handleLogout() {
           {menuOpen && (
             <div className={`dropdown-menu open ${isMember ? 'has-admin' : ''}`}>
               <div className="menu-section">
+                <button type="button" className="menu-link-btn" onClick={handleChangeLeague}>
+                  Cambiar de liga
+                </button>
                 {isMember && <span className="menu-section-title">Navegación</span>}
                 <Link to={`/${league.slug}`} onClick={() => setMenuOpen(false)}>
                   Inicio

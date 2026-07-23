@@ -210,7 +210,8 @@
   color: #94a3b8;
 }
 
-.dropdown-menu a {
+.dropdown-menu a,
+.dropdown-menu button.menu-link-btn {
   text-decoration: none;
   color: #1e293b;
   font-weight: 600;
@@ -225,7 +226,17 @@
     transform 0.15s ease;
 }
 
-.dropdown-menu a:hover {
+.dropdown-menu button.menu-link-btn {
+  background: none;
+  border: none;
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.dropdown-menu a:hover,
+.dropdown-menu button.menu-link-btn:hover {
   background-color: var(--accent-soft);
   color: var(--accent);
   transform: translateX(2px);
