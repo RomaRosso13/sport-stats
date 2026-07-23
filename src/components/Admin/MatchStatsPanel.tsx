@@ -128,7 +128,7 @@ function TeamStatsColumn({
   return (
     <div className={`stats-column ${side}`}>
       <h4 className="stats-column-title">
-        {teamLogo && <img src={teamLogo} alt="" />}
+        {teamLogo && <img src={teamLogo} alt="" loading="lazy" />}
         {teamName}
       </h4>
 

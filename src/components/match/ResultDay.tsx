@@ -72,7 +72,7 @@ function ResultsDay({ matchday, teams }) {
           <div className="bye-teams">
             {byeTeams.map(team => (
               <div key={team.id} className="bye-team">
-                <img src={team.logo_url} alt={team.name} />
+                <img src={team.logo_url} alt={team.name} loading="lazy" />
                 <span>{team.name}</span>
               </div>
             ))}

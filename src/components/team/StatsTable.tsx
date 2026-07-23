@@ -15,6 +15,7 @@ function LeaderAvatar({ photo, name }) {
         src={photo}
         alt={name}
         className="leader-photo"
+        loading="lazy"
         onError={() => setImageFailed(true)}
       />
     )

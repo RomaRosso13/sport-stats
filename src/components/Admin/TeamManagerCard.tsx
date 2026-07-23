@@ -9,7 +9,7 @@ function TeamManagerCard({ team, coach, isSelected, onSelect, onEdit, onDelete }
       onClick={() => onSelect(team)}
     >
       {team.logo_url ? (
-        <img src={team.logo_url} alt={team.name} className="team-manager-logo" />
+        <img src={team.logo_url} alt={team.name} className="team-manager-logo" loading="lazy" />
       ) : (
         <div className="team-manager-logo placeholder">?</div>
       )}

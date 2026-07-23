@@ -18,6 +18,7 @@ function PlayerRow({ player }) {
             src={player.image_url}
             alt={player.name}
             className="player-row-photo"
+            loading="lazy"
             onError={() => setImageFailed(true)}
           />
         ) : (

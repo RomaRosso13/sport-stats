@@ -605,7 +605,7 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches, reloadToken }) {
 
                     <div className="team">
                       {match.local_team?.logo_url && (
-                        <img src={match.local_team.logo_url} alt={match.local_team.name} />
+                        <img src={match.local_team.logo_url} alt={match.local_team.name} loading="lazy" />
                       )}
                       <span>{match.local_team?.name}</span>
                     </div>
@@ -614,7 +614,7 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches, reloadToken }) {
 
                     <div className="team">
                       {match.visit_team?.logo_url && (
-                        <img src={match.visit_team.logo_url} alt={match.visit_team.name} />
+                        <img src={match.visit_team.logo_url} alt={match.visit_team.name} loading="lazy" />
                       )}
                       <span>{match.visit_team?.name}</span>
                     </div>
@@ -691,7 +691,7 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches, reloadToken }) {
 
                 <div className="team">
                   {homeTeam?.logo_url && (
-                    <img src={homeTeam.logo_url} alt={homeTeam.name} />
+                    <img src={homeTeam.logo_url} alt={homeTeam.name} loading="lazy" />
                   )}
                   <span>{homeTeam?.name}</span>
                 </div>
@@ -700,7 +700,7 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches, reloadToken }) {
 
                 <div className="team">
                   {awayTeam?.logo_url && (
-                    <img src={awayTeam.logo_url} alt={awayTeam.name} />
+                    <img src={awayTeam.logo_url} alt={awayTeam.name} loading="lazy" />
                   )}
                   <span>{awayTeam?.name}</span>
                 </div>

@@ -15,6 +15,7 @@ function RosterAvatar({ imageUrl, name }) {
         src={imageUrl}
         alt={name}
         className="roster-photo"
+        loading="lazy"
         onError={() => setImageFailed(true)}
       />
     )

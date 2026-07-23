@@ -62,6 +62,7 @@ function MatchRow({
           src={match.local_team.logo_url}
           alt={match.local_team.name}
           className="team-logo"
+          loading="lazy"
         />
         <span className="team-name">{match.local_team.name}</span>
       </div>
@@ -105,6 +106,7 @@ function MatchRow({
           src={match.visit_team.logo_url}
           alt={match.visit_team.name}
           className="team-logo"
+          loading="lazy"
         />
         <span className="team-name">{match.visit_team.name}</span>
       </div>

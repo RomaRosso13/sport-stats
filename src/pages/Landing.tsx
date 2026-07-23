@@ -188,7 +188,7 @@ function Landing() {
               {leagues.map(league => (
                 <Link to={`/${league.slug}`} className="landing-league-card" key={league.id}>
                   {league.image_url ? (
-                    <img src={league.image_url} alt={league.name} className="landing-league-logo" />
+                    <img src={league.image_url} alt={league.name} className="landing-league-logo" loading="lazy" />
                   ) : (
                     <span className="landing-league-logo landing-league-logo-fallback">🏈</span>
                   )}

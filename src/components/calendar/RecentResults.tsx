@@ -21,6 +21,7 @@ function RecentResults({ games }) {
                 src={p.local_team.logo_url}
                 alt={p.local_team.name}
                 className="team-logo"
+                loading="lazy"
               />
               <span className="team-name">{p.local_team.name}</span>
               {ganadorLocal && <span className="badge-win">WIN</span>}
@@ -38,6 +39,7 @@ function RecentResults({ games }) {
                 src={p.visit_team.logo_url}
                 alt={p.visit_team.name}
                 className="team-logo"
+                loading="lazy"
               />
               {ganadorVisit && <span className="badge-win">WIN</span>}
             </div>

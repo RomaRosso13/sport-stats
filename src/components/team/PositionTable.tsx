@@ -33,12 +33,12 @@ function PositionTable({ table }) {
               <td className="equipo-cell">
                 {fila.id && leagueSlug ? (
                   <Link to={`/${leagueSlug}/equipos/${fila.id}`} className="equipo-link">
-                    <img src={fila.logo} alt={fila.equipo} className="team-logo" />
+                    <img src={fila.logo} alt={fila.equipo} className="team-logo" loading="lazy" />
                     <span className="team-name">{fila.equipo}</span>
                   </Link>
                 ) : (
                   <span className="equipo-link">
-                    <img src={fila.logo} alt={fila.equipo} className="team-logo" />
+                    <img src={fila.logo} alt={fila.equipo} className="team-logo" loading="lazy" />
                     <span className="team-name">{fila.equipo}</span>
                   </span>
                 )}

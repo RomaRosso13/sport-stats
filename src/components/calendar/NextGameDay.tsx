@@ -16,6 +16,7 @@ function NextGameDay({ data }) {
               src={p.local_team.logo_url}
               alt={p.local_team.name}
               className="team-logo"
+              loading="lazy"
             />
             <span>{p.local_team.name}</span>
           </div>
@@ -29,6 +30,7 @@ function NextGameDay({ data }) {
               src={p.visit_team.logo_url}
               alt={p.visit_team.name}
               className="team-logo"
+              loading="lazy"
             />
           </div>
 

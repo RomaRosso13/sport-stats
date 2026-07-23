@@ -22,7 +22,7 @@ function TeamScheduleRow({ match, teamId }) {
 
       <div className="schedule-opponent">
         <span className="schedule-vs">vs</span>
-        <img src={opponent.logo_url} alt={opponent.name} className="schedule-opponent-logo" />
+        <img src={opponent.logo_url} alt={opponent.name} className="schedule-opponent-logo" loading="lazy" />
         <span className="schedule-opponent-name">{opponent.name}</span>
       </div>
 

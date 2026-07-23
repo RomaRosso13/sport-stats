@@ -1,0 +1,34 @@
+name: Backup semanal de Supabase
+
+on:
+  schedule:
+    - cron: '0 6 * * 0' # domingo 06:00 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar cliente de PostgreSQL
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
+      - name: Exportar la base de datos (esquema public)
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          pg_dump "$SUPABASE_DB_URL" --schema=public --no-owner --no-privileges \
+            | gzip > backup.sql.gz
+
+      - name: Publicar como Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="backup-$(date -u +'%Y-%m-%d')"
+          gh release create "$TAG" backup.sql.gz \
+            --title "Backup $(date -u +'%Y-%m-%d')" \
+            --notes "Backup automático semanal de la base de datos (esquema public)."

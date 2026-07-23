@@ -17,6 +17,7 @@ function PlayerAvatar({ photo, name }) {
         src={photo}
         alt={name}
         className="player-photo"
+        loading="lazy"
         onError={() => setImageFailed(true)}
       />
     )
@@ -68,7 +69,7 @@ function PlayerStatsTable({ title, statKey, statLabel, data }) {
                 {player.teamId ? (
                   <Link to={`/${leagueSlug}/equipos/${player.teamId}`} className="stats-team-link">
                     {player.teamLogo && (
-                      <img src={player.teamLogo} alt={player.team} className="stats-team-logo" />
+                      <img src={player.teamLogo} alt={player.team} className="stats-team-logo" loading="lazy" />
                     )}
                     <span className="stats-team-name">{player.team}</span>
                   </Link>

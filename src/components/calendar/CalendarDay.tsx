@@ -214,7 +214,7 @@ function CalendarDay({ matchday, calendarConfig }) {
                               </div>
 
                               <div className={`team-row ${localWon ? "winner" : ""}`}>
-                                <img src={match.local_team.logo_url} alt="" className="team-logo" />
+                                <img src={match.local_team.logo_url} alt="" className="team-logo" loading="lazy" />
                                 <span className="team-name" title={match.local_team.name}>{match.local_team.name}</span>
                                 {isFinished && <span className="team-score">{match.local_points}</span>}
                               </div>
@@ -226,7 +226,7 @@ function CalendarDay({ matchday, calendarConfig }) {
                               )}
 
                               <div className={`team-row ${visitWon ? "winner" : ""}`}>
-                                <img src={match.visit_team.logo_url} alt="" className="team-logo" />
+                                <img src={match.visit_team.logo_url} alt="" className="team-logo" loading="lazy" />
                                 <span className="team-name" title={match.visit_team.name}>{match.visit_team.name}</span>
                                 {isFinished && <span className="team-score">{match.visit_points}</span>}
                               </div>

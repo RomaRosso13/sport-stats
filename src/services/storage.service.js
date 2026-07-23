@@ -11,7 +11,8 @@ export async function uploadImage(blob, folder) {
   const { error } = await supabase.storage
     .from(BUCKET)
     .upload(path, blob, {
-      contentType: blob.type
+      contentType: blob.type,
+      cacheControl: '31536000'
     })
 
   if (error) throw error
@@ -27,7 +28,8 @@ export async function uploadDocument(file, folder) {
   const { error } = await supabase.storage
     .from(DOCUMENTS_BUCKET)
     .upload(path, file, {
-      contentType: 'application/pdf'
+      contentType: 'application/pdf',
+      cacheControl: '31536000'
     })
 
   if (error) throw error

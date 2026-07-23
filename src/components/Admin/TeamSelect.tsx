@@ -32,7 +32,7 @@ function TeamSelect({
         {selectedTeam ? (
           <>
             {selectedTeam.logo_url && (
-              <img src={selectedTeam.logo_url} alt={selectedTeam.name} />
+              <img src={selectedTeam.logo_url} alt={selectedTeam.name} loading="lazy" />
             )}
             <span>{selectedTeam.name}</span>
           </>
@@ -60,7 +60,7 @@ function TeamSelect({
               }}
             >
               {team.logo_url && (
-                <img src={team.logo_url} alt={team.name} />
+                <img src={team.logo_url} alt={team.name} loading="lazy" />
               )}
               <span>{team.name}</span>
             </button>

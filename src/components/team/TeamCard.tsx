@@ -24,6 +24,7 @@ function TeamCard({ team, matchdays, coach }) {
           src={team.logo_url}
           alt={team.name}
           className="team-logo"
+          loading="lazy"
         />
 
         <div className="team-text">

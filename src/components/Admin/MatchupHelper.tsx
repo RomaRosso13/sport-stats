@@ -25,7 +25,7 @@ function MatchupHelper({ teams, matches, teamId, onSelectOpponent }) {
                 className="matchup-chip suggested"
                 onClick={() => onSelectOpponent(t.id)}
               >
-                {t.logo_url && <img src={t.logo_url} alt="" />}
+                {t.logo_url && <img src={t.logo_url} alt="" loading="lazy" />}
                 <span>{t.name}</span>
                 <span className="matchup-chip-count">{t.gamesPlayed} jugados</span>
               </button>
@@ -45,7 +45,7 @@ function MatchupHelper({ teams, matches, teamId, onSelectOpponent }) {
                 className="matchup-chip played"
                 onClick={() => onSelectOpponent(t.id)}
               >
-                {t.logo_url && <img src={t.logo_url} alt="" />}
+                {t.logo_url && <img src={t.logo_url} alt="" loading="lazy" />}
                 <span>{t.name}</span>
                 <span className="matchup-chip-count">
                   {t.timesPlayed} {t.timesPlayed === 1 ? 'vez' : 'veces'}

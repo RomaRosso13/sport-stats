@@ -19,7 +19,7 @@ function MatchCard({ match }) {
 
         {/* LOCAL */}
         <div className={`team local ${localWon ? "winner" : visitorWon ? "loser" : ""}`}>
-          <img src={match.local_team.logo_url} alt="" className="team-logo" />
+          <img src={match.local_team.logo_url} alt="" className="team-logo" loading="lazy" />
           <span>{match.local_team.name}</span>
         </div>
 
@@ -36,7 +36,7 @@ function MatchCard({ match }) {
         {/* VISITOR */}
         <div className={`team visitor ${visitorWon ? "winner" : localWon ? "loser" : ""}`}>
           <span>{match.visit_team.name}</span>
-          <img src={match.visit_team.logo_url} alt="" className="team-logo" />
+          <img src={match.visit_team.logo_url} alt="" className="team-logo" loading="lazy" />
         </div>
       </div>
 
