@@ -6,6 +6,7 @@ import logo from '../assets/flagstatslogo.jpeg'
 
 import { getActiveLeagues } from '../services/league.service'
 import { applyLeagueBranding } from '../utils/applyLeagueBranding'
+import { useInstallPrompt } from '../hooks/useInstallPrompt'
 
 import './Landing.css'
 
@@ -57,7 +58,9 @@ function scrollToSection(id) {
 function Landing() {
   const [leagues, setLeagues] = useState([])
   const [loadingLeagues, setLoadingLeagues] = useState(true)
+  const [showIosHelp, setShowIosHelp] = useState(false)
   const trackRef = useRef(null)
+  const { installed, canInstall, isIos, promptInstall } = useInstallPrompt()
 
   useEffect(() => {
     applyLeagueBranding(null, null)
@@ -80,6 +83,14 @@ function Landing() {
     loadLeagues()
     return () => { cancelled = true }
   }, [])
+
+  function handleInstallClick() {
+    if (canInstall) {
+      promptInstall()
+    } else if (isIos) {
+      setShowIosHelp(true)
+    }
+  }
 
   function scrollLeagues(direction) {
     const track = trackRef.current
@@ -116,6 +127,31 @@ function Landing() {
             <button type="button" className="landing-btn landing-btn-secondary" onClick={() => scrollToSection('contacto')}>
               Súmate a FlagStats
             </button>
+
+            {!installed && (canInstall || isIos) && (
+              <div className="landing-install-wrap">
+                <button type="button" className="landing-btn landing-btn-secondary" onClick={handleInstallClick}>
+                  <svg className="landing-contact-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  Instalar app
+                </button>
+
+                {showIosHelp && (
+                  <div className="landing-install-tip" role="tooltip">
+                    Toca <strong>Compartir</strong> ⬆️ en Safari y elige <strong>"Agregar a pantalla de inicio"</strong>.
+                    <button
+                      type="button"
+                      className="landing-install-tip-close"
+                      onClick={() => setShowIosHelp(false)}
+                      aria-label="Cerrar"
+                    >
+                      ×
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
