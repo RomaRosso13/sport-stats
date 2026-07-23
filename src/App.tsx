@@ -3,6 +3,7 @@ import { AuthProvider } from "./context/AuthContext"
 
 import LeagueLayout from "./layouts/LeagueLayout"
 import Landing from "./pages/Landing"
+import About from "./pages/About"
 import Home from "./pages/Home"
 import Calendar from "./pages/Calendar"
 import Results from "./pages/Results"
@@ -31,6 +32,7 @@ function App() {
     <AuthProvider>
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route path="/nosotros" element={<About />} />
 
         <Route path="/:leagueSlug" element={<LeagueLayout />}>
           <Route index element={<Home />} />
