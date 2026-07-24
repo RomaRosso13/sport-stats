@@ -28,12 +28,6 @@
   margin-bottom: 1.25rem;
 }
 
-.app-home-install-wrap {
-  position: relative;
-  display: inline-flex;
-  margin-bottom: 1.5rem;
-}
-
 .app-home-install-btn {
   display: inline-flex;
   align-items: center;
@@ -46,57 +40,11 @@
   font-weight: 600;
   font-size: 0.9rem;
   cursor: pointer;
+  margin-bottom: 1.5rem;
 }
 
 .app-home-install-btn:hover {
   background: var(--accent-dark);
-}
-
-.app-home-install-btn svg {
-  width: 17px;
-  height: 17px;
-  flex-shrink: 0;
-}
-
-.app-home-install-tip {
-  position: absolute;
-  top: calc(100% + 0.6rem);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-  width: 240px;
-  background: #0f172a;
-  color: #fff;
-  font-size: 0.85rem;
-  line-height: 1.4;
-  padding: 0.75rem 1.75rem 0.75rem 0.85rem;
-  border-radius: 10px;
-  box-shadow: 0 12px 28px -8px rgba(15, 23, 42, 0.45);
-  text-align: left;
-}
-
-.app-home-install-tip::before {
-  content: '';
-  position: absolute;
-  top: -6px;
-  left: 50%;
-  transform: translateX(-50%) rotate(45deg);
-  width: 12px;
-  height: 12px;
-  background: #0f172a;
-}
-
-.app-home-install-tip-close {
-  position: absolute;
-  top: 0.4rem;
-  right: 0.5rem;
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 1.1rem;
-  line-height: 1;
-  cursor: pointer;
-  padding: 0.15rem;
 }
 
 .app-home-title {
