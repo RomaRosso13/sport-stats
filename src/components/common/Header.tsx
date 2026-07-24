@@ -9,6 +9,7 @@ import { clearDefaultLeagueSlug } from '../../utils/defaultLeague'
 
 import SeasonSelector from '../filters/SeasonSelector'
 import LoginForm from '../auth/LoginForm'
+import InstallAppButton from './InstallAppButton'
 
 import './Header.css'
 
@@ -85,6 +86,8 @@ async function handleLogout() {
 
       {/* DERECHA */}
       <div className="header-right">
+        <InstallAppButton className="auth-btn" />
+
         <nav className="nav">
           <button
             className="menu-btn"
