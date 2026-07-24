@@ -28,16 +28,6 @@
   flex-shrink: 0;
 }
 
-.team-manager-logo.placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #f1f5f9;
-  border-radius: 999px;
-  color: #94a3b8;
-  font-weight: 700;
-}
-
 .team-manager-info {
   flex: 1;
   min-width: 0;

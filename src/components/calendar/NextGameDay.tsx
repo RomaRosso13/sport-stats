@@ -1,3 +1,4 @@
+import TeamLogo from '../common/TeamLogo'
 import './NextGameDay.css'
 
 function NextGameDay({ data }) {
@@ -12,12 +13,7 @@ function NextGameDay({ data }) {
           
           {/* LOCAL */}
           <div className="equipo lado izquierdo">
-            <img
-              src={p.local_team.logo_url}
-              alt={p.local_team.name}
-              className="team-logo"
-              loading="lazy"
-            />
+            <TeamLogo logoUrl={p.local_team.logo_url} name={p.local_team.name} alt={p.local_team.name} className="team-logo" />
             <span>{p.local_team.name}</span>
           </div>
 
@@ -26,12 +22,7 @@ function NextGameDay({ data }) {
           {/* VISITANTE */}
           <div className="equipo lado derecho">
             <span>{p.visit_team.name}</span>
-            <img
-              src={p.visit_team.logo_url}
-              alt={p.visit_team.name}
-              className="team-logo"
-              loading="lazy"
-            />
+            <TeamLogo logoUrl={p.visit_team.logo_url} name={p.visit_team.name} alt={p.visit_team.name} className="team-logo" />
           </div>
 
           {/* META */}

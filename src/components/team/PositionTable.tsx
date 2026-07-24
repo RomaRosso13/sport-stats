@@ -1,4 +1,5 @@
 import { Link, useParams } from 'react-router-dom'
+import TeamLogo from '../common/TeamLogo'
 import './PositionTable.css'
 
 function PositionTable({ table }) {
@@ -33,12 +34,12 @@ function PositionTable({ table }) {
               <td className="equipo-cell">
                 {fila.id && leagueSlug ? (
                   <Link to={`/${leagueSlug}/equipos/${fila.id}`} className="equipo-link">
-                    <img src={fila.logo} alt={fila.equipo} className="team-logo" loading="lazy" />
+                    <TeamLogo logoUrl={fila.logo} name={fila.equipo} alt={fila.equipo} className="team-logo" />
                     <span className="team-name">{fila.equipo}</span>
                   </Link>
                 ) : (
                   <span className="equipo-link">
-                    <img src={fila.logo} alt={fila.equipo} className="team-logo" loading="lazy" />
+                    <TeamLogo logoUrl={fila.logo} name={fila.equipo} alt={fila.equipo} className="team-logo" />
                     <span className="team-name">{fila.equipo}</span>
                   </span>
                 )}

@@ -5,6 +5,7 @@ import Header from "../components/common/Header"
 import Footer from '../components/common/Footer'
 import CategorySwitcher from "../components/filters/CategorySwitcher"
 import PlayoffBracket from "../components/match/PlayoffBracket"
+import TeamLogo from "../components/common/TeamLogo"
 import Loader from '../components/common/Loader'
 import PageWrapper from '../components/common/PageWrapper'
 
@@ -90,9 +91,7 @@ function Playoffs() {
         {champion && (
           <Link to={`/${league.slug}/equipos/${champion.id}`} className="champion-banner">
             <span className="champion-trophy">🏆</span>
-            {champion.logo_url && (
-              <img src={champion.logo_url} alt={champion.name} className="champion-logo" />
-            )}
+            <TeamLogo logoUrl={champion.logo_url} name={champion.name} alt={champion.name} className="champion-logo" />
             <div className="champion-text">
               <span className="champion-label">Campeón</span>
               <span className="champion-name">{champion.name}</span>

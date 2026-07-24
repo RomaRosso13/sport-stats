@@ -1,3 +1,4 @@
+import TeamLogo from '../common/TeamLogo'
 import './TeamScheduleRow.css'
 
 function TeamScheduleRow({ match, teamId }) {
@@ -22,7 +23,7 @@ function TeamScheduleRow({ match, teamId }) {
 
       <div className="schedule-opponent">
         <span className="schedule-vs">vs</span>
-        <img src={opponent.logo_url} alt={opponent.name} className="schedule-opponent-logo" loading="lazy" />
+        <TeamLogo logoUrl={opponent.logo_url} name={opponent.name} alt={opponent.name} className="schedule-opponent-logo" />
         <span className="schedule-opponent-name">{opponent.name}</span>
       </div>
 

@@ -8,6 +8,7 @@ import Footer from '../../components/common/Footer'
 import TeamFormModal from '../../components/Admin/TeamFormModal'
 import PlayerFormModal from '../../components/Admin/PlayerFormModal'
 import PlayerRosterManager from '../../components/Admin/PlayerRosterManager'
+import TeamLogo from '../../components/common/TeamLogo'
 
 import { getTeamsByIds } from '../../services/team.service.js'
 import { setPlayerActive } from '../../services/player.service.js'
@@ -131,9 +132,7 @@ function CoachTeamManager() {
             {selectedTeam && (
               <>
                 <div className="coach-team-info-card">
-                  {selectedTeam.logo_url && (
-                    <img src={selectedTeam.logo_url} alt={selectedTeam.name} className="coach-team-logo" />
-                  )}
+                  <TeamLogo logoUrl={selectedTeam.logo_url} name={selectedTeam.name} alt={selectedTeam.name} className="coach-team-logo" />
                   <div className="coach-team-info-text">
                     <h3>{selectedTeam.name}</h3>
                     {selectedTeam.category?.type && (

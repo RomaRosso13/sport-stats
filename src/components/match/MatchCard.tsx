@@ -1,3 +1,4 @@
+import TeamLogo from "../common/TeamLogo"
 import "./MatchCard.css"
 
 function MatchCard({ match }) {
@@ -19,7 +20,7 @@ function MatchCard({ match }) {
 
         {/* LOCAL */}
         <div className={`team local ${localWon ? "winner" : visitorWon ? "loser" : ""}`}>
-          <img src={match.local_team.logo_url} alt="" className="team-logo" loading="lazy" />
+          <TeamLogo logoUrl={match.local_team.logo_url} name={match.local_team.name} alt="" className="team-logo" />
           <span>{match.local_team.name}</span>
         </div>
 
@@ -36,7 +37,7 @@ function MatchCard({ match }) {
         {/* VISITOR */}
         <div className={`team visitor ${visitorWon ? "winner" : localWon ? "loser" : ""}`}>
           <span>{match.visit_team.name}</span>
-          <img src={match.visit_team.logo_url} alt="" className="team-logo" loading="lazy" />
+          <TeamLogo logoUrl={match.visit_team.logo_url} name={match.visit_team.name} alt="" className="team-logo" />
         </div>
       </div>
 

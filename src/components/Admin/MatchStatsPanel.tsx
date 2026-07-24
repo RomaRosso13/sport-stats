@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { createPlayer } from '../../services/player.service.js'
 import { STAT_KEYS } from '../../constants/statFields'
+import TeamLogo from '../common/TeamLogo'
 import './MatchStatsPanel.css'
 
 const NEW_PLAYER_VALUE = '__new__'
@@ -128,7 +129,7 @@ function TeamStatsColumn({
   return (
     <div className={`stats-column ${side}`}>
       <h4 className="stats-column-title">
-        {teamLogo && <img src={teamLogo} alt="" loading="lazy" />}
+        <TeamLogo logoUrl={teamLogo} name={teamName} alt="" className="stats-column-logo" />
         {teamName}
       </h4>
 

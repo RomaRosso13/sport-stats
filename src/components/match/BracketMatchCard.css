@@ -55,7 +55,8 @@
   text-decoration: underline;
 }
 
-.bracket-team img {
+.bracket-team img,
+.bracket-team-logo {
   width: 20px;
   height: 20px;
   object-fit: contain;
@@ -107,7 +108,8 @@
     font-size: 12px;
   }
 
-  .bracket-team img {
+  .bracket-team img,
+  .bracket-team-logo {
     width: 18px;
     height: 18px;
   }

@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom"
 
 import TeamStats from "./TeamStats"
 import PlayerRow from "../player/PlayerRow"
+import TeamLogo from "../common/TeamLogo"
 
 import { calculateTeamStats } from "../../utils/calculateTeamStats"
 import { sortPlayersByNumber } from "../../utils/sortPlayers"
@@ -20,12 +21,7 @@ function TeamCard({ team, matchdays, coach }) {
 
     <header className="team-header">
       <Link to={`/${leagueSlug}/equipos/${team.id}`} className="team-info">
-        <img
-          src={team.logo_url}
-          alt={team.name}
-          className="team-logo"
-          loading="lazy"
-        />
+        <TeamLogo logoUrl={team.logo_url} name={team.name} alt={team.name} className="team-logo" />
 
         <div className="team-text">
           <h3 className="team-name">{team.name}</h3>

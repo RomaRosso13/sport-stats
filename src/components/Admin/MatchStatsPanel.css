@@ -38,7 +38,8 @@
   color: #0f172a;
 }
 
-.stats-column-title img {
+.stats-column-title img,
+.stats-column-logo {
   width: 22px;
   height: 22px;
   object-fit: contain;

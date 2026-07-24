@@ -5,6 +5,7 @@ import Header from '../components/common/Header'
 import Footer from '../components/common/Footer'
 import Loader from '../components/common/Loader'
 import PageWrapper from '../components/common/PageWrapper'
+import TeamLogo from '../components/common/TeamLogo'
 
 import { useLeague } from '../context/LeagueContext'
 
@@ -95,7 +96,7 @@ function MatchDetail() {
                 to={`/${league.slug}/equipos/${match.local_team.id}`}
                 className={`match-detail-team left ${localGano ? 'winner' : ''}`}
               >
-                <img src={match.local_team.logo_url} alt={match.local_team.name} className="match-detail-team-logo" />
+                <TeamLogo logoUrl={match.local_team.logo_url} name={match.local_team.name} alt={match.local_team.name} className="match-detail-team-logo" />
                 <span className="match-detail-team-name">{match.local_team.name}</span>
               </Link>
 
@@ -110,7 +111,7 @@ function MatchDetail() {
                 className={`match-detail-team right ${visitanteGano ? 'winner' : ''}`}
               >
                 <span className="match-detail-team-name">{match.visit_team.name}</span>
-                <img src={match.visit_team.logo_url} alt={match.visit_team.name} className="match-detail-team-logo" />
+                <TeamLogo logoUrl={match.visit_team.logo_url} name={match.visit_team.name} alt={match.visit_team.name} className="match-detail-team-logo" />
               </Link>
             </div>
 
@@ -132,7 +133,7 @@ function MatchDetail() {
               return (
                 <div key={team.id} className="boxscore-team">
                   <h3 className="boxscore-team-title">
-                    <img src={team.logo_url} alt={team.name} />
+                    <TeamLogo logoUrl={team.logo_url} name={team.name} alt={team.name} className="boxscore-team-logo" />
                     {team.name}
                   </h3>
 

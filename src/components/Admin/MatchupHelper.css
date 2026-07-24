@@ -58,7 +58,8 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
 
-.matchup-chip img {
+.matchup-chip img,
+.matchup-chip-logo {
   width: 16px;
   height: 16px;
   object-fit: contain;

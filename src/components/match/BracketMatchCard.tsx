@@ -1,4 +1,5 @@
 import { Link, useParams } from "react-router-dom"
+import TeamLogo from "../common/TeamLogo"
 import "./BracketMatchCard.css"
 
 function BracketMatchCard({ match }) {
@@ -20,7 +21,7 @@ function BracketMatchCard({ match }) {
     <div className={`bracket-card ${isPendiente ? "pending" : "finished"}`}>
       <div className={`bracket-team ${localGano ? "winner" : ""}`}>
         <Link to={`/${leagueSlug}/equipos/${match.local_team.id}`} className="bracket-team-link">
-          <img src={match.local_team.logo_url} alt={match.local_team.name} loading="lazy" />
+          <TeamLogo logoUrl={match.local_team.logo_url} name={match.local_team.name} alt={match.local_team.name} className="bracket-team-logo" />
           <span className="bracket-team-name" title={match.local_team.name}>{match.local_team.name}</span>
         </Link>
         <span className="bracket-team-score">{isPendiente ? "-" : match.local_points}</span>
@@ -28,7 +29,7 @@ function BracketMatchCard({ match }) {
 
       <div className={`bracket-team ${visitanteGano ? "winner" : ""}`}>
         <Link to={`/${leagueSlug}/equipos/${match.visit_team.id}`} className="bracket-team-link">
-          <img src={match.visit_team.logo_url} alt={match.visit_team.name} loading="lazy" />
+          <TeamLogo logoUrl={match.visit_team.logo_url} name={match.visit_team.name} alt={match.visit_team.name} className="bracket-team-logo" />
           <span className="bracket-team-name" title={match.visit_team.name}>{match.visit_team.name}</span>
         </Link>
         <span className="bracket-team-score">{isPendiente ? "-" : match.visit_points}</span>

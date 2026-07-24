@@ -9,6 +9,7 @@ import TeamStats from '../components/team/TeamStats'
 import PlayerRow from '../components/player/PlayerRow'
 import StatsTable from '../components/team/StatsTable'
 import TeamScheduleRow from '../components/team/TeamScheduleRow'
+import TeamLogo from '../components/common/TeamLogo'
 
 import { useLeague } from '../context/LeagueContext'
 
@@ -123,7 +124,7 @@ function TeamProfile() {
           </Link>
 
           <div className="team-profile-header">
-            <img src={team.logo_url} alt={team.name} className="team-profile-logo" />
+            <TeamLogo logoUrl={team.logo_url} name={team.name} alt={team.name} className="team-profile-logo" />
             <div>
               {team.category?.type && (
                 <span className="team-profile-category">{team.category.type}</span>

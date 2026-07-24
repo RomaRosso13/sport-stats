@@ -1,3 +1,4 @@
+import TeamLogo from "../common/TeamLogo"
 import "./RecentResults.css"
 
 function RecentResults({ games }) {
@@ -17,12 +18,7 @@ function RecentResults({ games }) {
             
             {/* Equipo local */}
             <div className={`equipo lado izquierdo ${ganadorLocal ? "ganador" : ""}`}>
-              <img
-                src={p.local_team.logo_url}
-                alt={p.local_team.name}
-                className="team-logo"
-                loading="lazy"
-              />
+              <TeamLogo logoUrl={p.local_team.logo_url} name={p.local_team.name} alt={p.local_team.name} className="team-logo" />
               <span className="team-name">{p.local_team.name}</span>
               {ganadorLocal && <span className="badge-win">WIN</span>}
             </div>
@@ -35,12 +31,7 @@ function RecentResults({ games }) {
             {/* Equipo visitante */}
             <div className={`equipo lado derecho ${ganadorVisit ? "ganador" : ""}`}>
               <span className="team-name">{p.visit_team.name}</span>
-              <img
-                src={p.visit_team.logo_url}
-                alt={p.visit_team.name}
-                className="team-logo"
-                loading="lazy"
-              />
+              <TeamLogo logoUrl={p.visit_team.logo_url} name={p.visit_team.name} alt={p.visit_team.name} className="team-logo" />
               {ganadorVisit && <span className="badge-win">WIN</span>}
             </div>
 

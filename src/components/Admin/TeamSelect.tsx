@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import TeamLogo from '../common/TeamLogo'
 import './TeamSelect.css'
 
 function TeamSelect({
@@ -31,9 +32,7 @@ function TeamSelect({
       >
         {selectedTeam ? (
           <>
-            {selectedTeam.logo_url && (
-              <img src={selectedTeam.logo_url} alt={selectedTeam.name} loading="lazy" />
-            )}
+            <TeamLogo logoUrl={selectedTeam.logo_url} name={selectedTeam.name} alt={selectedTeam.name} className="team-select-logo" />
             <span>{selectedTeam.name}</span>
           </>
         ) : (
@@ -59,9 +58,7 @@ function TeamSelect({
                 setOpen(false)
               }}
             >
-              {team.logo_url && (
-                <img src={team.logo_url} alt={team.name} loading="lazy" />
-              )}
+              <TeamLogo logoUrl={team.logo_url} name={team.name} alt={team.name} className="team-select-logo" />
               <span>{team.name}</span>
             </button>
           ))}

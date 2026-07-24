@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import TeamLogo from '../common/TeamLogo'
 import './PlayerStatsTable.css'
 
 const INITIAL_LIMIT = 10
@@ -68,9 +69,7 @@ function PlayerStatsTable({ title, statKey, statLabel, data }) {
 
                 {player.teamId ? (
                   <Link to={`/${leagueSlug}/equipos/${player.teamId}`} className="stats-team-link">
-                    {player.teamLogo && (
-                      <img src={player.teamLogo} alt={player.team} className="stats-team-logo" loading="lazy" />
-                    )}
+                    <TeamLogo logoUrl={player.teamLogo} name={player.team} alt={player.team} className="stats-team-logo" />
                     <span className="stats-team-name">{player.team}</span>
                   </Link>
                 ) : (

@@ -1,4 +1,5 @@
 import { getMatchupInfo } from '../../utils/matchupHelper'
+import TeamLogo from '../common/TeamLogo'
 import './MatchupHelper.css'
 
 function MatchupHelper({ teams, matches, teamId, onSelectOpponent }) {
@@ -25,7 +26,7 @@ function MatchupHelper({ teams, matches, teamId, onSelectOpponent }) {
                 className="matchup-chip suggested"
                 onClick={() => onSelectOpponent(t.id)}
               >
-                {t.logo_url && <img src={t.logo_url} alt="" loading="lazy" />}
+                <TeamLogo logoUrl={t.logo_url} name={t.name} alt="" className="matchup-chip-logo" />
                 <span>{t.name}</span>
                 <span className="matchup-chip-count">{t.gamesPlayed} jugados</span>
               </button>
@@ -45,7 +46,7 @@ function MatchupHelper({ teams, matches, teamId, onSelectOpponent }) {
                 className="matchup-chip played"
                 onClick={() => onSelectOpponent(t.id)}
               >
-                {t.logo_url && <img src={t.logo_url} alt="" loading="lazy" />}
+                <TeamLogo logoUrl={t.logo_url} name={t.name} alt="" className="matchup-chip-logo" />
                 <span>{t.name}</span>
                 <span className="matchup-chip-count">
                   {t.timesPlayed} {t.timesPlayed === 1 ? 'vez' : 'veces'}

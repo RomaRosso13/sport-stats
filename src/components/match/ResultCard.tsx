@@ -1,5 +1,6 @@
 import { Link, useParams } from "react-router-dom"
 import { STAGE_LABELS } from "../../utils/matchStages"
+import TeamLogo from "../common/TeamLogo"
 import "./ResultCard.css"
 
 function ResultCard({ match }) {
@@ -24,12 +25,7 @@ function ResultCard({ match }) {
       <div className="result-main">
         {/* LOCAL */}
         <div className={`team left ${localGano ? "winner" : ""}`}>
-          <img
-            src={match.local_team.logo_url}
-            alt={match.local_team.name}
-            className="team-logo"
-            loading="lazy"
-          />
+          <TeamLogo logoUrl={match.local_team.logo_url} name={match.local_team.name} alt={match.local_team.name} className="team-logo" />
           <span className="team-name" title={match.local_team.name}>{match.local_team.name}</span>
         </div>
 
@@ -47,12 +43,7 @@ function ResultCard({ match }) {
         {/* VISITANTE */}
         <div className={`team right ${visitanteGano ? "winner" : ""}`}>
           <span className="team-name" title={match.visit_team.name}>{match.visit_team.name}</span>
-          <img
-            src={match.visit_team.logo_url}
-            alt={match.visit_team.name}
-            className="team-logo"
-            loading="lazy"
-          />
+          <TeamLogo logoUrl={match.visit_team.logo_url} name={match.visit_team.name} alt={match.visit_team.name} className="team-logo" />
         </div>
       </div>
 

@@ -190,7 +190,8 @@
   color: #0f172a;
 }
 
-.boxscore-team-title img {
+.boxscore-team-title img,
+.boxscore-team-logo {
   width: 22px;
   height: 22px;
   object-fit: contain;

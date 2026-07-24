@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react"
+import TeamLogo from "../common/TeamLogo"
 import "./CalendarDay.css"
 
 const CATEGORY_LABELS = {
@@ -214,7 +215,7 @@ function CalendarDay({ matchday, calendarConfig }) {
                               </div>
 
                               <div className={`team-row ${localWon ? "winner" : ""}`}>
-                                <img src={match.local_team.logo_url} alt="" className="team-logo" loading="lazy" />
+                                <TeamLogo logoUrl={match.local_team.logo_url} name={match.local_team.name} alt="" className="team-logo" />
                                 <span className="team-name" title={match.local_team.name}>{match.local_team.name}</span>
                                 {isFinished && <span className="team-score">{match.local_points}</span>}
                               </div>
@@ -226,7 +227,7 @@ function CalendarDay({ matchday, calendarConfig }) {
                               )}
 
                               <div className={`team-row ${visitWon ? "winner" : ""}`}>
-                                <img src={match.visit_team.logo_url} alt="" className="team-logo" loading="lazy" />
+                                <TeamLogo logoUrl={match.visit_team.logo_url} name={match.visit_team.name} alt="" className="team-logo" />
                                 <span className="team-name" title={match.visit_team.name}>{match.visit_team.name}</span>
                                 {isFinished && <span className="team-score">{match.visit_points}</span>}
                               </div>

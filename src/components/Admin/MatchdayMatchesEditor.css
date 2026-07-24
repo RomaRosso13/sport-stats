@@ -356,7 +356,8 @@
   font-size: 14px;
 }
 
-.match-teams img {
+.match-teams img,
+.match-teams .team-logo {
   width: 26px;
   height: 26px;
   object-fit: contain;

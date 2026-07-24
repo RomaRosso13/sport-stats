@@ -1,3 +1,4 @@
+import TeamLogo from '../common/TeamLogo'
 import './TeamManagerCard.css'
 
 function TeamManagerCard({ team, coach, isSelected, onSelect, onEdit, onDelete }) {
@@ -8,11 +9,7 @@ function TeamManagerCard({ team, coach, isSelected, onSelect, onEdit, onDelete }
       className={`team-manager-card ${isSelected ? 'selected' : ''}`}
       onClick={() => onSelect(team)}
     >
-      {team.logo_url ? (
-        <img src={team.logo_url} alt={team.name} className="team-manager-logo" loading="lazy" />
-      ) : (
-        <div className="team-manager-logo placeholder">?</div>
-      )}
+      <TeamLogo logoUrl={team.logo_url} name={team.name} alt={team.name} className="team-manager-logo" />
 
       <div className="team-manager-info">
         <h4>{team.name}</h4>

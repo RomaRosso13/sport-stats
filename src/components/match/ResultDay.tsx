@@ -1,4 +1,5 @@
 import ResultCard from "./ResultCard"
+import TeamLogo from "../common/TeamLogo"
 import "./ResultDay.css"
 
 function ResultsDay({ matchday, teams }) {
@@ -72,7 +73,7 @@ function ResultsDay({ matchday, teams }) {
           <div className="bye-teams">
             {byeTeams.map(team => (
               <div key={team.id} className="bye-team">
-                <img src={team.logo_url} alt={team.name} loading="lazy" />
+                <TeamLogo logoUrl={team.logo_url} name={team.name} alt={team.name} className="bye-team-logo" />
                 <span>{team.name}</span>
               </div>
             ))}

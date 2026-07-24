@@ -5,6 +5,7 @@ import Header from '../components/common/Header'
 import Footer from '../components/common/Footer'
 import Loader from '../components/common/Loader'
 import PageWrapper from '../components/common/PageWrapper'
+import TeamLogo from '../components/common/TeamLogo'
 
 import { useLeague } from '../context/LeagueContext'
 
@@ -131,9 +132,7 @@ function PlayerProfile() {
 
               {team && (
                 <Link to={`/${league.slug}/equipos/${team.id}`} className="player-profile-team">
-                  {team.logo_url && (
-                    <img src={team.logo_url} alt={team.name} className="player-profile-team-logo" />
-                  )}
+                  <TeamLogo logoUrl={team.logo_url} name={team.name} alt={team.name} className="player-profile-team-logo" />
                   {team.name}
                 </Link>
               )}

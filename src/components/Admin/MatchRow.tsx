@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import MatchStatsPanel from './MatchStatsPanel'
+import TeamLogo from '../common/TeamLogo'
 
 function MatchRow({
   match,
@@ -58,12 +59,7 @@ function MatchRow({
     <div className={`match-card ${cardStatusClass}`}>
       {/* Local */}
       <div className="team">
-        <img
-          src={match.local_team.logo_url}
-          alt={match.local_team.name}
-          className="team-logo"
-          loading="lazy"
-        />
+        <TeamLogo logoUrl={match.local_team.logo_url} name={match.local_team.name} alt={match.local_team.name} className="team-logo" />
         <span className="team-name">{match.local_team.name}</span>
       </div>
 
@@ -102,12 +98,7 @@ function MatchRow({
 
       {/* Visitante */}
       <div className="team">
-        <img
-          src={match.visit_team.logo_url}
-          alt={match.visit_team.name}
-          className="team-logo"
-          loading="lazy"
-        />
+        <TeamLogo logoUrl={match.visit_team.logo_url} name={match.visit_team.name} alt={match.visit_team.name} className="team-logo" />
         <span className="team-name">{match.visit_team.name}</span>
       </div>
 
