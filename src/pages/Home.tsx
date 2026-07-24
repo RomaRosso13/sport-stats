@@ -22,6 +22,7 @@ import { getIndividualStatsByCategory } from '../services/individual_stats.servi
 import { getTeamsByCategoryId } from '../services/team.service'
 
 import { calculateTable } from '../utils/calculateTable'
+import { isScrimmage } from '../utils/matchStages'
 import { getNextGameDay } from '../utils/getNextGameDay'
 import { getRecentResults } from '../utils/getRecentResults'
 import { classifyTopPlayersByStats } from '../utils/classifyTopPlayersByStats'
@@ -81,7 +82,7 @@ function Home() {
     loadMatchdays()
   }, [category?.id])
 
-  const matches = matchdays.flatMap(j => j.games)
+  const matches = matchdays.flatMap(j => j.games).filter(m => !isScrimmage(m.type))
   const calculatedTable = calculateTable(matches, teams)
   const nextGameDay = getNextGameDay(matchdays)
   const recentResults = getRecentResults(matchdays, 4)

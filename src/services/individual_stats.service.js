@@ -2,6 +2,7 @@ import { supabase } from '../libs/supabase'
 import { runQuery } from '../libs/supabaseQuery'
 import { cached, invalidate } from '../utils/queryCache'
 import { STAT_KEYS } from '../constants/statFields'
+import { isScrimmage } from '../utils/matchStages'
 
 const STATS_SELECT = `
   *,
@@ -15,11 +16,17 @@ const STATS_SELECT = `
     id,
     name,
     logo_url
+  ),
+  match:match_id (
+    type
   )
 `
 
+// Totales/líderes de temporada: los partidos de scrimmage se excluyen aquí
+// (no en getIndividualStatsByMatchId) para que el editor de un partido
+// puntual siga pudiendo capturar sus estadísticas normalmente.
 export async function getIndividualStatsByCategory(categoryId) {
-  return cached('getIndividualStatsByCategory', [categoryId], () =>
+  const rows = await cached('getIndividualStatsByCategory', [categoryId], () =>
     runQuery(
       supabase
         .from('IndividualStats')
@@ -27,6 +34,8 @@ export async function getIndividualStatsByCategory(categoryId) {
         .eq('category_id', categoryId)
     )
   )
+
+  return (rows || []).filter(row => !isScrimmage(row.match?.type))
 }
 
 export async function getIndividualStatsByMatchId(matchId) {

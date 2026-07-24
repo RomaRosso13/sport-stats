@@ -1,3 +1,5 @@
+import { isScrimmage } from './matchStages'
+
 export function calculateTeamStats(name, matchdays) {
   const stats = {
     partidos: 0,
@@ -11,6 +13,7 @@ export function calculateTeamStats(name, matchdays) {
   matchdays.forEach(matchday => {
     matchday.games.forEach(match => {
       if (match.status == 'Pendiente') return
+      if (isScrimmage(match.type)) return
 
       const esLocal = match.local_team.name === name
       const esVisitante = match.visit_team.name === name

@@ -17,7 +17,7 @@ import { getMatchesByMatchDayIds } from '../services/match.service'
 import { getTeamsByCategoryId } from '../services/team.service'
 
 import { calculateTable } from "../utils/calculateTable"
-import { isPlayoffStage } from "../utils/matchStages"
+import { isPlayoffStage, isScrimmage } from "../utils/matchStages"
 
 import "./Standings.css"
 
@@ -65,7 +65,7 @@ function Standings() {
       loadMatchdays()
     }, [category?.id])
 
-    const matches = matchdays.flatMap(j => j.games).filter(m => !isPlayoffStage(m.type))
+    const matches = matchdays.flatMap(j => j.games).filter(m => !isPlayoffStage(m.type) && !isScrimmage(m.type))
     const calculatedTable = calculateTable(matches, teams)
 
   const isDataLoading = !league || !matchdays.length
