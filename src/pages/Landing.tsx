@@ -14,6 +14,7 @@ function Landing() {
   const navigate = useNavigate()
   const [leagues, setLeagues] = useState([])
   const [loading, setLoading] = useState(true)
+  const [search, setSearch] = useState('')
 
   useEffect(() => {
     applyLeagueBranding(null, null)
@@ -49,6 +50,10 @@ function Landing() {
     return () => { cancelled = true }
   }, [navigate])
 
+  const filteredLeagues = leagues.filter(league =>
+    league.name.toLowerCase().includes(search.trim().toLowerCase())
+  )
+
   function handleSelectLeague(slug) {
     setDefaultLeagueSlug(slug)
     navigate(`/${slug}`)
@@ -71,8 +76,21 @@ function Landing() {
         )}
 
         {!loading && leagues.length > 0 && (
+          <input
+            type="text"
+            className="app-home-search"
+            placeholder="Buscar liga..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
+        )}
+
+        {!loading && leagues.length > 0 && (
           <div className="app-home-league-list">
-            {leagues.map(league => (
+            {filteredLeagues.length === 0 && (
+              <p className="app-home-status">No encontramos ligas con ese nombre.</p>
+            )}
+            {filteredLeagues.map(league => (
               <button
                 type="button"
                 key={league.id}
