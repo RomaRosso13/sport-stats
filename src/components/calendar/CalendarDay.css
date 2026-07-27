@@ -297,21 +297,79 @@
   z-index: 3;
 }
 
+/* =========================
+   LISTA MÓVIL
+   El grid de horas se aprieta demasiado en pantallas angostas (muchas
+   columnas de 15 min): en su lugar se muestra una lista apilada por
+   cancha, con los mismos datos y las mismas tarjetas de partido.
+========================= */
+.calendar-mobile-list {
+  display: none;
+}
+
+.calendar-mobile-field + .calendar-mobile-field {
+  margin-top: 20px;
+}
+
+.calendar-mobile-field-header {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #f8fafc;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.calendar-mobile-matches {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.calendar-mobile-matches .match-item {
+  padding: 12px 14px;
+}
+
+.calendar-mobile-matches .match-text {
+  align-items: stretch;
+  text-align: left;
+  gap: 6px;
+}
+
+.calendar-mobile-matches .match-meta-row {
+  justify-content: flex-start;
+}
+
+.calendar-mobile-matches .team-row {
+  justify-content: flex-start;
+}
+
+.calendar-mobile-matches .team-row .team-name {
+  flex: 1;
+}
+
+.calendar-mobile-matches .team-row .team-score {
+  margin-left: auto;
+}
+
+.calendar-mobile-matches .vs,
+.calendar-mobile-matches .score-divider {
+  margin-left: 21px;
+  text-align: left;
+}
+
 /* MOBILE */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .calendar-table-day {
     padding: 16px;
   }
 
-  .row {
-    grid-template-columns: 108px repeat(var(--hours-count), minmax(72px, 1fr));
+  .calendar-table-wrapper {
+    display: none;
   }
 
-  .cell {
-    font-size: 11px;
-  }
-
-  .team-row .team-name {
-    max-width: 64px;
+  .calendar-mobile-list {
+    display: block;
   }
 }

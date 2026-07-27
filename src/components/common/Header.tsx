@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 
 import { useSeason } from '../../context/SeasonContext'
@@ -10,15 +10,49 @@ import { clearDefaultLeagueSlug } from '../../utils/defaultLeague'
 import SeasonSelector from '../filters/SeasonSelector'
 import LoginForm from '../auth/LoginForm'
 import InstallAppButton from './InstallAppButton'
+import AdminMenu from './AdminMenu'
+import MobileNavDrawer from './MobileNavDrawer'
 
 import './Header.css'
+
+const PUBLIC_NAV_ITEMS = [
+  { to: '', label: 'Inicio', end: true },
+  { to: '/calendario', label: 'Calendario' },
+  { to: '/results', label: 'Partidos' },
+  { to: '/tabla', label: 'Tabla' },
+  { to: '/playoffs', label: 'Playoffs' },
+  { to: '/estadisticas', label: 'Estadísticas' },
+  { to: '/equipos', label: 'Equipos' },
+  { to: '/reglamento', label: 'Reglamento' },
+  { to: '/fotos', label: 'Fotos' }
+]
+
+// Mismos links y condiciones de rol que ya existían en el dropdown viejo —
+// solo se movieron aquí para no duplicarlos entre AdminMenu (escritorio) y
+// MobileNavDrawer (móvil).
+function getAdminNavItems({ isFullAdmin, isReferee, isCoach }) {
+  const items = []
+
+  if (isFullAdmin) items.push({ to: '/admin', label: 'Panel de Administración' })
+  if (isFullAdmin) items.push({ to: '/admin/gestor', label: 'Gestor de temporadas' })
+  if (isFullAdmin) items.push({ to: '/admin/crear', label: 'Gestor de Jornadas' })
+  if (isFullAdmin || isReferee) items.push({ to: '/admin/editar', label: 'Registrar resultados' })
+  if (isFullAdmin || isReferee) items.push({ to: '/admin/asistencia', label: 'Asistencia' })
+  if (isFullAdmin) items.push({ to: '/admin/equipos', label: 'Gestor de Equipos' })
+  if (isFullAdmin) items.push({ to: '/admin/sedes', label: 'Gestor de Sedes' })
+  if (isFullAdmin) items.push({ to: '/admin/usuarios', label: 'Gestor de Usuarios' })
+  if (isFullAdmin) items.push({ to: '/admin/configuracion', label: 'Configuración General' })
+  if (isFullAdmin || isCoach) items.push({ to: '/admin/mi-equipo', label: 'Mi Equipo' })
+
+  return items
+}
 
 function Header({ league }) {
   const { user } = useAuth()
   const { seasons, season, setSeason, loading } = useSeason()
-  const { isMember, isFullAdmin, isReferee, isPhotographer, isCoach } = useLeagueMembership()
+  const { isMember, isFullAdmin, isReferee, isCoach } = useLeagueMembership()
 
-  const [menuOpen, setMenuOpen] = useState(false)
+  const [drawerOpen, setDrawerOpen] = useState(false)
   const [showLoginForm, setShowLoginForm] = useState(false)
   const authRef = useRef(null)
 
@@ -38,183 +72,119 @@ function Header({ league }) {
   if (loading) return null
   if (!league) return null
 
-function handleChangeLeague() {
-  clearDefaultLeagueSlug()
-  window.location.href = '/'
-}
-
-async function handleLogout() {
-  try {
-    await signOut()
-    setShowLoginForm(false)
-    setMenuOpen(false)
-
-
-    window.location.href = `/${league.slug}`
-    
-  } catch (err) {
-    console.error(err.message)
+  function handleChangeLeague() {
+    clearDefaultLeagueSlug()
+    window.location.href = '/'
   }
-}
 
+  async function handleLogout() {
+    try {
+      await signOut()
+      setShowLoginForm(false)
+      setDrawerOpen(false)
+      window.location.href = `/${league.slug}`
+    } catch (err) {
+      console.error(err.message)
+    }
+  }
+
+  const adminNavItems = getAdminNavItems({ isFullAdmin, isReferee, isCoach })
 
   return (
     <header className="header-liga">
-      {/* IZQUIERDA */}
-      <div className="header-left">
-        <div className="league-logo-badge">
-          <img
-            src={league.image_url}
-            alt={league.name}
-            className="league-logo"
-          />
-        </div>
-
-        <div className="league-info">
-          <h1 className="liga-nombre">{league.name}</h1>
-
-          {/* Selector solo si hay temporada */}
-          {season && seasons.length > 0 && (
-            <SeasonSelector
-              seasons={seasons}
-              activeSeason={season}
-              onChange={setSeason}
+      <div className="header-top">
+        {/* IZQUIERDA */}
+        <div className="header-left">
+          <div className="league-logo-badge">
+            <img
+              src={league.image_url}
+              alt={league.name}
+              className="league-logo"
             />
-          )}
+          </div>
+
+          <div className="league-info">
+            <h1 className="liga-nombre">{league.name}</h1>
+
+            {season && seasons.length > 0 && (
+              <SeasonSelector
+                seasons={seasons}
+                activeSeason={season}
+                onChange={setSeason}
+              />
+            )}
+          </div>
         </div>
-      </div>
 
-      {/* DERECHA */}
-      <div className="header-right">
-        <InstallAppButton className="auth-btn" />
+        {/* DERECHA */}
+        <div className="header-right">
+          <button type="button" className="change-league-btn" onClick={handleChangeLeague}>
+            Cambiar de liga
+          </button>
 
-        <nav className="nav">
+          <InstallAppButton className="auth-btn" />
+
+          {isMember && (
+            <AdminMenu leagueSlug={league.slug} items={adminNavItems} />
+          )}
+
+          {!user ? (
+            <div className="auth-popover-wrapper" ref={authRef}>
+              <button
+                className="auth-btn"
+                onClick={() => setShowLoginForm(prev => !prev)}
+              >
+                Inicia sesión
+              </button>
+
+              {showLoginForm && (
+                <LoginForm onClose={() => setShowLoginForm(false)} />
+              )}
+            </div>
+          ) : (
+            <div className="user-actions">
+              <span className="user-name">
+                Bienvenid@ {user.email}
+              </span>
+              <button className="auth-btn" onClick={handleLogout}>
+                Cerrar sesión
+              </button>
+            </div>
+          )}
+
           <button
+            type="button"
             className="menu-btn"
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Menú"
+            onClick={() => setDrawerOpen(true)}
+            aria-label="Abrir menú"
           >
             ☰
           </button>
-
-          {menuOpen && (
-            <div className={`dropdown-menu open ${isMember ? 'has-admin' : ''}`}>
-              <div className="menu-section">
-                <button type="button" className="menu-link-btn" onClick={handleChangeLeague}>
-                  Cambiar de liga
-                </button>
-                {isMember && <span className="menu-section-title">Navegación</span>}
-                <Link to={`/${league.slug}`} onClick={() => setMenuOpen(false)}>
-                  Inicio
-                </Link>
-                <Link to={`/${league.slug}/calendario`} onClick={() => setMenuOpen(false)}>
-                  Calendario
-                </Link>
-                <Link to={`/${league.slug}/results`} onClick={() => setMenuOpen(false)}>
-                  Partidos
-                </Link>
-                <Link to={`/${league.slug}/tabla`} onClick={() => setMenuOpen(false)}>
-                  Tabla de Posiciones
-                </Link>
-                <Link to={`/${league.slug}/playoffs`} onClick={() => setMenuOpen(false)}>
-                  Playoffs
-                </Link>
-                <Link to={`/${league.slug}/estadisticas`} onClick={() => setMenuOpen(false)}>
-                  Estadísticas
-                </Link>
-                <Link to={`/${league.slug}/equipos`} onClick={() => setMenuOpen(false)}>
-                  Equipos
-                </Link>
-                <hr />
-                <Link to={`/${league.slug}/reglamento`} onClick={() => setMenuOpen(false)}>
-                  Reglamento
-                </Link>
-              </div>
-
-              {isMember && (
-                <div className="menu-section admin-section">
-                  <span className="menu-section-title">Administración</span>
-                  {isFullAdmin && (
-                    <Link to={`/${league.slug}/admin`} onClick={() => setMenuOpen(false)}>
-                      Panel de Administración
-                    </Link>
-                  )}
-                  {isFullAdmin && (
-                    <Link to={`/${league.slug}/admin/gestor`} onClick={() => setMenuOpen(false)}>
-                      Gestor de temporadas
-                    </Link>
-                  )}
-                  {isFullAdmin && (
-                    <Link to={`/${league.slug}/admin/crear`} onClick={() => setMenuOpen(false)}>
-                      Gestor de Jornadas
-                    </Link>
-                  )}
-                  {(isFullAdmin || isReferee) && (
-                    <Link to={`/${league.slug}/admin/editar`} onClick={() => setMenuOpen(false)}>
-                      Registrar resultados
-                    </Link>
-                  )}
-                  {isFullAdmin && (
-                    <Link to={`/${league.slug}/admin/equipos`} onClick={() => setMenuOpen(false)}>
-                      Gestor de Equipos
-                    </Link>
-                  )}
-                  {isFullAdmin && (
-                    <Link to={`/${league.slug}/admin/sedes`} onClick={() => setMenuOpen(false)}>
-                      Gestor de Sedes
-                    </Link>
-                  )}
-                  {isFullAdmin && (
-                    <Link to={`/${league.slug}/admin/usuarios`} onClick={() => setMenuOpen(false)}>
-                      Gestor de Usuarios
-                    </Link>
-                  )}
-                  {(isFullAdmin || isPhotographer) && (
-                    <Link to={`/${league.slug}/admin/fotos`} onClick={() => setMenuOpen(false)}>
-                      Gestión de Fotos
-                    </Link>
-                  )}
-                  {isFullAdmin && (
-                    <Link to={`/${league.slug}/admin/configuracion`} onClick={() => setMenuOpen(false)}>
-                      Configuración General
-                    </Link>
-                  )}
-                  {(isFullAdmin || isCoach) && (
-                    <Link to={`/${league.slug}/admin/mi-equipo`} onClick={() => setMenuOpen(false)}>
-                      Mi Equipo
-                    </Link>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
-        </nav>
-
-        {/* AUTH */}
-        {!user ? (
-          <div className="auth-popover-wrapper" ref={authRef}>
-            <button
-              className="auth-btn"
-              onClick={() => setShowLoginForm(prev => !prev)}
-            >
-              Inicia sesión
-            </button>
-
-            {showLoginForm && (
-              <LoginForm onClose={() => setShowLoginForm(false)} />
-            )}
-          </div>
-        ) : (
-          <div className="user-actions">
-            <span className="user-name">
-              Bienvenid@ {user.email}
-            </span>
-            <button className="auth-btn" onClick={handleLogout}>
-              Cerrar sesión
-            </button>
-          </div>
-        )}
+        </div>
       </div>
+
+      <nav className="primary-nav">
+        {PUBLIC_NAV_ITEMS.map(item => (
+          <NavLink
+            key={item.to || 'home'}
+            to={`/${league.slug}${item.to}`}
+            end={item.end}
+            className={({ isActive }) => `primary-nav-link ${isActive ? 'active' : ''}`}
+          >
+            {item.label}
+          </NavLink>
+        ))}
+      </nav>
+
+      <MobileNavDrawer
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        leagueSlug={league.slug}
+        publicItems={PUBLIC_NAV_ITEMS}
+        adminItems={adminNavItems}
+        isMember={isMember}
+        onChangeLeague={handleChangeLeague}
+      />
     </header>
   )
 }

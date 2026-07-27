@@ -1,4 +1,5 @@
 import TeamLogo from '../common/TeamLogo'
+import VenueLink from '../common/VenueLink'
 import './NextGameDay.css'
 
 function NextGameDay({ data }) {
@@ -29,7 +30,7 @@ function NextGameDay({ data }) {
           <div className="meta">
             <span>{p.matchday}</span>
             <span>·</span>
-            <span>Sede: {p.branch.name}</span>
+            <span>Sede: <VenueLink branch={p.branch} /></span>
             <span>·</span>
             <span>Campo: {p.field.name}</span>
             <span>·</span>

@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 import TeamLogo from '../common/TeamLogo'
+import { getTeamColorStyle } from '../../utils/teamColorStyle'
 import './PositionTable.css'
 
 function PositionTable({ table }) {
@@ -29,7 +30,11 @@ function PositionTable({ table }) {
         </thead>
         <tbody>
           {table.map((fila, index) => (
-              <tr key={fila.id ?? fila.equipo} className={index === 0 && fila.pj > 0 ? 'leader' : ''}>
+              <tr
+                key={fila.id ?? fila.equipo}
+                className={index === 0 && fila.pj > 0 ? 'leader' : ''}
+                style={getTeamColorStyle(fila.color)}
+              >
               <td>{index + 1}</td>
               <td className="equipo-cell">
                 {fila.id && leagueSlug ? (

@@ -111,14 +111,15 @@ function invalidateTeamCaches() {
   invalidate('getTeamsByIds')
 }
 
-export async function createTeam(categoryId, { name, logoUrl }) {
+export async function createTeam(categoryId, { name, logoUrl, primaryColor }) {
   const result = await runQuery(
     supabase
       .from('Team')
       .insert([{
         category_id: Number(categoryId),
         name,
-        logo_url: logoUrl || null
+        logo_url: logoUrl || null,
+        primary_color: primaryColor || null
       }])
       .select()
       .single()
@@ -128,13 +129,14 @@ export async function createTeam(categoryId, { name, logoUrl }) {
   return result
 }
 
-export async function updateTeam(teamId, { name, logoUrl }) {
+export async function updateTeam(teamId, { name, logoUrl, primaryColor }) {
   const result = await runQuery(
     supabase
       .from('Team')
       .update({
         name,
-        logo_url: logoUrl || null
+        logo_url: logoUrl || null,
+        primary_color: primaryColor || null
       })
       .eq('id', teamId)
       .select()

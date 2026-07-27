@@ -12,6 +12,12 @@
   padding: 24px;
 }
 
+.profile-section-divider {
+  height: 1px;
+  background: #f1f5f9;
+  margin: 20px 0;
+}
+
 .team-profile-back {
   display: inline-block;
   margin-bottom: 16px;
@@ -26,10 +32,26 @@
 }
 
 .team-profile-header {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 18px;
   margin-bottom: 24px;
+  padding: 20px 20px 20px 26px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  overflow: hidden;
+}
+
+.team-profile-header::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  background: var(--team-color, transparent);
 }
 
 .team-profile-logo {
@@ -37,6 +59,8 @@
   height: 72px;
   object-fit: contain;
   flex-shrink: 0;
+  border-radius: 999px;
+  box-shadow: 0 0 0 3px var(--team-color, transparent);
 }
 
 .team-profile-header h2 {

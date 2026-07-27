@@ -56,6 +56,48 @@
   box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.15);
 }
 
+.modal-branch {
+  width: 420px;
+}
+
+.branch-address-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.branch-address-row input {
+  margin-top: 0;
+}
+
+.branch-maps-open-link {
+  display: inline-block;
+  margin-top: 8px;
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.branch-address-row .branch-maps-open-link {
+  margin-top: 0;
+}
+
+.branch-maps-open-link:hover {
+  text-decoration: underline;
+}
+
+.branch-map-preview {
+  width: 100%;
+  height: 160px;
+  margin-top: 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+}
+
 .modal-error {
   margin: 10px 0 0;
   font-size: 13px;

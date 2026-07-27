@@ -16,7 +16,8 @@ const MATCH_SELECT = `
   ),
   branch:branch_id (
     id,
-    name
+    name,
+    maps_url
   ),
   field:field_id (
     id,

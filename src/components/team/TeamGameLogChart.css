@@ -1,0 +1,147 @@
+.team-chart-empty {
+  margin: 0;
+  padding: 20px 16px;
+  text-align: center;
+  border: 1px dashed #e5e7eb;
+  border-radius: 12px;
+  background: #f9fafb;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.team-chart-legend {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #52514e;
+}
+
+.legend-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.legend-dot.favor {
+  background: #2a78d6;
+}
+
+.legend-dot.contra {
+  background: #e34948;
+}
+
+.team-gamelog-track {
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.team-gamelog-bars {
+  display: flex;
+  gap: 20px;
+  min-width: min-content;
+}
+
+.team-gamelog-group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 4px 6px;
+  border-radius: 10px;
+  outline: none;
+  transition: background-color .15s ease;
+}
+
+.team-gamelog-group:hover,
+.team-gamelog-group.active {
+  background: #f8fafc;
+}
+
+.team-gamelog-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 6px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 11px;
+  white-space: nowrap;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.team-gamelog-tooltip strong {
+  font-size: 12px;
+}
+
+.team-gamelog-bar-pair {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 2px;
+}
+
+.team-gamelog-bar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.team-gamelog-value {
+  font-size: 10px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.team-gamelog-bar-track {
+  height: 110px;
+  width: 14px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.team-gamelog-bar {
+  width: 100%;
+  border-radius: 4px 4px 0 0;
+  min-height: 2px;
+}
+
+.team-gamelog-bar.favor {
+  background: #2a78d6;
+}
+
+.team-gamelog-bar.contra {
+  background: #e34948;
+}
+
+.team-gamelog-tick {
+  margin-top: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #9ca3af;
+}
+
+@media (max-width: 640px) {
+  .team-gamelog-bar-track {
+    height: 90px;
+  }
+}

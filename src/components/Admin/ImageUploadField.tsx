@@ -1,8 +1,9 @@
 import { useState } from 'react'
+import { extractDominantColor } from '../../utils/extractDominantColor'
 
 const ALLOWED_TYPES = ['image/png', 'image/jpeg', 'image/jpg']
 
-function ImageUploadField({ label, currentUrl, onFileSelected }) {
+function ImageUploadField({ label, currentUrl, onFileSelected, onColorDetected = null }) {
   const [preview, setPreview] = useState(currentUrl || '')
   const [error, setError] = useState('')
 
@@ -19,6 +20,10 @@ function ImageUploadField({ label, currentUrl, onFileSelected }) {
     setError('')
     setPreview(URL.createObjectURL(file))
     onFileSelected(file)
+
+    if (onColorDetected) {
+      extractDominantColor(file).then(hex => { if (hex) onColorDetected(hex) })
+    }
   }
 
   return (

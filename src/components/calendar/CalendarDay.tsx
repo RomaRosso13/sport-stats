@@ -1,11 +1,58 @@
 import type { CSSProperties } from "react"
 import TeamLogo from "../common/TeamLogo"
+import VenueLink from "../common/VenueLink"
 import "./CalendarDay.css"
 
 const CATEGORY_LABELS = {
   Mixto: "Mixto",
   Femenil: "Femenil",
   Varonil: "Varonil"
+}
+
+// Contenido de un partido, reusado tal cual por la vista de grid (desktop)
+// y por la lista apilada (móvil) — mismo dato, dos layouts distintos.
+function MatchItem({ match, style = undefined }) {
+  const isFinished = match.status === "Terminado"
+  const localWon = isFinished && match.local_points > match.visit_points
+  const visitWon = isFinished && match.visit_points > match.local_points
+  const categoryType = match.category?.type
+  const categoryClass = categoryType ? categoryType.toLowerCase() : ""
+
+  return (
+    <div
+      className={`match-item ${isFinished ? "finished" : "pending"} ${categoryClass ? `cat-${categoryClass}` : ""}`}
+      style={style}
+    >
+      <div className="match-text">
+        <div className="match-meta-row">
+          {categoryType && (
+            <span className={`category-tag cat-${categoryClass}`}>
+              {CATEGORY_LABELS[categoryType] || categoryType}
+            </span>
+          )}
+          <span className="match-hour">{match.hour.slice(0, 5)}</span>
+        </div>
+
+        <div className={`team-row ${localWon ? "winner" : ""}`}>
+          <TeamLogo logoUrl={match.local_team.logo_url} name={match.local_team.name} alt="" className="team-logo" />
+          <span className="team-name" title={match.local_team.name}>{match.local_team.name}</span>
+          {isFinished && <span className="team-score">{match.local_points}</span>}
+        </div>
+
+        {isFinished ? (
+          <div className="score-divider">–</div>
+        ) : (
+          <div className="vs">vs</div>
+        )}
+
+        <div className={`team-row ${visitWon ? "winner" : ""}`}>
+          <TeamLogo logoUrl={match.visit_team.logo_url} name={match.visit_team.name} alt="" className="team-logo" />
+          <span className="team-name" title={match.visit_team.name}>{match.visit_team.name}</span>
+          {isFinished && <span className="team-score">{match.visit_points}</span>}
+        </div>
+      </div>
+    </div>
+  )
 }
 
 function CalendarDay({ matchday, calendarConfig }) {
@@ -48,14 +95,14 @@ function CalendarDay({ matchday, calendarConfig }) {
   }
 
   function groupGamesByField(games) {
-    const map: Record<string, { id: string; name: string; branch: string; games: typeof games }> = {}
+    const map: Record<string, { id: string; name: string; branch: typeof games[number]["branch"]; games: typeof games }> = {}
     games.forEach(game => {
       const fieldId = game.field_id
       if (!map[fieldId]) {
         map[fieldId] = {
           id: fieldId,
           name: game.field.name,
-          branch: game.branch.name,
+          branch: game.branch,
           games: []
         }
       }
@@ -160,7 +207,7 @@ function CalendarDay({ matchday, calendarConfig }) {
               <div key={field.id} className="row">
                 <div className="cell field sticky">
                   <span className="field-name">{field.name}</span>
-                  <span className="field-branch">{field.branch}</span>
+                  <span className="field-branch"><VenueLink branch={field.branch} /></span>
                 </div>
 
                 {hours.map(hour => {
@@ -190,49 +237,12 @@ function CalendarDay({ matchday, calendarConfig }) {
                     >
                       {matches.map(match => {
                         const offset = getOffsetPercent(match.hour, STEP)
-                        const isFinished = match.status === "Terminado"
-                        const localWon = isFinished && match.local_points > match.visit_points
-                        const visitWon = isFinished && match.visit_points > match.local_points
-                        const categoryType = match.category?.type
-                        const categoryClass = categoryType ? categoryType.toLowerCase() : ""
-
                         return (
-                          <div
+                          <MatchItem
                             key={match.id}
-                            className={`match-item ${isFinished ? "finished" : "pending"} ${categoryClass ? `cat-${categoryClass}` : ""}`}
-                            style={{
-                              transform: `translateX(${offset * 100}%)`
-                            }}
-                          >
-                            <div className="match-text">
-                              <div className="match-meta-row">
-                                {categoryType && (
-                                  <span className={`category-tag cat-${categoryClass}`}>
-                                    {CATEGORY_LABELS[categoryType] || categoryType}
-                                  </span>
-                                )}
-                                <span className="match-hour">{match.hour.slice(0, 5)}</span>
-                              </div>
-
-                              <div className={`team-row ${localWon ? "winner" : ""}`}>
-                                <TeamLogo logoUrl={match.local_team.logo_url} name={match.local_team.name} alt="" className="team-logo" />
-                                <span className="team-name" title={match.local_team.name}>{match.local_team.name}</span>
-                                {isFinished && <span className="team-score">{match.local_points}</span>}
-                              </div>
-
-                              {isFinished ? (
-                                <div className="score-divider">–</div>
-                              ) : (
-                                <div className="vs">vs</div>
-                              )}
-
-                              <div className={`team-row ${visitWon ? "winner" : ""}`}>
-                                <TeamLogo logoUrl={match.visit_team.logo_url} name={match.visit_team.name} alt="" className="team-logo" />
-                                <span className="team-name" title={match.visit_team.name}>{match.visit_team.name}</span>
-                                {isFinished && <span className="team-score">{match.visit_points}</span>}
-                              </div>
-                            </div>
-                          </div>
+                            match={match}
+                            style={{ transform: `translateX(${offset * 100}%)` }}
+                          />
                         )
                       })}
                     </div>
@@ -242,6 +252,27 @@ function CalendarDay({ matchday, calendarConfig }) {
             )
           })}
         </div>
+      </div>
+
+      {/* Lista apilada — mismos datos (fields), layout simple para móvil
+          en vez del grid de horas, que ahí queda apretado e ilegible. */}
+      <div className="calendar-mobile-list">
+        {fields.map(field => (
+          <div key={field.id} className="calendar-mobile-field">
+            <div className="calendar-mobile-field-header">
+              <span className="field-name">{field.name}</span>
+              <span className="field-branch"><VenueLink branch={field.branch} /></span>
+            </div>
+
+            <div className="calendar-mobile-matches">
+              {[...field.games]
+                .sort((a, b) => a.hour.localeCompare(b.hour))
+                .map(match => (
+                  <MatchItem key={match.id} match={match} />
+                ))}
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   )

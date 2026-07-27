@@ -1,4 +1,5 @@
 import TeamLogo from "../common/TeamLogo"
+import VenueLink from "../common/VenueLink"
 import "./RecentResults.css"
 
 function RecentResults({ games }) {
@@ -39,7 +40,7 @@ function RecentResults({ games }) {
             <div className="meta">
               <span>{p.matchday}</span>
               <span>·</span>
-              <span>Sede: {p.branch.name} Campo: {p.field.name}</span>
+              <span>Sede: <VenueLink branch={p.branch} /> Campo: {p.field.name}</span>
               <span>·</span>
               <span>Fecha: {p.date}</span>
             </div>

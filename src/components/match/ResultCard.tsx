@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom"
 import { STAGE_LABELS } from "../../utils/matchStages"
 import TeamLogo from "../common/TeamLogo"
+import VenueLink from "../common/VenueLink"
 import "./ResultCard.css"
 
 function ResultCard({ match }) {
@@ -48,7 +49,7 @@ function ResultCard({ match }) {
       </div>
 
       <div className="result-meta">
-        <span>Sede: {match.branch.name}</span>
+        <span>Sede: <VenueLink branch={match.branch} /></span>
         <span>·</span>
         <span>Fecha: {match.date}</span>
         <span>·</span>

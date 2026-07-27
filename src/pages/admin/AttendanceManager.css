@@ -1,0 +1,44 @@
+.attendance-manager-container {
+  flex: 1;
+  display: flex;
+  padding: 24px;
+  flex-direction: column;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.attendance-manager-intro {
+  margin-bottom: 20px;
+}
+
+.attendance-manager-intro h2 {
+  margin: 0 0 4px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.attendance-manager-intro p {
+  margin: 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.attendance-manager-empty,
+.attendance-list-empty {
+  margin-top: 8px;
+  padding: 32px 16px;
+  text-align: center;
+  border: 1px dashed #e5e7eb;
+  border-radius: 14px;
+  background: #ffffff;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.attendance-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}

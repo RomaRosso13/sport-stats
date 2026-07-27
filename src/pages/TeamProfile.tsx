@@ -10,6 +10,8 @@ import PlayerRow from '../components/player/PlayerRow'
 import StatsTable from '../components/team/StatsTable'
 import TeamScheduleRow from '../components/team/TeamScheduleRow'
 import TeamLogo from '../components/common/TeamLogo'
+import TeamGameLogChart from '../components/team/TeamGameLogChart'
+import TeamOffenseDefenseChart from '../components/team/TeamOffenseDefenseChart'
 
 import { useLeague } from '../context/LeagueContext'
 
@@ -20,8 +22,11 @@ import { getIndividualStatsByCategory } from '../services/individual_stats.servi
 import { getCoachAssignmentsByLeagueId } from '../services/league_user.service.js'
 
 import { calculateTeamStats } from '../utils/calculateTeamStats'
+import { calculateTeamGameLog } from '../utils/calculateTeamGameLog'
+import { sumTeamStats, calculateLeagueMaxes, OFFENSE_STAT_KEYS, DEFENSE_STAT_KEYS } from '../utils/calculateTeamOffenseDefense'
 import { classifyTopPlayersByStats } from '../utils/classifyTopPlayersByStats'
 import { sortPlayersByNumber } from '../utils/sortPlayers'
+import { getTeamColorStyle } from '../utils/teamColorStyle'
 import { STAT_KEYS, getStatLabels } from '../constants/statFields'
 
 import './TeamProfile.css'
@@ -35,6 +40,8 @@ function TeamProfile() {
   const [team, setTeam] = useState(null)
   const [schedule, setSchedule] = useState([])
   const [teamStats, setTeamStats] = useState(null)
+  const [gameLog, setGameLog] = useState([])
+  const [offenseDefense, setOffenseDefense] = useState({ totals: {}, leagueMaxes: {}, hasData: true })
   const [leaderboards, setLeaderboards] = useState({})
   const [loading, setLoading] = useState(true)
   const [coach, setCoach] = useState(null)
@@ -74,6 +81,7 @@ function TeamProfile() {
           games: matches.filter(m => m.matchday_id === md.id)
         }))
         setTeamStats(calculateTeamStats(teamData.name, matchdaysWithGames))
+        setGameLog(calculateTeamGameLog(teamData.name, matchdaysWithGames))
 
         const individualStats = await getIndividualStatsByCategory(teamData.category_id)
         const teamPlayerStats = individualStats.filter(
@@ -82,6 +90,13 @@ function TeamProfile() {
         setLeaderboards(
           classifyTopPlayersByStats(teamPlayerStats, STAT_KEYS, 3)
         )
+
+        const offenseDefenseKeys = [...OFFENSE_STAT_KEYS, ...DEFENSE_STAT_KEYS]
+        setOffenseDefense({
+          totals: sumTeamStats(teamPlayerStats, offenseDefenseKeys),
+          leagueMaxes: calculateLeagueMaxes(individualStats, offenseDefenseKeys),
+          hasData: individualStats.length > 0
+        })
 
       } catch (err) {
         console.error(err)
@@ -123,7 +138,7 @@ function TeamProfile() {
             ← Equipos
           </Link>
 
-          <div className="team-profile-header">
+          <div className="team-profile-header" style={getTeamColorStyle(team.primary_color)}>
             <TeamLogo logoUrl={team.logo_url} name={team.name} alt={team.name} className="team-profile-logo" />
             <div>
               {team.category?.type && (
@@ -141,6 +156,18 @@ function TeamProfile() {
               <section className="profile-card">
                 <h3 className="profile-card-title">Récord</h3>
                 {teamStats && <TeamStats stats={teamStats} />}
+              </section>
+
+              <section className="profile-card">
+                <h3 className="profile-card-title">Análisis de rendimiento</h3>
+                <TeamGameLogChart games={gameLog} />
+                <div className="profile-section-divider" />
+                <TeamOffenseDefenseChart
+                  totals={offenseDefense.totals}
+                  leagueMaxes={offenseDefense.leagueMaxes}
+                  statLabels={statLabels}
+                  hasData={offenseDefense.hasData}
+                />
               </section>
 
               <section className="profile-card">

@@ -6,6 +6,7 @@ import Footer from '../components/common/Footer'
 import Loader from '../components/common/Loader'
 import PageWrapper from '../components/common/PageWrapper'
 import TeamLogo from '../components/common/TeamLogo'
+import VenueLink from '../components/common/VenueLink'
 
 import { useLeague } from '../context/LeagueContext'
 
@@ -116,7 +117,7 @@ function MatchDetail() {
             </div>
 
             <div className="match-detail-meta">
-              <span>Sede: {match.branch.name}</span>
+              <span>Sede: <VenueLink branch={match.branch} /></span>
               <span>·</span>
               <span>Campo: {match.field.name}</span>
               <span>·</span>

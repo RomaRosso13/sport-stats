@@ -10,6 +10,7 @@ function TeamFormModal({ categoryId, team, onClose, onSaved }) {
   const isEditing = !!team
   const [name, setName] = useState(team?.name || '')
   const [logoFile, setLogoFile] = useState(null)
+  const [primaryColor, setPrimaryColor] = useState(team?.primary_color || '')
   const [loading, setLoading] = useState(false)
   const [loadingLabel, setLoadingLabel] = useState('')
   const [error, setError] = useState('')
@@ -37,8 +38,8 @@ function TeamFormModal({ categoryId, team, onClose, onSaved }) {
 
       setLoadingLabel('Guardando...')
       const saved = isEditing
-        ? await updateTeam(team.id, { name: name.trim(), logoUrl })
-        : await createTeam(categoryId, { name: name.trim(), logoUrl })
+        ? await updateTeam(team.id, { name: name.trim(), logoUrl, primaryColor })
+        : await createTeam(categoryId, { name: name.trim(), logoUrl, primaryColor })
 
       onSaved(saved)
       onClose()
@@ -68,7 +69,18 @@ function TeamFormModal({ categoryId, team, onClose, onSaved }) {
             label="Logo del equipo"
             currentUrl={team?.logo_url}
             onFileSelected={setLogoFile}
+            onColorDetected={setPrimaryColor}
           />
+
+          <label>Color del equipo</label>
+          <div className="team-color-field">
+            <input
+              type="color"
+              value={primaryColor || '#2563eb'}
+              onChange={e => setPrimaryColor(e.target.value)}
+            />
+            <span className="team-color-hint">Se detecta solo al subir el logo — puedes cambiarlo</span>
+          </div>
 
           {error && <p className="modal-error">{error}</p>}
 

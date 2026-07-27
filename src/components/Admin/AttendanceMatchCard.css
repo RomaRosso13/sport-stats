@@ -1,0 +1,316 @@
+.attendance-match-card {
+  padding: 16px 20px;
+  background: white;
+  border-radius: 16px;
+  border-left: 4px solid #e5e7eb;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.attendance-match-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.12);
+}
+
+.attendance-match-card.partial {
+  border-left-color: #f59e0b;
+}
+
+.attendance-match-card.complete {
+  border-left-color: #16a34a;
+}
+
+.attendance-match-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.attendance-match-header .team {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1;
+}
+
+.attendance-match-header .team-logo {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.attendance-match-header .team-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.attendance-match-header .vs {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.attendance-match-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.attendance-complete-tag {
+  margin-left: auto;
+  font-weight: 700;
+  color: #16a34a;
+}
+
+.attendance-loading {
+  margin: 0;
+  padding: 16px 0;
+  text-align: center;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.attendance-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.attendance-roster {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 12px;
+  border-top: 3px solid transparent;
+}
+
+.attendance-roster.side-local {
+  background: var(--accent-soft);
+  border-top-color: var(--accent);
+}
+
+.attendance-roster.side-visit {
+  background: #f8fafc;
+  border-top-color: #64748b;
+}
+
+.attendance-roster-team {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.attendance-roster-side-tag {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+  padding: 2px 7px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.side-local .attendance-roster-side-tag {
+  background: var(--accent);
+}
+
+.side-visit .attendance-roster-side-tag {
+  background: #64748b;
+}
+
+.attendance-roster-team-logo {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.attendance-roster-team-name {
+  font-weight: 700;
+  font-size: 13px;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.attendance-roster-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.attendance-roster-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  flex-shrink: 0;
+}
+
+.attendance-roster-bar {
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  overflow: hidden;
+}
+
+.attendance-roster-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-dark));
+  transition: width 0.2s ease;
+}
+
+.attendance-roster-count {
+  font-size: 11px;
+  font-weight: 800;
+  color: #0f172a;
+  flex-shrink: 0;
+  min-width: 32px;
+  text-align: right;
+}
+
+.attendance-roster-empty {
+  margin: 0;
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.attendance-player-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid transparent;
+  flex-wrap: wrap;
+  transition: background-color .15s ease, border-color .15s ease;
+}
+
+.attendance-player-row.is-present {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.attendance-player-row.is-absent {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.attendance-player-avatar {
+  width: 28px;
+  height: 28px;
+  font-size: 12px;
+}
+
+.attendance-player-number {
+  font-size: 12px;
+  font-weight: 800;
+  color: #9ca3af;
+  flex-shrink: 0;
+}
+
+.attendance-player-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: #0f172a;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.attendance-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.attendance-present-btn,
+.attendance-absent-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: #374151;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+
+.attendance-btn-icon {
+  font-size: 11px;
+  line-height: 1;
+}
+
+.attendance-present-btn:hover:not(:disabled),
+.attendance-absent-btn:hover:not(:disabled) {
+  background: #f3f4f6;
+}
+
+.attendance-present-btn:disabled,
+.attendance-absent-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.attendance-present-btn.active {
+  color: #16a34a;
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+}
+
+.attendance-present-btn.active:hover:not(:disabled) {
+  background: #dcfce7;
+}
+
+.attendance-absent-btn.active {
+  color: #dc2626;
+  border-color: #fecaca;
+  background: #fef2f2;
+}
+
+.attendance-absent-btn.active:hover:not(:disabled) {
+  background: #fee2e2;
+}
+
+@media (max-width: 640px) {
+  .attendance-columns {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .attendance-player-row {
+    justify-content: space-between;
+  }
+
+  .attendance-complete-tag {
+    margin-left: 0;
+    flex-basis: 100%;
+  }
+}

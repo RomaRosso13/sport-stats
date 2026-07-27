@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react'
 
-import { useLeague } from '../../context/LeagueContext'
-import { useSeason } from '../../context/SeasonContext'
-import { useCategory } from '../../context/CategoryContext'
+import { useLeague } from '../context/LeagueContext'
+import { useSeason } from '../context/SeasonContext'
+import { useCategory } from '../context/CategoryContext'
+import { useLeagueMembership } from '../hooks/useLeagueMembership'
 
-import Header from '../../components/common/Header'
-import Footer from '../../components/common/Footer'
-import JornadaLinkModal from '../../components/Admin/JornadaLinkModal'
+import Header from '../components/common/Header'
+import Footer from '../components/common/Footer'
+import Loader from '../components/common/Loader'
+import PageWrapper from '../components/common/PageWrapper'
+import JornadaLinkModal from '../components/Admin/JornadaLinkModal'
 
-import { getMatchDaysByCategoryIds } from '../../services/matchday.service'
-import { getJornadaLinksBySeasonId, deleteJornadaLink } from '../../services/jornada_link.service.js'
-import { getGoogleDriveEmbedUrl } from '../../utils/googleDriveEmbed'
+import { getMatchDaysByCategoryIds } from '../services/matchday.service'
+import { getJornadaLinksBySeasonId, deleteJornadaLink } from '../services/jornada_link.service.js'
+import { getGoogleDriveEmbedUrl } from '../utils/googleDriveEmbed'
 
 import './PhotoManager.css'
 
@@ -18,6 +21,8 @@ function PhotoManager() {
   const { league } = useLeague()
   const { season } = useSeason()
   const { categories } = useCategory()
+  const { isFullAdmin, isPhotographer } = useLeagueMembership()
+  const canManage = isFullAdmin || isPhotographer
 
   const [jornadas, setJornadas] = useState([])
   const [links, setLinks] = useState([])
@@ -99,13 +104,18 @@ function PhotoManager() {
     return formatted.charAt(0).toUpperCase() + formatted.slice(1)
   }
 
+  const isDataLoading = !league || loading
+
   return (
     <div className="app-layout">
+      <Loader show={isDataLoading} label="Cargando..." />
+      <PageWrapper loading={isDataLoading}/>
       <Header league={league} />
+
       <main className="photo-manager-container">
         <div className="photo-manager-intro">
-          <h2>Gestión de Fotos</h2>
-          <p>Deja el enlace (por ejemplo, una carpeta de Google Drive) con las fotos de cada jornada</p>
+          <h2>Fotos</h2>
+          <p>Encuentra el enlace con las fotos de cada jornada de {league?.name}</p>
         </div>
 
         {!loading && jornadas.length === 0 ? (
@@ -130,10 +140,12 @@ function PhotoManager() {
                           Abrir enlace
                         </a>
                       )}
-                      <button type="button" onClick={() => setActiveJornada(jornada)}>
-                        {link ? 'Editar enlace' : 'Agregar enlace'}
-                      </button>
-                      {link && (
+                      {canManage && (
+                        <button type="button" onClick={() => setActiveJornada(jornada)}>
+                          {link ? 'Editar enlace' : 'Agregar enlace'}
+                        </button>
+                      )}
+                      {canManage && link && (
                         <button type="button" className="remove-link-btn" onClick={() => handleDeleteLink(link)}>
                           Quitar
                         </button>
@@ -148,6 +160,12 @@ function PhotoManager() {
                   {link && !embedUrl && (
                     <p className="jornada-link-no-preview">
                       No se puede previsualizar este enlace aquí — usa "Abrir enlace".
+                    </p>
+                  )}
+
+                  {!link && !canManage && (
+                    <p className="jornada-link-no-preview">
+                      Aún no hay fotos de esta jornada.
                     </p>
                   )}
                 </section>

@@ -1,4 +1,5 @@
 import TeamLogo from '../common/TeamLogo'
+import VenueLink from '../common/VenueLink'
 import './TeamScheduleRow.css'
 
 function TeamScheduleRow({ match, teamId }) {
@@ -39,7 +40,7 @@ function TeamScheduleRow({ match, teamId }) {
       </div>
 
       <div className="schedule-meta">
-        <span>{match.branch?.name}</span>
+        <VenueLink branch={match.branch} />
         <span>·</span>
         <span>{match.field?.name}</span>
       </div>

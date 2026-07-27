@@ -3,11 +3,6 @@
   top: 0;
   z-index: 1000;
 
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  padding: 16px 24px;
   background:
     linear-gradient(120deg, rgba(var(--accent-rgb), 0.4) 0%, transparent 45%),
     linear-gradient(90deg, #0f172a, #111827);
@@ -15,6 +10,13 @@
 
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
   border-bottom: 3px solid var(--accent);
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
 }
 
 .header-left {
@@ -66,17 +68,41 @@
 .user-actions {
   display: flex;
   align-items: center;
-  gap: 10px; /* ajusta a gusto */
+  gap: 10px;
 }
 
 .auth-popover-wrapper {
   position: relative;
 }
 
-
 .header-right {
   display: flex;
   align-items: center;
+  gap: 12px;
+}
+
+.change-league-btn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 10px;
+  border-radius: 8px;
+  white-space: nowrap;
+  transition: background-color .15s ease, color .15s ease;
+}
+
+.change-league-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 899.98px) {
+  .change-league-btn {
+    display: none;
+  }
 }
 
 .auth-btn {
@@ -103,23 +129,7 @@
   transform: translateY(0);
 }
 
-
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-/* Menú */
-.nav {
-  position: relative;
-  /* siempre al extremo derecho de .header-right, sin importar si hay
-     mensaje de bienvenida/botón de sesión a su lado, para que el
-     dropdown (anclado a este elemento) no quede desplazado a la
-     izquierda y termine fuera de la pantalla */
-  order: 1;
-}
-
+/* Botón de hamburguesa: solo móvil, abre el MobileNavDrawer */
 .menu-btn {
   background: rgba(255,255,255,0.08);
   border: none;
@@ -145,130 +155,55 @@
   transform: translateY(0);
 }
 
-
-/* Dropdown */
-.dropdown-menu {
-  position: absolute;
-  top: calc(100% + 10px);
-  right: 0;
-
-  display: grid;
-  grid-template-columns: 1fr;
-  min-width: 220px;
-  padding: 12px;
-  gap: 2px 20px;
-
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-
-  border-radius: 16px;
-  box-shadow:
-    0 20px 40px rgba(0, 0, 0, 0.18),
-    0 0 0 1px rgba(255, 255, 255, 0.4);
-
-  /* Animación */
-  opacity: 0;
-  transform: translateY(-8px) scale(0.98);
-  pointer-events: none;
-
-  transition:
-    opacity 0.25s ease,
-    transform 0.25s ease;
-
-  z-index: 1000;
+@media (min-width: 900px) {
+  .menu-btn {
+    display: none;
+  }
 }
 
-.dropdown-menu.has-admin {
-  grid-template-columns: 1fr 1fr;
-  min-width: 400px;
+/* Fila 2: navegación pública visible, solo escritorio */
+.primary-nav {
+  display: none;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 24px;
+  background: rgba(0, 0, 0, 0.18);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  overflow-x: auto;
 }
 
-/* Estado abierto */
-.dropdown-menu.open {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  pointer-events: auto;
+@media (min-width: 900px) {
+  .primary-nav {
+    display: flex;
+  }
 }
 
-.menu-section {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.admin-section {
-  border-left: 1px solid #e5e7eb;
-  padding-left: 18px;
-}
-
-.menu-section-title {
-  padding: 2px 10px 6px;
-  font-size: 10px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #94a3b8;
-}
-
-.dropdown-menu a,
-.dropdown-menu button.menu-link-btn {
-  text-decoration: none;
-  color: #1e293b;
-  font-weight: 600;
+.primary-nav-link {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  border-radius: 999px;
   font-size: 0.85rem;
-
-  padding: 7px 10px;
-  border-radius: 10px;
-
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    transform 0.15s ease;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color .15s ease, color .15s ease;
 }
 
-.dropdown-menu button.menu-link-btn {
-  background: none;
-  border: none;
-  text-align: left;
-  width: 100%;
-  cursor: pointer;
-  font-family: inherit;
+.primary-nav-link:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
 }
 
-.dropdown-menu a:hover,
-.dropdown-menu button.menu-link-btn:hover {
-  background-color: var(--accent-soft);
-  color: var(--accent);
-  transform: translateX(2px);
+.primary-nav-link.active {
+  color: #ffffff;
+  background: var(--accent);
 }
-
-
-.dropdown-menu hr {
-  border: none;
-  height: 1px;
-  background: linear-gradient(
-    to right,
-    transparent,
-    #e5e7eb,
-    transparent
-  );
-  margin: 6px 0;
-}
-
 
 .league-logo {
   width: 100%;
   height: 100%;
   object-fit: contain;
-}
-
-@media (max-width: 640px) {
-  .league-logo-badge {
-    width: 44px;
-    height: 44px;
-    padding: 5px;
-    border-radius: 12px;
-  }
 }
 
 .league-info {
@@ -284,7 +219,14 @@
    empujen la página a scroll horizontal
 ================================ */
 @media (max-width: 640px) {
-  .header-liga {
+  .league-logo-badge {
+    width: 44px;
+    height: 44px;
+    padding: 5px;
+    border-radius: 12px;
+  }
+
+  .header-top {
     flex-wrap: wrap;
     row-gap: 10px;
     padding: 10px 14px;
@@ -325,22 +267,5 @@
     padding: 8px 12px;
     font-size: 0.8rem;
     white-space: nowrap;
-  }
-
-  .dropdown-menu,
-  .dropdown-menu.has-admin {
-    grid-template-columns: 1fr;
-    min-width: 0;
-    width: min(280px, calc(100vw - 28px));
-    max-height: 70vh;
-    overflow-y: auto;
-  }
-
-  .admin-section {
-    border-left: none;
-    border-top: 1px solid #e5e7eb;
-    padding-left: 0;
-    padding-top: 10px;
-    margin-top: 6px;
   }
 }

@@ -38,6 +38,10 @@
   font-weight: 500;
 }
 
+.tabla-posiciones td:first-child {
+  border-left: 6px solid var(--team-color, transparent);
+}
+
 .tabla-posiciones tr.leader {
   background-color: #d1fae5; /* verde clarito para el líder */
   font-weight: bold;
@@ -72,6 +76,11 @@
   height: 22px;
   object-fit: contain;
   flex-shrink: 0;
+}
+
+.equipo-cell .team-logo {
+  border-radius: 999px;
+  box-shadow: 0 0 0 2px var(--team-color, transparent);
 }
 
 .team-name {

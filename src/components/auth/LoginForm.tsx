@@ -23,7 +23,7 @@ export default function InlineLoginForm({ onClose }) {
       const { role } = await signInByPasswordForLeague(email, password, league.id)
       onClose()
       const dest = role === 'Referi' ? `/${league.slug}/admin/editar`
-        : role === 'Fotografo' ? `/${league.slug}/admin/fotos`
+        : role === 'Fotografo' ? `/${league.slug}/fotos`
         : role === 'Coach' ? `/${league.slug}/admin/mi-equipo`
         : `/${league.slug}/admin`
       navigate(dest)
