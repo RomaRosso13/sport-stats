@@ -30,7 +30,7 @@ function TeamCard({ team, matchdays, coach }) {
         <div className="team-text">
           <h3 className="team-name">{team.name}</h3>
           <span className="coach">
-            Coach: {coach ? (coach.name || coach.email) : "Sin asignar"}
+            Coach: {coach ? coach.name : "Sin asignar"}
           </span>
         </div>
       </Link>

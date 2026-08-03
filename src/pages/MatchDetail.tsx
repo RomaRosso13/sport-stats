@@ -7,15 +7,20 @@ import Loader from '../components/common/Loader'
 import PageWrapper from '../components/common/PageWrapper'
 import TeamLogo from '../components/common/TeamLogo'
 import VenueLink from '../components/common/VenueLink'
+import HeadToHead from '../components/match/HeadToHead'
 
 import { useLeague } from '../context/LeagueContext'
 
-import { getMatchById } from '../services/match.service'
+import { getMatchById, getHeadToHeadMatches } from '../services/match.service'
 import { getIndividualStatsByMatchId } from '../services/individual_stats.service'
 import { STAGE_LABELS } from '../utils/matchStages'
 import { STAT_KEYS, getStatLabels } from '../constants/statFields'
 
 import './MatchDetail.css'
+
+function getInitial(name) {
+  return name?.trim().charAt(0).toUpperCase() || '?'
+}
 
 function buildTeamBoxScore(stats, teamId, statSections) {
   const rows = stats.filter(row => String(row.team_id) === String(teamId))
@@ -26,7 +31,13 @@ function buildTeamBoxScore(stats, teamId, statSections) {
       label,
       players: rows
         .filter(row => (row[key] || 0) > 0)
-        .map(row => ({ name: row.player.name, value: row[key] }))
+        .map(row => ({
+          id: row.player.id,
+          name: row.player.name,
+          number: row.player.number,
+          photo: row.player.image_url,
+          value: row[key]
+        }))
         .sort((a, b) => b.value - a.value)
     }))
     .filter(section => section.players.length > 0)
@@ -40,6 +51,7 @@ function MatchDetail() {
 
   const [match, setMatch] = useState(null)
   const [stats, setStats] = useState([])
+  const [headToHead, setHeadToHead] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -52,8 +64,12 @@ function MatchDetail() {
         const matchData = await getMatchById(matchId)
         setMatch(matchData)
 
-        const statsData = await getIndividualStatsByMatchId(matchId)
+        const [statsData, h2hData] = await Promise.all([
+          getIndividualStatsByMatchId(matchId),
+          getHeadToHeadMatches(matchData.local_team.id, matchData.visit_team.id, matchId)
+        ])
         setStats(statsData || [])
+        setHeadToHead(h2hData || [])
       } catch (err) {
         console.error(err)
       } finally {
@@ -127,6 +143,11 @@ function MatchDetail() {
             </div>
           </div>
 
+          <section className="match-detail-h2h-card">
+            <h3 className="match-detail-h2h-title">Historial entre estos equipos</h3>
+            <HeadToHead matches={headToHead} localTeam={match.local_team} visitTeam={match.visit_team} />
+          </section>
+
           <section className="match-detail-boxscore">
             {[match.local_team, match.visit_team].map(team => {
               const sections = buildTeamBoxScore(stats, team.id, STAT_SECTIONS)
@@ -145,10 +166,20 @@ function MatchDetail() {
                       <div key={section.key} className="boxscore-section">
                         <span className="boxscore-section-label">{section.label}</span>
                         <ul className="boxscore-list">
-                          {section.players.map((p, i) => (
-                            <li key={i}>
-                              {p.name}
-                              {p.value > 1 && <span className="boxscore-value"> ×{p.value}</span>}
+                          {section.players.map(p => (
+                            <li key={p.id} className="boxscore-row">
+                              <Link to={`/${league.slug}/jugadores/${p.id}`} className="boxscore-player-link">
+                                {p.photo ? (
+                                  <img src={p.photo} alt={p.name} className="boxscore-player-photo" loading="lazy" />
+                                ) : (
+                                  <span className="boxscore-player-avatar">{getInitial(p.name)}</span>
+                                )}
+                                <span className="boxscore-player-name">
+                                  {p.number != null && <span className="boxscore-player-number">#{p.number}</span>}
+                                  {p.name}
+                                </span>
+                              </Link>
+                              {p.value > 1 && <span className="boxscore-value">×{p.value}</span>}
                             </li>
                           ))}
                         </ul>

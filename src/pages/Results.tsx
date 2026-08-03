@@ -14,6 +14,9 @@ import { useCategory } from '../context/CategoryContext'
 import { getMatchDaysByCategoryId } from '../services/matchday.service'
 import { getMatchesByMatchDayIds } from '../services/match.service'
 import { getTeamsByCategoryId } from '../services/team.service'
+import { getIndividualStatsByCategory } from '../services/individual_stats.service'
+import { calculateMatchMVP } from '../utils/calculateMatchMVP'
+import { STAT_KEYS } from '../constants/statFields'
 
 import "./Results.css"
 
@@ -23,6 +26,7 @@ function Results() {
   const [matchdays, setMatchdays] = useState([])
   const [, setLoadingMatchdays] = useState(true)
   const [ teamData, setTeamData ] = useState([])
+  const [mvpByMatch, setMvpByMatch] = useState({})
 
   useEffect(() => {
     if (!category) return
@@ -31,8 +35,11 @@ function Results() {
       try {
         setLoadingMatchdays(true)
 
-        const teams = await getTeamsByCategoryId(category.id)
-        const matchdaysData = await getMatchDaysByCategoryId(category.id)
+        const [teams, matchdaysData, individualStats] = await Promise.all([
+          getTeamsByCategoryId(category.id),
+          getMatchDaysByCategoryId(category.id),
+          getIndividualStatsByCategory(category.id)
+        ])
         const ids = matchdaysData.map(md => md.id)
         const matches = await getMatchesByMatchDayIds(ids)
 
@@ -47,8 +54,21 @@ function Results() {
           games: matchesMap[md.id] || []
         }))
 
+        const statsByMatch = {}
+        individualStats.forEach(row => {
+          const id = row.match_id
+          if (!statsByMatch[id]) statsByMatch[id] = []
+          statsByMatch[id].push(row)
+        })
+
+        const mvpMap = {}
+        matches.forEach(match => {
+          mvpMap[match.id] = calculateMatchMVP(statsByMatch[match.id] || [], STAT_KEYS)
+        })
+
         setMatchdays(combined)
         setTeamData(teams)
+        setMvpByMatch(mvpMap)
 
       } catch (err) {
         console.error(err)
@@ -97,7 +117,7 @@ function Results() {
           <p className="empty-results">Aún no hay resultados</p>
         ) : (
           matchdaysWithResults.map(matchday => (
-            <ResultsDay key={matchday.id} matchday={matchday} teams={teamData} />
+            <ResultsDay key={matchday.id} matchday={matchday} teams={teamData} mvpByMatch={mvpByMatch} />
           ))
         )}
       </main>

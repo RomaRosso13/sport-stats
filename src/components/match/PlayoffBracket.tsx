@@ -7,7 +7,7 @@ const ROUNDS = [
   { stage: 'Final', label: 'Final' }
 ]
 
-function PlayoffBracket({ matchesByStage }) {
+function PlayoffBracket({ matchesByStage, championId }) {
   return (
     <div className="bracket">
       {ROUNDS.map(({ stage, label }, roundIndex) => {
@@ -25,7 +25,7 @@ function PlayoffBracket({ matchesByStage }) {
                   key={match?.id ?? `${stage}-placeholder-${i}`}
                   className={`bracket-match-wrap ${!isLastRound ? 'has-connector' : ''}`}
                 >
-                  <BracketMatchCard match={match} />
+                  <BracketMatchCard match={match} championId={championId} />
                 </div>
               ))}
             </div>

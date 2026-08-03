@@ -21,10 +21,17 @@
   flex-wrap: wrap;
 }
 
+.standings-title {
+  margin: 32px 0 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
 .export-image-btn {
   margin-top: 32px;
   padding: 8px 16px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   background-color: var(--accent);
   color: #ffffff;

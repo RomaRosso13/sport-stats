@@ -9,6 +9,7 @@ import Header from '../components/common/Header'
 import Footer from '../components/common/Footer'
 import Loader from '../components/common/Loader'
 import PageWrapper from '../components/common/PageWrapper'
+import DocumentLinkCard from '../components/common/DocumentLinkCard'
 import JornadaLinkModal from '../components/Admin/JornadaLinkModal'
 
 import { getMatchDaysByCategoryIds } from '../services/matchday.service'
@@ -121,20 +122,26 @@ function PhotoManager() {
         {!loading && jornadas.length === 0 ? (
           <p className="empty-state">Aún no hay jornadas programadas</p>
         ) : (
-          <div className="jornada-link-list">
+          <div className="document-link-list">
             {jornadas.map(jornada => {
               const link = links.find(l => l.date === jornada.date)
               const embedUrl = getGoogleDriveEmbedUrl(link?.url)
+              const noPreviewMessage = link && !embedUrl
+                ? 'No se puede previsualizar este enlace aquí — usa "Abrir enlace".'
+                : !link && !canManage
+                  ? 'Aún no hay fotos de esta jornada.'
+                  : null
 
               return (
-                <section key={jornada.date} className="jornada-link-card">
-                  <div className="jornada-link-card-header">
-                    <div className="jornada-link-card-info">
-                      <h3>{jornada.name}</h3>
-                      <span className="jornada-link-card-date">{formatJornadaDate(jornada.date)}</span>
-                    </div>
-
-                    <div className="jornada-link-card-actions">
+                <DocumentLinkCard
+                  key={jornada.date}
+                  title={jornada.name}
+                  dateLabel={formatJornadaDate(jornada.date)}
+                  previewUrl={embedUrl}
+                  emptyPreviewMessage={noPreviewMessage}
+                  compactPreview
+                  actions={(
+                    <>
                       {link && (
                         <a href={link.url} target="_blank" rel="noreferrer">
                           Abrir enlace
@@ -150,25 +157,9 @@ function PhotoManager() {
                           Quitar
                         </button>
                       )}
-                    </div>
-                  </div>
-
-                  {embedUrl && (
-                    <iframe src={embedUrl} className="jornada-link-preview" title={`Fotos de ${jornada.name}`} />
+                    </>
                   )}
-
-                  {link && !embedUrl && (
-                    <p className="jornada-link-no-preview">
-                      No se puede previsualizar este enlace aquí — usa "Abrir enlace".
-                    </p>
-                  )}
-
-                  {!link && !canManage && (
-                    <p className="jornada-link-no-preview">
-                      Aún no hay fotos de esta jornada.
-                    </p>
-                  )}
-                </section>
+                />
               )
             })}
           </div>

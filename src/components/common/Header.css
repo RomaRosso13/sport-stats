@@ -34,7 +34,7 @@
   height: 78px;
   padding: 8px;
   border-radius: 20px;
-  background: #ffffff;
+  background: var(--bg-surface);
   box-shadow:
     0 10px 24px rgba(0, 0, 0, 0.32),
     0 0 0 3px rgba(var(--accent-rgb), 0.65),
@@ -69,6 +69,14 @@
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+/* Color explícito (no heredado) para no depender de la cascada — el header
+   siempre es oscuro sin importar el tema de la app. */
+.header-user-name {
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
 .auth-popover-wrapper {
@@ -106,6 +114,8 @@
 }
 
 .auth-btn {
+  /* Blanco fijo a propósito: el botón vive sobre la barra oscura del header,
+     que no cambia con el tema. */
   background: white;
   color: var(--accent);
   border: none;
@@ -255,7 +265,7 @@
     min-width: 0;
   }
 
-  .user-name {
+  .header-user-name {
     max-width: 100%;
     white-space: nowrap;
     overflow: hidden;

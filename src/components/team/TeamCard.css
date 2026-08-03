@@ -1,6 +1,6 @@
 .team-card {
   position: relative;
-  background: #ffffff;
+  background: var(--bg-surface);
   border-radius: 16px;
   box-shadow: 0 6px 18px rgba(0,0,0,0.07);
   overflow: hidden;
@@ -28,8 +28,8 @@
   display: flex;
   align-items: center;
   padding: 18px 20px;
-  background: linear-gradient(135deg, var(--accent-soft), #ffffff);
-  border-bottom: 1px solid #f1f5f9;
+  background: linear-gradient(135deg, var(--accent-soft), var(--bg-surface));
+  border-bottom: 1px solid var(--border-color);
 }
 
 .team-card .team-logo {
@@ -67,7 +67,7 @@
   margin: 0;
   font-size: 19px;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -75,7 +75,7 @@
 
 .coach {
   font-size: 12px;
-  color: #94a3b8;
+  color: var(--text-faint);
 }
 
 .team-card-body {
@@ -84,7 +84,7 @@
 
 .empty {
   font-size: 13px;
-  color: #9ca3af;
+  color: var(--text-faint);
 }
 
 .players-toggle {

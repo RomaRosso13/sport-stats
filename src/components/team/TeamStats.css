@@ -15,20 +15,20 @@
   align-items: center;
   padding: 8px 4px;
   border-radius: 10px;
-  background: #f8fafc;
+  background: var(--bg-surface-alt);
 }
 
 .record-value {
   font-size: 20px;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--text-primary);
   line-height: 1.1;
 }
 
 .record-label {
   font-size: 11px;
   font-weight: 700;
-  color: #94a3b8;
+  color: var(--text-faint);
   text-transform: uppercase;
   letter-spacing: .03em;
 }
@@ -38,11 +38,11 @@
 }
 
 .record-item.loss .record-value {
-  color: #dc2626;
+  color: var(--status-loss-text);
 }
 
 .record-item.draw .record-value {
-  color: #b45309;
+  color: var(--status-pending-text);
 }
 
 .stats-bars {
@@ -51,7 +51,7 @@
   border-radius: 999px;
   overflow: hidden;
   margin-bottom: 12px;
-  background: #f1f5f9;
+  background: var(--bg-muted);
 }
 
 .bar.win {
@@ -81,7 +81,7 @@
 .points-value {
   font-size: 15px;
   font-weight: 700;
-  color: #334155;
+  color: var(--text-secondary);
 }
 
 .points-value.diff.positive {
@@ -89,13 +89,13 @@
 }
 
 .points-value.diff.negative {
-  color: #dc2626;
+  color: var(--status-loss-text);
 }
 
 .points-label {
   font-size: 10px;
   font-weight: 600;
-  color: #9ca3af;
+  color: var(--text-faint);
   text-transform: uppercase;
   letter-spacing: .03em;
 }

@@ -1,5 +1,5 @@
 .resumen-card {
-  background-color: #ffffff;
+  background-color: var(--bg-surface);
   border-radius: 12px;
   padding: 16px;
 
@@ -12,13 +12,13 @@
 
 .resumen-titulo {
   font-size: 0.85rem;
-  color: #64748b;
+  color: var(--text-secondary);
 }
 
 .resumen-valor {
   font-size: 1.8rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 @media (max-width: 768px) {

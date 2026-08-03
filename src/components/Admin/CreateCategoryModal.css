@@ -9,13 +9,13 @@
 }
 
 .modal {
-  background: white;
+  background: var(--bg-surface);
   border-radius: 16px;
   padding: 22px;
   width: 320px;
   --primary: var(--accent);      /* azul */
 --primary-hover: var(--accent-dark);
---secondary: #e5e7eb;    /* gris claro */
+--secondary: var(--border-color);    /* gris claro */
 --secondary-text: #374151;
 --disabled: #9ca3af;
 
@@ -30,7 +30,7 @@
   padding: 8px 10px;
   margin-top: 6px;
   border-radius: 8px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
 }
 
 .modal-actions {

@@ -12,6 +12,7 @@ import TeamScheduleRow from '../components/team/TeamScheduleRow'
 import TeamLogo from '../components/common/TeamLogo'
 import TeamGameLogChart from '../components/team/TeamGameLogChart'
 import TeamOffenseDefenseChart from '../components/team/TeamOffenseDefenseChart'
+import TeamLeagueComparison from '../components/team/TeamLeagueComparison'
 
 import { useLeague } from '../context/LeagueContext'
 
@@ -24,6 +25,7 @@ import { getCoachAssignmentsByLeagueId } from '../services/league_user.service.j
 import { calculateTeamStats } from '../utils/calculateTeamStats'
 import { calculateTeamGameLog } from '../utils/calculateTeamGameLog'
 import { sumTeamStats, calculateLeagueMaxes, OFFENSE_STAT_KEYS, DEFENSE_STAT_KEYS } from '../utils/calculateTeamOffenseDefense'
+import { calculateLeagueAverage } from '../utils/calculateLeagueAverage'
 import { classifyTopPlayersByStats } from '../utils/classifyTopPlayersByStats'
 import { sortPlayersByNumber } from '../utils/sortPlayers'
 import { getTeamColorStyle } from '../utils/teamColorStyle'
@@ -42,6 +44,7 @@ function TeamProfile() {
   const [teamStats, setTeamStats] = useState(null)
   const [gameLog, setGameLog] = useState([])
   const [offenseDefense, setOffenseDefense] = useState({ totals: {}, leagueMaxes: {}, hasData: true })
+  const [leagueAverage, setLeagueAverage] = useState(0)
   const [leaderboards, setLeaderboards] = useState({})
   const [loading, setLoading] = useState(true)
   const [coach, setCoach] = useState(null)
@@ -82,6 +85,7 @@ function TeamProfile() {
         }))
         setTeamStats(calculateTeamStats(teamData.name, matchdaysWithGames))
         setGameLog(calculateTeamGameLog(teamData.name, matchdaysWithGames))
+        setLeagueAverage(calculateLeagueAverage(matches))
 
         const individualStats = await getIndividualStatsByCategory(teamData.category_id)
         const teamPlayerStats = individualStats.filter(
@@ -146,7 +150,7 @@ function TeamProfile() {
               )}
               <h2>{team.name}</h2>
               <span className="team-profile-coach-tag">
-                Coach: {coach ? (coach.name || coach.email) : 'Sin asignar'}
+                Coach: {coach ? coach.name : 'Sin asignar'}
               </span>
             </div>
           </div>
@@ -156,6 +160,17 @@ function TeamProfile() {
               <section className="profile-card">
                 <h3 className="profile-card-title">Récord</h3>
                 {teamStats && <TeamStats stats={teamStats} />}
+
+                {teamStats && teamStats.partidos > 0 && (
+                  <>
+                    <div className="profile-section-divider" />
+                    <TeamLeagueComparison
+                      teamAvgFor={Number((teamStats.puntosFavor / teamStats.partidos).toFixed(1))}
+                      teamAvgAgainst={Number((teamStats.puntosContra / teamStats.partidos).toFixed(1))}
+                      leagueAverage={leagueAverage}
+                    />
+                  </>
+                )}
               </section>
 
               <section className="profile-card">

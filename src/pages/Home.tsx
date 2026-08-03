@@ -11,6 +11,7 @@ import CategorySwitcher from "../components/filters/CategorySwitcher"
 import Loader from '../components/common/Loader'
 import PageWrapper from '../components/common/PageWrapper'
 import LeagueNotFound from '../components/common/LeagueNotFound'
+import HeroSlider from '../components/home/HeroSlider'
 
 import { useSeason } from "../context/SeasonContext"
 import { useLeague } from '../context/LeagueContext'
@@ -20,6 +21,7 @@ import { getMatchDaysByCategoryId } from '../services/matchday.service'
 import { getMatchesByMatchDayIds } from '../services/match.service'
 import { getIndividualStatsByCategory } from '../services/individual_stats.service'
 import { getTeamsByCategoryId } from '../services/team.service'
+import { getHeroImagesByLeagueId } from '../services/league_hero_image.service'
 
 import { calculateTable } from '../utils/calculateTable'
 import { isScrimmage } from '../utils/matchStages'
@@ -38,6 +40,31 @@ function Home() {
   const [teams, setTeams] = useState([])
   const [loadingMatchdays, setLoadingMatchdays] = useState(true)
   const [ stats, setStats ] = useState([])
+  const [heroImages, setHeroImages] = useState([])
+
+  useEffect(() => {
+    if (!league?.id) {
+      setHeroImages([])
+      return
+    }
+
+    let isMounted = true
+
+    async function loadHeroImages() {
+      try {
+        const images = await getHeroImagesByLeagueId(league.id)
+        if (isMounted) setHeroImages(images || [])
+      } catch (err) {
+        console.error(err)
+      }
+    }
+
+    loadHeroImages()
+
+    return () => {
+      isMounted = false
+    }
+  }, [league?.id])
 
   useEffect(() => {
     if (!category) {
@@ -120,24 +147,34 @@ return (
         <div className="home-card positions-wrapper">
           <h2 className="card-title">Tabla de Posiciones</h2>
           <div className="card-body">
-            <PositionTable table={calculatedTable} />
+            <PositionTable table={calculatedTable} matchdays={matchdays} />
           </div>
         </div>
 
       <div className="right-column">
-        <div className="home-card">
-          <h2 className="card-title">Resultados Recientes</h2>
-          <div className="card-body">
-            <RecentResults games={recentResults} />
+        {heroImages.length > 0 ? (
+          <div className="home-card">
+            <div className="card-body">
+              <HeroSlider images={heroImages} />
+            </div>
           </div>
-        </div>
+        ) : (
+          <>
+            <div className="home-card">
+              <h2 className="card-title">Resultados Recientes</h2>
+              <div className="card-body">
+                <RecentResults games={recentResults} />
+              </div>
+            </div>
 
-        <div className="home-card">
-          <h2 className="card-title">Próximos partidos</h2>
-          <div className="card-body">
-            <NextGameDay data={nextGameDay} />
-          </div>
-        </div>
+            <div className="home-card">
+              <h2 className="card-title">Próximos partidos</h2>
+              <div className="card-body">
+                <NextGameDay data={nextGameDay} />
+              </div>
+            </div>
+          </>
+        )}
       </div>
       </div>
     </main>

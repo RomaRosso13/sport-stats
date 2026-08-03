@@ -36,7 +36,29 @@ export async function getMatchesByMatchDayIds(matchdayId) {
 
   return cached('getMatchesByMatchDayIds', [sortedIds], () =>
     runQuery(
-      supabase.from('Match').select(MATCH_SELECT).in('matchday_id', ids)
+      supabase.from('Match').select(MATCH_SELECT).in('matchday_id', ids).order('hour', { ascending: true })
+    )
+  )
+}
+
+// Enfrentamientos previos ENTRE estos dos equipos específicos (en cualquier
+// categoría/temporada), excluyendo el partido actual para no repetirlo.
+export async function getHeadToHeadMatches(teamAId, teamBId, excludeMatchId) {
+  // Se fuerza a número antes de interpolar en el filtro .or() de PostgREST
+  // (no acepta placeholders para esta sintaxis) — así un valor no numérico
+  // se vuelve NaN de forma inofensiva en vez de poder alterar el filtro.
+  const teamA = Number(teamAId)
+  const teamB = Number(teamBId)
+
+  return cached('getHeadToHeadMatches', [teamA, teamB, excludeMatchId], () =>
+    runQuery(
+      supabase
+        .from('Match')
+        .select(MATCH_SELECT)
+        .or(`and(local_team_id.eq.${teamA},visit_team_id.eq.${teamB}),and(local_team_id.eq.${teamB},visit_team_id.eq.${teamA})`)
+        .eq('status', 'Terminado')
+        .neq('id', excludeMatchId)
+        .order('date', { ascending: false })
     )
   )
 }

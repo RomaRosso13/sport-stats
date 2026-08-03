@@ -15,7 +15,7 @@
   gap: 12px;
   padding: 10px 14px;
   border-radius: 12px;
-  background: #ffffff;
+  background: var(--bg-surface);
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
@@ -34,9 +34,9 @@
   flex-shrink: 0;
   padding: 6px 12px;
   border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  background: #ffffff;
-  color: #374151;
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
@@ -44,16 +44,16 @@
 }
 
 .field-row button:hover {
-  background: #f3f4f6;
+  background: var(--bg-hover);
 }
 
 .field-row button.delete-btn {
-  color: #dc2626;
-  border-color: #fecaca;
+  color: var(--status-loss-text);
+  border-color: var(--status-loss-border);
 }
 
 .field-row button.delete-btn:hover {
-  background: #fef2f2;
+  background: var(--status-loss-bg);
 }
 
 @media (max-width: 640px) {

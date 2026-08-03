@@ -9,6 +9,15 @@
   flex-shrink: 0;
 }
 
+/* Instalar la app es una acción de marca FlagStats, no de la liga: en el
+   header se tiñe con el rosa fijo en vez del acento dinámico de la liga
+   (mayor especificidad que .auth-btn, sin tocar esa clase compartida con
+   login/logout). En Landing el botón ya es sólido rosa por su propio acento
+   local, así que no se toca aquí para no dejar texto rosa sobre fondo rosa. */
+.header-right .install-app-wrap button {
+  color: var(--brand-pink);
+}
+
 .install-app-tip {
   position: absolute;
   top: calc(100% + 0.6rem);

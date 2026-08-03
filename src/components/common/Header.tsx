@@ -5,6 +5,7 @@ import { useSeason } from '../../context/SeasonContext'
 import { useAuth } from "../../context/AuthContext"
 import { useLeagueMembership } from '../../hooks/useLeagueMembership'
 import { signOut } from '../../services/auth.service'
+import { getUserByAuthId } from '../../services/league_user.service'
 import { clearDefaultLeagueSlug } from '../../utils/defaultLeague'
 
 import SeasonSelector from '../filters/SeasonSelector'
@@ -12,6 +13,7 @@ import LoginForm from '../auth/LoginForm'
 import InstallAppButton from './InstallAppButton'
 import AdminMenu from './AdminMenu'
 import MobileNavDrawer from './MobileNavDrawer'
+import ThemeToggle from './ThemeToggle'
 
 import './Header.css'
 
@@ -29,22 +31,34 @@ const PUBLIC_NAV_ITEMS = [
 
 // Mismos links y condiciones de rol que ya existían en el dropdown viejo —
 // solo se movieron aquí para no duplicarlos entre AdminMenu (escritorio) y
-// MobileNavDrawer (móvil).
-function getAdminNavItems({ isFullAdmin, isReferee, isCoach }) {
-  const items = []
+// MobileNavDrawer (móvil). Agrupados por tema para que AdminMenu los pinte
+// en secciones (MobileNavDrawer los sigue mostrando como una sola lista).
+function getAdminNavGroups({ isFullAdmin, isReferee, isCoach }) {
+  const general = []
+  const temporada = []
+  const partidos = []
+  const equipos = []
 
-  if (isFullAdmin) items.push({ to: '/admin', label: 'Panel de Administración' })
-  if (isFullAdmin) items.push({ to: '/admin/gestor', label: 'Gestor de temporadas' })
-  if (isFullAdmin) items.push({ to: '/admin/crear', label: 'Gestor de Jornadas' })
-  if (isFullAdmin || isReferee) items.push({ to: '/admin/editar', label: 'Registrar resultados' })
-  if (isFullAdmin || isReferee) items.push({ to: '/admin/asistencia', label: 'Asistencia' })
-  if (isFullAdmin) items.push({ to: '/admin/equipos', label: 'Gestor de Equipos' })
-  if (isFullAdmin) items.push({ to: '/admin/sedes', label: 'Gestor de Sedes' })
-  if (isFullAdmin) items.push({ to: '/admin/usuarios', label: 'Gestor de Usuarios' })
-  if (isFullAdmin) items.push({ to: '/admin/configuracion', label: 'Configuración General' })
-  if (isFullAdmin || isCoach) items.push({ to: '/admin/mi-equipo', label: 'Mi Equipo' })
+  if (isFullAdmin) general.push({ to: '/admin', label: 'Panel de Administración' })
+  if (isFullAdmin) general.push({ to: '/admin/configuracion', label: 'Configuración General' })
+  if (isFullAdmin) general.push({ to: '/admin/usuarios', label: 'Gestor de Usuarios' })
 
-  return items
+  if (isFullAdmin) temporada.push({ to: '/admin/gestor', label: 'Gestor de temporadas' })
+  if (isFullAdmin) temporada.push({ to: '/admin/crear', label: 'Gestor de Jornadas' })
+
+  if (isFullAdmin || isReferee) partidos.push({ to: '/admin/editar', label: 'Registrar resultados' })
+  if (isFullAdmin || isReferee) partidos.push({ to: '/admin/asistencia', label: 'Asistencia' })
+
+  if (isFullAdmin) equipos.push({ to: '/admin/equipos', label: 'Gestor de Equipos' })
+  if (isFullAdmin) equipos.push({ to: '/admin/sedes', label: 'Gestor de Sedes' })
+  if (isFullAdmin || isCoach) equipos.push({ to: '/admin/mi-equipo', label: 'Mi Equipo' })
+
+  return [
+    { title: 'General', items: general },
+    { title: 'Temporada', items: temporada },
+    { title: 'Partidos', items: partidos },
+    { title: 'Equipos y sedes', items: equipos }
+  ].filter(group => group.items.length > 0)
 }
 
 function Header({ league }) {
@@ -54,7 +68,32 @@ function Header({ league }) {
 
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [showLoginForm, setShowLoginForm] = useState(false)
+  const [displayName, setDisplayName] = useState('')
   const authRef = useRef(null)
+
+  useEffect(() => {
+    let isMounted = true
+
+    async function loadDisplayName() {
+      if (!user?.id) {
+        if (isMounted) setDisplayName('')
+        return
+      }
+
+      try {
+        const profile = await getUserByAuthId(user.id)
+        if (isMounted) setDisplayName(profile?.name || '')
+      } catch (err) {
+        console.error(err)
+      }
+    }
+
+    loadDisplayName()
+
+    return () => {
+      isMounted = false
+    }
+  }, [user?.id])
 
   useEffect(() => {
     if (!showLoginForm) return
@@ -88,7 +127,8 @@ function Header({ league }) {
     }
   }
 
-  const adminNavItems = getAdminNavItems({ isFullAdmin, isReferee, isCoach })
+  const adminNavGroups = getAdminNavGroups({ isFullAdmin, isReferee, isCoach })
+  const adminNavItemsFlat = adminNavGroups.flatMap(group => group.items)
 
   return (
     <header className="header-liga">
@@ -122,10 +162,12 @@ function Header({ league }) {
             Cambiar de liga
           </button>
 
+          <ThemeToggle />
+
           <InstallAppButton className="auth-btn" />
 
           {isMember && (
-            <AdminMenu leagueSlug={league.slug} items={adminNavItems} />
+            <AdminMenu leagueSlug={league.slug} groups={adminNavGroups} />
           )}
 
           {!user ? (
@@ -143,8 +185,8 @@ function Header({ league }) {
             </div>
           ) : (
             <div className="user-actions">
-              <span className="user-name">
-                Bienvenid@ {user.email}
+              <span className="header-user-name">
+                Bienvenid@ {displayName || user.email}
               </span>
               <button className="auth-btn" onClick={handleLogout}>
                 Cerrar sesión
@@ -181,7 +223,7 @@ function Header({ league }) {
         onClose={() => setDrawerOpen(false)}
         leagueSlug={league.slug}
         publicItems={PUBLIC_NAV_ITEMS}
-        adminItems={adminNavItems}
+        adminItems={adminNavItemsFlat}
         isMember={isMember}
         onChangeLeague={handleChangeLeague}
       />

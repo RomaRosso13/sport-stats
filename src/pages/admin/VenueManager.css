@@ -20,13 +20,13 @@
   margin: 0 0 4px;
   font-size: 22px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .venue-manager-intro p {
   margin: 0;
   font-size: 14px;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .section-header {
@@ -39,7 +39,7 @@
 .section-header h3 {
   font-size: 17px;
   font-weight: 600;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .primary-btn {
@@ -68,10 +68,10 @@
 .empty-state {
   padding: 28px 16px;
   text-align: center;
-  border: 1px dashed #e5e7eb;
+  border: 1px dashed var(--border-color);
   border-radius: 14px;
-  background: #f9fafb;
-  color: #6b7280;
+  background: var(--bg-subtle);
+  color: var(--text-muted);
   font-size: 14px;
 }
 

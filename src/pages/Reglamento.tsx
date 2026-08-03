@@ -4,6 +4,7 @@ import Header from '../components/common/Header'
 import Footer from '../components/common/Footer'
 import Loader from '../components/common/Loader'
 import PageWrapper from '../components/common/PageWrapper'
+import DocumentLinkCard from '../components/common/DocumentLinkCard'
 import DocumentUploadModal from '../components/Admin/DocumentUploadModal'
 
 import { useLeague } from '../context/LeagueContext'
@@ -77,31 +78,24 @@ function Reglamento() {
         {!loadingDocuments && documents.length === 0 ? (
           <p className="empty-state">Aún no hay documentos de reglamento cargados</p>
         ) : (
-          <div className="document-list">
+          <div className="document-link-list">
             {documents.map(doc => (
-              <section key={doc.id} className="document-card">
-                <div className="document-card-header">
-                  <div className="document-card-info">
-                    <h3>{doc.name}</h3>
-                    <span className="document-card-date">Subido el {formatDate(doc.created_at)}</span>
-                  </div>
-
-                  <div className="document-card-actions">
+              <DocumentLinkCard
+                key={doc.id}
+                title={doc.name}
+                dateLabel={`Subido el ${formatDate(doc.created_at)}`}
+                previewUrl={doc.file_url}
+                actions={(
+                  <>
                     <a href={doc.file_url} target="_blank" rel="noreferrer">
                       Abrir
                     </a>
                     <a href={doc.file_url} download={`${doc.name}.pdf`}>
                       Descargar
                     </a>
-                  </div>
-                </div>
-
-                <iframe
-                  src={doc.file_url}
-                  title={doc.name}
-                  className="document-preview"
-                />
-              </section>
+                  </>
+                )}
+              />
             ))}
           </div>
         )}

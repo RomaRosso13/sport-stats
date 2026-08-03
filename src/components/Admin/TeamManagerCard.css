@@ -4,7 +4,7 @@
   gap: 12px;
   padding: 14px 16px;
   border-radius: 14px;
-  background: linear-gradient(180deg, #ffffff, #fafafa);
+  background: var(--card-grad);
   box-shadow: 0 6px 18px rgba(0,0,0,0.05);
   cursor: pointer;
   transition: all .2s ease;
@@ -18,7 +18,7 @@
 
 .team-manager-card.selected {
   border-color: var(--accent);
-  background: linear-gradient(180deg, var(--accent-soft), #ffffff);
+  background: linear-gradient(180deg, var(--accent-soft), var(--bg-surface));
 }
 
 .team-manager-logo {
@@ -44,7 +44,7 @@
 
 .team-manager-count {
   font-size: 12px;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .team-manager-coach-tag {
@@ -56,11 +56,11 @@
 }
 
 .team-manager-coach-tag.assigned {
-  color: #166534;
+  color: var(--status-win-text);
 }
 
 .team-manager-coach-tag.pending {
-  color: #9ca3af;
+  color: var(--text-faint);
   font-weight: 600;
 }
 
@@ -75,9 +75,9 @@
   flex-shrink: 0;
   padding: 6px 12px;
   border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  background: #ffffff;
-  color: #374151;
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
@@ -85,14 +85,14 @@
 }
 
 .team-manager-edit-btn:hover {
-  background: #f3f4f6;
+  background: var(--bg-hover);
 }
 
 .team-manager-delete-btn {
-  color: #dc2626;
-  border-color: #fecaca;
+  color: var(--status-loss-text);
+  border-color: var(--status-loss-border);
 }
 
 .team-manager-delete-btn:hover {
-  background: #fef2f2;
+  background: var(--status-loss-bg);
 }

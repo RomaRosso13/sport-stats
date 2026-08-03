@@ -1,9 +1,11 @@
 import { Routes, Route } from "react-router-dom"
 import { AuthProvider } from "./context/AuthContext"
+import { ThemeProvider } from "./context/ThemeContext"
 
 import LeagueLayout from "./layouts/LeagueLayout"
 import Landing from "./pages/Landing"
 import About from "./pages/About"
+import PrivacyNotice from "./pages/PrivacyNotice"
 import Home from "./pages/Home"
 import Calendar from "./pages/Calendar"
 import Results from "./pages/Results"
@@ -30,10 +32,12 @@ import AttendanceManager from "./pages/admin/AttendanceManager"
 
 function App() {
   return (
+    <ThemeProvider>
     <AuthProvider>
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/nosotros" element={<About />} />
+        <Route path="/privacidad" element={<PrivacyNotice />} />
 
         <Route path="/:leagueSlug" element={<LeagueLayout />}>
           <Route index element={<Home />} />
@@ -63,6 +67,7 @@ function App() {
         <Route path="*" element={<p>Liga no encontrada</p>} />
       </Routes>
     </AuthProvider>
+    </ThemeProvider>
   )
 }
 

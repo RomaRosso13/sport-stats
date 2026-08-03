@@ -11,13 +11,110 @@
   --accent-soft: #eff6ff;
   --accent-soft-2: #dbeafe;
   --accent-border-soft: #bfdbfe;
+
+  /* Rosa de marca de FlagStats (fijo, no cambia por liga ni por tema —
+     mismo tono que theme_color en el manifest de la PWA). Se usa muy poco,
+     solo en elementos que son "la app" y no "la liga": el loader y el botón
+     de instalar la app. */
+  --brand-pink: #e6007e;
+  --brand-pink-rgb: 230, 0, 126;
+
+  /* Paleta neutra: modo claro (default). El toggle de ThemeContext pone
+     data-theme="dark" en <html>, que sobreescribe estos valores abajo. */
+  --bg-page: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-alt: #f8fafc;
+  --bg-subtle: #f9fafb;
+  --bg-muted: #f1f5f9;
+  --bg-hover: #f3f4f6;
+  --border-color: #e5e7eb;
+  --card-grad: linear-gradient(180deg, var(--bg-surface), var(--bg-surface-alt));
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #6b7280;
+  --text-faint: #94a3b8;
+
+  --status-win-bg: #f0fdf4;
+  --status-win-text: #166534;
+  --status-loss-bg: #fef2f2;
+  --status-loss-text: #dc2626;
+  --status-loss-border: #fecaca;
+  --status-win-border: #bbf7d0;
+  --status-pending-bg: #fff7ed;
+  --status-pending-text: #b45309;
+  --status-review-bg: #faf5ff;
+  --status-review-text: #6b21a8;
+
+  /* Tinte por categoría (calendario): degradado de fondo de la tarjeta +
+     texto/pill de la etiqueta de categoría. */
+  --cat-femenil-grad: linear-gradient(180deg, #fdf2f8, #fce7f3);
+  --cat-varonil-grad: linear-gradient(180deg, #eff6ff, #dbeafe);
+  --cat-mixto-grad: linear-gradient(180deg, #ecfdf5, #d1fae5);
+  --cat-tag-bg: rgba(255, 255, 255, 0.7);
+  --cat-femenil-text: #be185d;
+  --cat-varonil-text: #1d4ed8;
+  --cat-mixto-text: #047857;
+
+  --leader-row-grad: linear-gradient(90deg, #fffbeb, var(--bg-surface-alt));
+  --leader-ring: #fde68a;
+
+  --champion-grad: linear-gradient(135deg, #fef9c3, #fde68a);
+  --champion-label-text: #92400e;
+  --champion-name-text: #78350f;
+
+  --row-leader-bg: #d1fae5;
+}
+
+:root[data-theme="dark"] {
+  --bg-page: #0b1220;
+  --bg-surface: #131b2c;
+  --bg-surface-alt: #1a2332;
+  --bg-subtle: #161f2e;
+  --bg-muted: #1f2937;
+  --bg-hover: #243044;
+  --border-color: #283349;
+
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-faint: #64748b;
+
+  --status-win-bg: rgba(22, 163, 74, 0.16);
+  --status-win-text: #4ade80;
+  --status-loss-bg: rgba(220, 38, 38, 0.18);
+  --status-loss-text: #f87171;
+  --status-loss-border: rgba(220, 38, 38, 0.4);
+  --status-win-border: rgba(22, 163, 74, 0.4);
+  --status-pending-bg: rgba(245, 158, 11, 0.16);
+  --status-pending-text: #fbbf24;
+  --status-review-bg: rgba(147, 51, 234, 0.18);
+  --status-review-text: #c084fc;
+
+  --cat-femenil-grad: linear-gradient(180deg, rgba(219, 39, 119, 0.18), rgba(219, 39, 119, 0.28));
+  --cat-varonil-grad: linear-gradient(180deg, rgba(37, 99, 235, 0.18), rgba(37, 99, 235, 0.28));
+  --cat-mixto-grad: linear-gradient(180deg, rgba(16, 185, 129, 0.18), rgba(16, 185, 129, 0.28));
+  --cat-tag-bg: rgba(255, 255, 255, 0.12);
+  --cat-femenil-text: #f472b6;
+  --cat-varonil-text: #60a5fa;
+  --cat-mixto-text: #34d399;
+
+  --leader-row-grad: linear-gradient(90deg, rgba(251, 191, 36, 0.14), var(--bg-surface-alt));
+  --leader-ring: rgba(251, 191, 36, 0.4);
+
+  --champion-grad: linear-gradient(135deg, rgba(202, 138, 4, 0.24), rgba(202, 138, 4, 0.34));
+  --champion-label-text: #fbbf24;
+  --champion-name-text: #fde68a;
+
+  --row-leader-bg: rgba(22, 163, 74, 0.22);
 }
 
 body {
   margin: 0;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
     Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  background-color: #f8fafc;
+  background-color: var(--bg-page);
+  color: var(--text-primary);
   background-image:
     repeating-linear-gradient(
       90deg,
@@ -27,6 +124,7 @@ body {
       transparent 140px
     );
   background-attachment: fixed;
+  transition: background-color .2s ease, color .2s ease;
 }
 
 #root {
@@ -68,8 +166,8 @@ button:focus-visible {
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    color: var(--text-primary);
+    background-color: var(--bg-surface);
   }
   a:hover {
     color: #747bff;

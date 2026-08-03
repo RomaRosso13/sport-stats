@@ -63,8 +63,8 @@
 /* Los <option> del navegador no heredan el tema oscuro; se mantienen
    legibles con su propio fondo claro nativo. */
 .season-selector option {
-  color: #111827;
-  background-color: #ffffff;
+  color: var(--text-primary);
+  background-color: var(--bg-surface);
 }
 
 /* Responsive */

@@ -14,7 +14,7 @@
   margin: 32px 0 20px;
   font-size: 1.3rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .champion-banner {
@@ -24,7 +24,7 @@
   margin-bottom: 24px;
   padding: 20px 24px;
   border-radius: 16px;
-  background: linear-gradient(135deg, #fef9c3, #fde68a);
+  background: var(--champion-grad);
   box-shadow: 0 8px 22px rgba(202, 138, 4, 0.18);
   text-decoration: none;
   color: inherit;
@@ -59,13 +59,13 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: .06em;
-  color: #92400e;
+  color: var(--champion-label-text);
 }
 
 .champion-name {
   font-size: 22px;
   font-weight: 900;
-  color: #78350f;
+  color: var(--champion-name-text);
 }
 
 @media (max-width: 640px) {
@@ -92,10 +92,10 @@
   margin-top: 12px;
   padding: 32px 16px;
   text-align: center;
-  border: 1px dashed #e5e7eb;
+  border: 1px dashed var(--border-color);
   border-radius: 14px;
-  background: #ffffff;
-  color: #6b7280;
+  background: var(--bg-surface);
+  color: var(--text-muted);
   font-size: 14px;
 }
 

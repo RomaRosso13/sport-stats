@@ -15,7 +15,12 @@ export async function getLeagueBySlug(slug) {
 export async function getActiveLeagues() {
   return cached('getActiveLeagues', [], () =>
     runQuery(
-      supabase.from('League').select('id, name, slug, image_url').eq('active', true).order('name')
+      supabase
+        .from('League')
+        .select('id, name, slug, image_url')
+        .eq('active', true)
+        .neq('slug', 'demo')
+        .order('name')
     ),
     5 * 60_000
   )
@@ -34,6 +39,19 @@ export async function updateLeague(leagueId, { name, imageUrl, primaryColor }) {
       .select()
       .single(),
     'No se pudo guardar la configuración de la liga'
+  )
+
+  invalidate('getLeagueBySlug')
+  return result
+}
+
+// Solo SuperAdmin puede llamar a esto (ver ConfigManager.tsx) — la fecha
+// hasta la que la liga tiene vigente su membresía. Por ahora es informativa;
+// el bloqueo de acceso cuando ya pasó se implementa en otro momento.
+export async function updateLeagueMembershipDate(leagueId, date) {
+  const result = await runQuery(
+    supabase.from('League').update({ membership_valid_until: date || null }).eq('id', leagueId).select().single(),
+    'No se pudo guardar la fecha de membresía'
   )
 
   invalidate('getLeagueBySlug')

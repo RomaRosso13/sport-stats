@@ -18,6 +18,17 @@ export async function getAttendanceByMatchIds(matchIds) {
   )
 }
 
+export async function getAttendanceByPlayerId(playerId) {
+  return cached('getAttendanceByPlayerId', [playerId], () =>
+    runQuery(
+      supabase
+        .from('MatchAttendance')
+        .select(`${ATTENDANCE_SELECT}, match:match_id (date)`)
+        .eq('player_id', playerId)
+    )
+  )
+}
+
 // `present` es el valor final y absoluto de cada click (no un delta), así que
 // un solo upsert basta: a diferencia de saveIndividualStatsForMatch no hay
 // nada que acumular entre llamadas.
@@ -42,5 +53,6 @@ export async function setAttendance(matchId, playerId, teamId, categoryId, prese
   )
 
   invalidate('getAttendanceByMatchIds')
+  invalidate('getAttendanceByPlayerId')
   return result
 }

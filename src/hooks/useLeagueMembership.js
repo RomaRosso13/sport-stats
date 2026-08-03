@@ -61,6 +61,7 @@ export function useLeagueMembership() {
     isMember: !!role,
     isReferee: role === 'Referi',
     isFullAdmin: role === 'Admin' || role === 'SuperAdmin',
+    isSuperAdmin: role === 'SuperAdmin',
     isPhotographer: role === 'Fotografo',
     isCoach: role === 'Coach',
     loading: authLoading || leagueLoading || checking

@@ -2,7 +2,7 @@
    CONTENEDOR DE JORNADA
 ========================= */
 .calendar-table-day {
-  background: #ffffff;
+  background: var(--bg-surface);
   border-radius: 16px;
   padding: 20px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
@@ -22,12 +22,12 @@
   margin: 0 0 2px;
   font-size: 17px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .calendar-table-date {
   font-size: 13px;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .calendar-table-summary {
@@ -46,18 +46,18 @@
 }
 
 .summary-pill.total {
-  background: #f1f5f9;
-  color: #475569;
+  background: var(--bg-muted);
+  color: var(--text-secondary);
 }
 
 .summary-pill.finished {
-  background: #f0fdf4;
-  color: #166534;
+  background: var(--status-win-bg);
+  color: var(--status-win-text);
 }
 
 .summary-pill.pending {
-  background: #fff7ed;
-  color: #b45309;
+  background: var(--status-pending-bg);
+  color: var(--status-pending-text);
 }
 
 /* =========================
@@ -65,9 +65,9 @@
 ========================= */
 .calendar-table-wrapper {
   overflow-x: auto;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
   border-radius: 12px;
-  background: #ffffff;
+  background: var(--bg-surface);
 }
 
 .calendar-table {
@@ -81,11 +81,11 @@
 }
 
 .row + .row {
-  border-top: 1px solid #eef1f5;
+  border-top: 1px solid var(--border-color);
 }
 
 .cell {
-  border-right: 1px solid #eef1f5;
+  border-right: 1px solid var(--border-color);
   padding: 6px;
   font-size: 12px;
   min-width: 60px;
@@ -95,7 +95,7 @@
 
 /* CANCHA */
 .cell.field {
-  background: #f8fafc;
+  background: var(--bg-surface-alt);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -103,13 +103,13 @@
 }
 
 .field-name {
-  color: #0f172a;
+  color: var(--text-primary);
   font-weight: 700;
   font-size: 13px;
 }
 
 .field-branch {
-  color: #94a3b8;
+  color: var(--text-faint);
   font-weight: 600;
   font-size: 10px;
   text-transform: uppercase;
@@ -121,14 +121,14 @@
   text-align: center;
   font-weight: 700;
   font-size: 12px;
-  color: #475569;
-  background: #f8fafc;
+  color: var(--text-secondary);
+  background: var(--bg-surface-alt);
   padding: 10px 6px;
 }
 
 /* PARTIDO */
 .cell.match {
-  color: #ffffff;
+  color: var(--text-primary);
   margin: 5px 3px;
   padding: 0;
   display: flex;
@@ -148,7 +148,7 @@
   padding: 8px 10px;
   font-size: 12px;
   line-height: 1.25;
-  background: #ffffff;
+  background: var(--bg-surface);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
   border-left: 4px solid transparent;
 }
@@ -163,15 +163,15 @@
 
 /* La categoría tiñe toda la tarjeta para distinguirla de un vistazo */
 .match-item.cat-femenil {
-  background: linear-gradient(180deg, #fdf2f8, #fce7f3);
+  background: var(--cat-femenil-grad);
 }
 
 .match-item.cat-varonil {
-  background: linear-gradient(180deg, #eff6ff, #dbeafe);
+  background: var(--cat-varonil-grad);
 }
 
 .match-item.cat-mixto {
-  background: linear-gradient(180deg, #ecfdf5, #d1fae5);
+  background: var(--cat-mixto-grad);
 }
 
 /* TEXTO */
@@ -196,7 +196,7 @@
 .match-hour {
   font-size: 10px;
   font-weight: 700;
-  color: #94a3b8;
+  color: var(--text-faint);
 }
 
 .category-tag {
@@ -208,19 +208,19 @@
   border-radius: 999px;
   white-space: nowrap;
   /* Fondo translúcido para que se lea bien sobre la tarjeta ya teñida por categoría */
-  background: rgba(255, 255, 255, 0.7);
+  background: var(--cat-tag-bg);
 }
 
 .category-tag.cat-femenil {
-  color: #be185d;
+  color: var(--cat-femenil-text);
 }
 
 .category-tag.cat-varonil {
-  color: #1d4ed8;
+  color: var(--cat-varonil-text);
 }
 
 .category-tag.cat-mixto {
-  color: #047857;
+  color: var(--cat-mixto-text);
 }
 
 /* Fila de equipo */
@@ -230,7 +230,7 @@
   justify-content: center;
   gap: 5px;
   width: 100%;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .team-row .team-logo {
@@ -252,36 +252,36 @@
 .team-row .team-score {
   font-size: 13px;
   font-weight: 800;
-  color: #6b7280;
+  color: var(--text-muted);
   margin-left: 2px;
 }
 
 .team-row.winner {
-  color: #166534;
+  color: var(--status-win-text);
 }
 
 .team-row.winner .team-score {
-  color: #166534;
+  color: var(--status-win-text);
 }
 
 /* VS */
 .vs {
   font-size: 10px;
   font-weight: 700;
-  color: #9ca3af;
+  color: var(--text-faint);
   margin: 1px 0;
 }
 
 .score-divider {
   font-size: 11px;
   font-weight: 700;
-  color: #cbd5e1;
+  color: var(--text-faint);
   margin: 1px 0;
 }
 
 /* VACÍO */
 .cell.empty {
-  background: #fcfdfe;
+  background: var(--bg-surface-alt);
 }
 
 /* STICKY */
@@ -316,7 +316,7 @@
   align-items: baseline;
   gap: 8px;
   padding: 10px 12px;
-  background: #f8fafc;
+  background: var(--bg-surface-alt);
   border-radius: 10px;
   margin-bottom: 10px;
 }

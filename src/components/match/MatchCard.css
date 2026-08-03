@@ -2,7 +2,7 @@
    BASE CARD
 ========================= */
 .match-card {
-  background: linear-gradient(180deg, #ffffff, #f9fafb);
+  background: var(--card-grad);
   border-radius: 18px;
   padding: 22px 24px;
   min-height: 200px;
@@ -28,7 +28,7 @@
 
 .match-card.pending {
   border-left: 4px solid #f59e0b;
-  background: linear-gradient(180deg, #fff7ed, #ffffff);
+  background: linear-gradient(180deg, var(--status-pending-bg), #ffffff);
 }
 
 .match-card.draw {
@@ -95,27 +95,27 @@
   font-weight: 700;
   min-width: 24px;
   text-align: center;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .score-inline.winner {
   font-size: 26px;
   font-weight: 900;
-  color: #166534;
+  color: var(--status-win-text);
 }
 
 /* VS */
 .vs {
   font-size: 12px;
   font-weight: 800;
-  color: #9ca3af;
+  color: var(--text-faint);
 }
 
 /* =========================
    WIN / LOSE
 ========================= */
 .team.winner {
-  color: #166534;
+  color: var(--status-win-text);
   font-weight: 800;
 }
 
@@ -135,7 +135,7 @@
 }
 
 .team.loser {
-  color: #9ca3af;
+  color: var(--text-faint);
   opacity: 0.6;
 }
 
@@ -149,15 +149,15 @@
   gap: 14px;
 
   font-size: 12px;
-  color: #6b7280;
+  color: var(--text-muted);
   margin-top: 14px;
   text-align: center;
 }
 
 /* STATUS */
 .status-pending {
-  background: #fff7ed;
-  color: #b45309;
+  background: var(--status-pending-bg);
+  color: var(--status-pending-text);
   padding: 6px 14px;
   border-radius: 999px;
   font-weight: 800;

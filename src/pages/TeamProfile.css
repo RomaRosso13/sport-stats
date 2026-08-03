@@ -14,7 +14,7 @@
 
 .profile-section-divider {
   height: 1px;
-  background: #f1f5f9;
+  background: var(--bg-muted);
   margin: 20px 0;
 }
 
@@ -39,8 +39,8 @@
   margin-bottom: 24px;
   padding: 20px 20px 20px 26px;
   border-radius: 16px;
-  background: #ffffff;
-  border: 1px solid #f1f5f9;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
   overflow: hidden;
 }
 
@@ -67,7 +67,7 @@
   margin: 2px 0 0;
   font-size: 26px;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .team-profile-category {
@@ -87,7 +87,7 @@
   margin-top: 4px;
   font-size: 13px;
   font-weight: 600;
-  color: #64748b;
+  color: var(--text-secondary);
 }
 
 .team-profile-layout {
@@ -98,7 +98,7 @@
 }
 
 .profile-card {
-  background: #ffffff;
+  background: var(--bg-surface);
   border-radius: 16px;
   padding: 20px;
   margin-bottom: 24px;
@@ -109,16 +109,16 @@
   margin: 0 0 16px;
   font-size: 16px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .profile-empty {
   padding: 24px 16px;
   text-align: center;
-  border: 1px dashed #e5e7eb;
+  border: 1px dashed var(--border-color);
   border-radius: 12px;
-  background: #f9fafb;
-  color: #6b7280;
+  background: var(--bg-subtle);
+  color: var(--text-muted);
   font-size: 13px;
   margin: 0;
 }

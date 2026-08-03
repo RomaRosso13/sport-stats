@@ -16,6 +16,9 @@ import { getMatchesByMatchDayIds } from '../services/match.service'
 import { getTeamsByCategoryId } from '../services/team.service'
 import { getCoachAssignmentsByLeagueId } from '../services/league_user.service.js'
 
+import { calculateTable } from '../utils/calculateTable'
+import { isPlayoffStage, isScrimmage } from '../utils/matchStages'
+
 import "./Teams.css"
 
 function Teams() {
@@ -79,6 +82,14 @@ function Teams() {
     loadCoaches()
   }, [league?.id])
 
+    const regularSeasonMatches = matchdays
+      .flatMap(md => md.games)
+      .filter(m => !isPlayoffStage(m.type) && !isScrimmage(m.type))
+    const standings = calculateTable(regularSeasonMatches, teams)
+    const rankById = {}
+    standings.forEach((row, index) => { rankById[row.id] = index })
+    const sortedTeams = [...teams].sort((a, b) => (rankById[a.id] ?? Infinity) - (rankById[b.id] ?? Infinity))
+
     const isDataLoading = !league || !matchdays.length
     const [showLoader, setShowLoader] = useState(true)
   
@@ -105,11 +116,15 @@ function Teams() {
     <main className="teams-container">
       <CategorySwitcher categories={categories} active={category} onChange={setCategory}/>
       <h2 className="teams-title">Equipos</h2>
-        <div className="teams-grid">
-          {teams.map(team => (
-            <TeamCard key={team.id} team={team} matchdays={matchdays} coach={coachesByTeamId[team.id]}/>
-          ))}
-        </div>
+        {!isDataLoading && teams.length === 0 ? (
+          <p className="empty-teams">Esta categoría aún no tiene equipos registrados</p>
+        ) : (
+          <div className="teams-grid">
+            {sortedTeams.map(team => (
+              <TeamCard key={team.id} team={team} matchdays={matchdays} coach={coachesByTeamId[team.id]}/>
+            ))}
+          </div>
+        )}
       </main>
       <Footer />
     </div>

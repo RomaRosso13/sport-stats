@@ -5,7 +5,7 @@ import './AdminMenu.css'
 
 // Menú de Administración, aparte de la navegación pública — solo escritorio
 // (en móvil, estos mismos links viven dentro de MobileNavDrawer).
-function AdminMenu({ leagueSlug, items }) {
+function AdminMenu({ leagueSlug, groups }) {
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
 
@@ -22,7 +22,7 @@ function AdminMenu({ leagueSlug, items }) {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [open])
 
-  if (items.length === 0) return null
+  if (groups.every(group => group.items.length === 0)) return null
 
   return (
     <div className="admin-menu" ref={ref}>
@@ -37,15 +37,20 @@ function AdminMenu({ leagueSlug, items }) {
 
       {open && (
         <div className="admin-menu-dropdown">
-          {items.map(item => (
-            <NavLink
-              key={item.to}
-              to={`/${leagueSlug}${item.to}`}
-              onClick={() => setOpen(false)}
-              className={({ isActive }) => isActive ? 'active' : ''}
-            >
-              {item.label}
-            </NavLink>
+          {groups.map(group => (
+            <div className="admin-menu-group" key={group.title}>
+              <span className="admin-menu-group-title">{group.title}</span>
+              {group.items.map(item => (
+                <NavLink
+                  key={item.to}
+                  to={`/${leagueSlug}${item.to}`}
+                  onClick={() => setOpen(false)}
+                  className={({ isActive }) => isActive ? 'active' : ''}
+                >
+                  {item.label}
+                </NavLink>
+              ))}
+            </div>
           ))}
         </div>
       )}

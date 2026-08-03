@@ -65,7 +65,11 @@ function Standings() {
       loadMatchdays()
     }, [category?.id])
 
-    const matches = matchdays.flatMap(j => j.games).filter(m => !isPlayoffStage(m.type) && !isScrimmage(m.type))
+    const regularSeasonMatchdays = matchdays.map(md => ({
+      ...md,
+      games: md.games.filter(m => !isPlayoffStage(m.type) && !isScrimmage(m.type))
+    }))
+    const matches = regularSeasonMatchdays.flatMap(j => j.games)
     const calculatedTable = calculateTable(matches, teams)
 
   const isDataLoading = !league || !matchdays.length
@@ -78,6 +82,7 @@ function Standings() {
 
     try {
       setExporting(true)
+      await new Promise(resolve => requestAnimationFrame(resolve))
 
       const canvas = await html2canvas(tableRef.current, {
         backgroundColor: '#ffffff',
@@ -120,7 +125,7 @@ function Standings() {
     <main className="standings-container">
       <CategorySwitcher categories={categories} active={category} onChange={setCategory}/>
       <div className="standings-header">
-        <h2 style={{ marginTop: '32px' }}>Tabla de Posiciones</h2>
+        <h2 className="standings-title">Tabla de Posiciones</h2>
         {user && (
           <button
             className="export-image-btn"
@@ -132,7 +137,7 @@ function Standings() {
         )}
       </div>
       <div ref={tableRef}>
-        <PositionTable table={calculatedTable} />
+        <PositionTable table={calculatedTable} matchdays={regularSeasonMatchdays} hideControls={exporting} />
       </div>
     </main>
     <Footer />

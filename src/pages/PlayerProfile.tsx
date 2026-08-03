@@ -9,9 +9,14 @@ import TeamLogo from '../components/common/TeamLogo'
 
 import { useLeague } from '../context/LeagueContext'
 
+import PlayerRadarChart from '../components/team/PlayerRadarChart'
+import PlayerMatchHistory from '../components/team/PlayerMatchHistory'
+
 import { getPlayerById } from '../services/player.service.js'
 import { getIndividualStatsByCategory } from '../services/individual_stats.service'
+import { getAttendanceByPlayerId } from '../services/attendance.service'
 import { classifyTopPlayersByStats } from '../utils/classifyTopPlayersByStats'
+import { calculatePlayerGameLog } from '../utils/calculatePlayerGameLog'
 import { STAT_KEYS, getStatLabels } from '../constants/statFields'
 
 import './PlayerProfile.css'
@@ -29,6 +34,9 @@ function PlayerProfile() {
   const [player, setPlayer] = useState(null)
   const [stats, setStats] = useState(null)
   const [ranks, setRanks] = useState({})
+  const [gameLog, setGameLog] = useState([])
+  const [leagueMaxes, setLeagueMaxes] = useState({})
+  const [attendance, setAttendance] = useState(null)
   const [imageFailed, setImageFailed] = useState(false)
   const [loading, setLoading] = useState(true)
 
@@ -39,8 +47,19 @@ function PlayerProfile() {
       try {
         setLoading(true)
 
-        const playerData = await getPlayerById(playerId)
+        const [playerData, attendanceRows] = await Promise.all([
+          getPlayerById(playerId),
+          getAttendanceByPlayerId(playerId)
+        ])
         setPlayer(playerData)
+
+        const totalMarked = attendanceRows.length
+        const presentCount = attendanceRows.filter(row => row.present).length
+        setAttendance({
+          present: presentCount,
+          total: totalMarked,
+          rate: totalMarked > 0 ? Math.round((presentCount / totalMarked) * 100) : null
+        })
 
         const categoryId = playerData.team?.category_id
 
@@ -66,11 +85,20 @@ function PlayerProfile() {
               : null
           })
 
+          const maxes = {}
+          STAT_KEYS.forEach(key => {
+            maxes[key] = (leaderboards[key] || [])[0]?.[key] || 1
+          })
+
           setStats(ownStats)
           setRanks(rankInfo)
+          setLeagueMaxes(maxes)
+          setGameLog(calculatePlayerGameLog(playerId, categoryStats, STAT_KEYS))
         } else {
           setStats({ touchdown: 0, touchdown_pass: 0, interceptions: 0, sacks: 0 })
           setRanks({})
+          setLeagueMaxes({})
+          setGameLog([])
         }
       } catch (err) {
         console.error(err)
@@ -83,6 +111,9 @@ function PlayerProfile() {
   }, [playerId])
 
   const team = player?.team
+  const attendanceLevel = attendance?.rate == null
+    ? ''
+    : attendance.rate >= 80 ? 'high' : attendance.rate >= 50 ? 'mid' : 'low'
 
   return (
     <div className="app-layout">
@@ -139,25 +170,64 @@ function PlayerProfile() {
             </div>
           </div>
 
-          <section className="profile-card">
-            <h3 className="profile-card-title">Estadísticas de la temporada</h3>
+          <div className="player-profile-layout">
+            <div className="player-profile-main">
+              <section className="profile-card">
+                <h3 className="profile-card-title">Perfil del jugador</h3>
+                <p className="profile-card-subtitle">Comparado contra el máximo de la liga en cada categoría</p>
+                <PlayerRadarChart values={stats || {}} maxes={leagueMaxes} statKeys={STAT_KEYS} statLabels={statLabels} />
+              </section>
 
-            {stats && (
-              <div className="player-stats-grid">
-                {STAT_SECTIONS.map(({ key, label }) => (
-                  <div key={key} className="player-stat-tile">
-                    <span className="player-stat-value">{stats[key]}</span>
-                    <span className="player-stat-label">{label}</span>
-                    {ranks[key] && (
-                      <span className="player-stat-rank">
-                        #{ranks[key].rank} de {ranks[key].total}
-                      </span>
-                    )}
+              <section className="profile-card">
+                <h3 className="profile-card-title">Historial de partidos</h3>
+                <PlayerMatchHistory games={gameLog} statKeys={STAT_KEYS} statLabels={statLabels} />
+              </section>
+            </div>
+
+            <div className="player-profile-side">
+              <section className="profile-card">
+                <h3 className="profile-card-title">Estadísticas de la temporada</h3>
+
+                {stats && (
+                  <div className="player-stats-grid">
+                    {STAT_SECTIONS.map(({ key, label }) => (
+                      <div key={key} className="player-stat-tile">
+                        <span className="player-stat-value">{stats[key]}</span>
+                        <span className="player-stat-label">{label}</span>
+                        {ranks[key] && (
+                          <span className="player-stat-rank">
+                            #{ranks[key].rank} de {ranks[key].total}
+                          </span>
+                        )}
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            )}
-          </section>
+                )}
+              </section>
+
+              <section className="profile-card">
+                <h3 className="profile-card-title">Asistencia</h3>
+
+                {attendance && attendance.total > 0 ? (
+                  <div className="attendance-summary">
+                    <div className="attendance-rate">
+                      <span className={`attendance-rate-value ${attendanceLevel}`}>{attendance.rate}%</span>
+                      <span className="attendance-rate-label">Asistencia</span>
+                    </div>
+
+                    <div className="attendance-bar-wrap">
+                      <div className="attendance-bar-track">
+                        <div className={`attendance-bar-fill ${attendanceLevel}`} style={{ width: `${attendance.rate}%` }} />
+                      </div>
+                      <span className="attendance-count">{attendance.present} de {attendance.total} partidos</span>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="attendance-empty">Aún no hay asistencia registrada</p>
+                )}
+              </section>
+            </div>
+          </div>
         </main>
       )}
 
