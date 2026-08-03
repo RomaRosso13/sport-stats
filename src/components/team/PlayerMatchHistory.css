@@ -1,0 +1,100 @@
+.player-history-empty {
+  margin: 0;
+  padding: 20px 16px;
+  text-align: center;
+  border: 1px dashed var(--border-color);
+  border-radius: 12px;
+  background: var(--bg-subtle);
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.player-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.player-history-row {
+  display: grid;
+  grid-template-columns: 80px 1.4fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: var(--bg-surface-alt);
+}
+
+.player-history-date {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-faint);
+}
+
+.player-history-opponent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.player-history-vs {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-faint);
+}
+
+.player-history-opponent-logo {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.player-history-opponent-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.player-history-opponent-name.muted {
+  color: var(--text-faint);
+  font-weight: 500;
+}
+
+.player-history-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.player-history-pill {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent-dark);
+  background: var(--accent-soft);
+  padding: 3px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.player-history-pill.muted {
+  color: var(--text-faint);
+  background: var(--bg-muted);
+  font-weight: 500;
+}
+
+@media (max-width: 640px) {
+  .player-history-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .player-history-stats {
+    justify-content: flex-start;
+  }
+}

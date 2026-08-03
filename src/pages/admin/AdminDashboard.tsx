@@ -13,6 +13,7 @@ import { useCategory } from '../../context/CategoryContext'
 import { getTeamsByCategoryId } from '../../services/team.service.js'
 import { getMatchDaysByCategoryId } from '../../services/matchday.service'
 import { getMatchesByMatchDayIds } from '../../services/match.service'
+import { getPlatformSettings } from '../../services/platform_settings.service'
 
 import './AdminDashboard.css'
 
@@ -51,6 +52,15 @@ const QUICK_LINKS = [
 
 const MAX_ALERTS = 6
 
+function formatMembershipDate(dateStr) {
+  if (!dateStr) return ''
+  return new Date(`${dateStr}T00:00:00`).toLocaleDateString('es-MX', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  })
+}
+
 function AdminDashboard() {
   const { league } = useLeague()
   const { season } = useSeason()
@@ -58,6 +68,20 @@ function AdminDashboard() {
 
   const [summaries, setSummaries] = useState([])
   const [loading, setLoading] = useState(true)
+  const [releaseNotes, setReleaseNotes] = useState('')
+
+  useEffect(() => {
+    async function loadPlatformSettings() {
+      try {
+        const settings = await getPlatformSettings()
+        setReleaseNotes(settings?.release_notes || '')
+      } catch (err) {
+        console.error(err)
+      }
+    }
+
+    loadPlatformSettings()
+  }, [])
 
   useEffect(() => {
     if (!categories || categories.length === 0) {
@@ -168,6 +192,11 @@ function AdminDashboard() {
   const visibleAlerts = alerts.slice(0, MAX_ALERTS)
   const hiddenAlertsCount = alerts.length - visibleAlerts.length
 
+  const membershipDate = league?.membership_valid_until
+  // Solo informativo por ahora — no bloquea nada, se compara como texto ISO
+  // (YYYY-MM-DD) para no meter zonas horarias de por medio.
+  const isMembershipExpired = !!membershipDate && membershipDate < new Date().toISOString().slice(0, 10)
+
   const isLoading = !league || !season || loading
 
   return (
@@ -180,7 +209,19 @@ function AdminDashboard() {
         <div className="admin-dashboard-intro">
           <h2>Panel de Administración</h2>
           <p>{league?.name} · {season?.name || 'Sin temporada activa'}</p>
+          {membershipDate && (
+            <span className={`membership-pill ${isMembershipExpired ? 'expired' : ''}`}>
+              Membresía vigente hasta: {formatMembershipDate(membershipDate)}
+            </span>
+          )}
         </div>
+
+        {releaseNotes && (
+          <section className="release-notes-card">
+            <h3>📋 Notas de la plataforma</h3>
+            <p>{releaseNotes}</p>
+          </section>
+        )}
 
         <div className="quick-links-grid">
           {QUICK_LINKS.map(link => (

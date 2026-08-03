@@ -30,13 +30,13 @@
 .matchday-banner-name {
   font-size: 20px;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .matchday-banner-date {
   font-size: 13px;
   font-weight: 600;
-  color: #6b7280;
+  color: var(--text-muted);
   margin-top: 2px;
 }
 

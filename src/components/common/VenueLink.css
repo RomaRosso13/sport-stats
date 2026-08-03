@@ -1,0 +1,13 @@
+.venue-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+}
+
+.venue-link:hover {
+  color: var(--accent);
+}

@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 import './Footer.css'
 
 function Footer() {
@@ -6,6 +8,12 @@ function Footer() {
       <span className="app-footer-copy">
         © {new Date().getFullYear()} Liga · Todos los derechos reservados
       </span>
+
+      <span className="app-footer-divider" aria-hidden="true">•</span>
+
+      <Link to="/privacidad" className="app-footer-contact">
+        Aviso de Privacidad
+      </Link>
 
       <span className="app-footer-divider" aria-hidden="true">•</span>
 

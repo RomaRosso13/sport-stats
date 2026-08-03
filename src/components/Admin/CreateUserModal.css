@@ -9,7 +9,7 @@
 }
 
 .modal {
-  background: white;
+  background: var(--bg-surface);
   border-radius: 16px;
   padding: 22px;
   width: 380px;
@@ -18,7 +18,7 @@
   overflow-y: auto;
   --primary: var(--accent);
   --primary-hover: var(--accent-dark);
-  --secondary: #e5e7eb;
+  --secondary: var(--border-color);
   --secondary-text: #374151;
   --disabled: #9ca3af;
 }
@@ -35,7 +35,7 @@
 .modal label {
   font-size: 12px;
   font-weight: 600;
-  color: #6b7280;
+  color: var(--text-muted);
   margin-top: 10px;
 }
 
@@ -49,7 +49,7 @@
   padding: 8px 10px;
   margin-top: 6px;
   border-radius: 8px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
   font-size: 14px;
   box-sizing: border-box;
 }
@@ -64,7 +64,7 @@
 .create-user-hint {
   margin: 6px 0 0;
   font-size: 11px;
-  color: #9ca3af;
+  color: var(--text-faint);
   line-height: 1.4;
 }
 
@@ -85,7 +85,7 @@
 .modal-error {
   margin: 10px 0 0;
   font-size: 13px;
-  color: #dc2626;
+  color: var(--status-loss-text);
   font-weight: 600;
 }
 

@@ -18,7 +18,10 @@ const STATS_SELECT = `
     logo_url
   ),
   match:match_id (
-    type
+    type,
+    date,
+    local_team:local_team_id (id, name, logo_url),
+    visit_team:visit_team_id (id, name, logo_url)
   )
 `
 

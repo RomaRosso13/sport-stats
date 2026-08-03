@@ -1,0 +1,316 @@
+.attendance-match-card {
+  padding: 16px 20px;
+  background: var(--bg-surface);
+  border-radius: 16px;
+  border-left: 4px solid var(--border-color);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.attendance-match-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.12);
+}
+
+.attendance-match-card.partial {
+  border-left-color: #f59e0b;
+}
+
+.attendance-match-card.complete {
+  border-left-color: #16a34a;
+}
+
+.attendance-match-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.attendance-match-header .team {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1;
+}
+
+.attendance-match-header .team-logo {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.attendance-match-header .team-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.attendance-match-header .vs {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.attendance-match-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+  font-size: 12px;
+  color: var(--text-faint);
+}
+
+.attendance-complete-tag {
+  margin-left: auto;
+  font-weight: 700;
+  color: #16a34a;
+}
+
+.attendance-loading {
+  margin: 0;
+  padding: 16px 0;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.attendance-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.attendance-roster {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 12px;
+  border-top: 3px solid transparent;
+}
+
+.attendance-roster.side-local {
+  background: var(--accent-soft);
+  border-top-color: var(--accent);
+}
+
+.attendance-roster.side-visit {
+  background: var(--bg-surface-alt);
+  border-top-color: #64748b;
+}
+
+.attendance-roster-team {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.attendance-roster-side-tag {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+  padding: 2px 7px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.side-local .attendance-roster-side-tag {
+  background: var(--accent);
+}
+
+.side-visit .attendance-roster-side-tag {
+  background: #64748b;
+}
+
+.attendance-roster-team-logo {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.attendance-roster-team-name {
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.attendance-roster-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.attendance-roster-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  flex-shrink: 0;
+}
+
+.attendance-roster-bar {
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--bg-muted);
+  overflow: hidden;
+}
+
+.attendance-roster-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-dark));
+  transition: width 0.2s ease;
+}
+
+.attendance-roster-count {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-primary);
+  flex-shrink: 0;
+  min-width: 32px;
+  text-align: right;
+}
+
+.attendance-roster-empty {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-faint);
+}
+
+.attendance-player-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--bg-surface);
+  border: 1px solid transparent;
+  flex-wrap: wrap;
+  transition: background-color .15s ease, border-color .15s ease;
+}
+
+.attendance-player-row.is-present {
+  background: var(--status-win-bg);
+  border-color: var(--status-win-border);
+}
+
+.attendance-player-row.is-absent {
+  background: var(--status-loss-bg);
+  border-color: var(--status-loss-border);
+}
+
+.attendance-player-avatar {
+  width: 28px;
+  height: 28px;
+  font-size: 12px;
+}
+
+.attendance-player-number {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text-faint);
+  flex-shrink: 0;
+}
+
+.attendance-player-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-primary);
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.attendance-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.attendance-present-btn,
+.attendance-absent-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+
+.attendance-btn-icon {
+  font-size: 11px;
+  line-height: 1;
+}
+
+.attendance-present-btn:hover:not(:disabled),
+.attendance-absent-btn:hover:not(:disabled) {
+  background: var(--bg-hover);
+}
+
+.attendance-present-btn:disabled,
+.attendance-absent-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.attendance-present-btn.active {
+  color: #16a34a;
+  border-color: var(--status-win-border);
+  background: var(--status-win-bg);
+}
+
+.attendance-present-btn.active:hover:not(:disabled) {
+  background: #dcfce7;
+}
+
+.attendance-absent-btn.active {
+  color: var(--status-loss-text);
+  border-color: var(--status-loss-border);
+  background: var(--status-loss-bg);
+}
+
+.attendance-absent-btn.active:hover:not(:disabled) {
+  background: #fee2e2;
+}
+
+@media (max-width: 640px) {
+  .attendance-columns {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .attendance-player-row {
+    justify-content: space-between;
+  }
+
+  .attendance-complete-tag {
+    margin-left: 0;
+    flex-basis: 100%;
+  }
+}

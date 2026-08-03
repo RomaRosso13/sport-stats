@@ -1,4 +1,5 @@
 import TeamLogo from "../common/TeamLogo"
+import VenueLink from "../common/VenueLink"
 import "./MatchCard.css"
 
 function MatchCard({ match }) {
@@ -48,7 +49,7 @@ function MatchCard({ match }) {
         ) : (
           <span className="status-pending">Por jugar</span>
         )}
-        <span>{match.branch.name} · {match.field.name}</span>
+        <span><VenueLink branch={match.branch} /> · {match.field.name}</span>
         <span>{match.hour}</span>
       </div>
     </div>

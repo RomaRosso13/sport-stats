@@ -2,7 +2,7 @@ import ResultCard from "./ResultCard"
 import TeamLogo from "../common/TeamLogo"
 import "./ResultDay.css"
 
-function ResultsDay({ matchday, teams }) {
+function ResultsDay({ matchday, teams, mvpByMatch = {} }) {
   const byeTeams = getByeTeams(teams, matchday.games)
 
   function getByeTeams(teams, games) {
@@ -62,7 +62,7 @@ function ResultsDay({ matchday, teams }) {
 
       <div className="results-grid">
         {matchday.games.map(match => (
-          <ResultCard key={match.id} match={match} />
+          <ResultCard key={match.id} match={match} mvp={mvpByMatch[match.id]} />
         ))}
       </div>
 

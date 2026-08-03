@@ -1,9 +1,14 @@
 import { Link, useParams } from "react-router-dom"
 import { STAGE_LABELS } from "../../utils/matchStages"
 import TeamLogo from "../common/TeamLogo"
+import VenueLink from "../common/VenueLink"
 import "./ResultCard.css"
 
-function ResultCard({ match }) {
+function getInitial(name) {
+  return name?.trim().charAt(0).toUpperCase() || '?'
+}
+
+function ResultCard({ match, mvp }) {
   const { leagueSlug } = useParams()
   const isFinished = match.status === "Terminado"
   const isReview = match.status === "Por aprobar"
@@ -47,8 +52,20 @@ function ResultCard({ match }) {
         </div>
       </div>
 
+      {isFinished && mvp && (
+        <div className="result-mvp">
+          <span className="result-mvp-label">Destacado</span>
+          {mvp.photo ? (
+            <img src={mvp.photo} alt={mvp.name} className="result-mvp-photo" loading="lazy" />
+          ) : (
+            <span className="result-mvp-avatar">{getInitial(mvp.name)}</span>
+          )}
+          <span className="result-mvp-name">{mvp.name}</span>
+        </div>
+      )}
+
       <div className="result-meta">
-        <span>Sede: {match.branch.name}</span>
+        <span>Sede: <VenueLink branch={match.branch} /></span>
         <span>·</span>
         <span>Fecha: {match.date}</span>
         <span>·</span>

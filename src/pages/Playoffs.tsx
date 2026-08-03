@@ -102,7 +102,7 @@ function Playoffs() {
         {playoffMatches.length === 0 ? (
           <p className="empty-playoffs">Aún no hay partidos de playoffs registrados</p>
         ) : (
-          <PlayoffBracket matchesByStage={matchesByStage} />
+          <PlayoffBracket matchesByStage={matchesByStage} championId={champion?.id} />
         )}
       </main>
       <Footer />

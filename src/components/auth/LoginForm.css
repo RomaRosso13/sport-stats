@@ -7,13 +7,13 @@
   width: 260px;
   padding: 16px;
 
-  background: rgba(255, 255, 255, 0.97);
+  background: var(--bg-surface);
   backdrop-filter: blur(10px);
 
   border-radius: 16px;
   box-shadow:
     0 20px 40px rgba(0, 0, 0, 0.2),
-    0 0 0 1px rgba(255, 255, 255, 0.4);
+    0 0 0 1px var(--border-color);
 
   animation: login-popover-in 0.18s ease;
 }
@@ -36,7 +36,7 @@
   margin-bottom: 12px;
   font-size: 14px;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .login-close-btn {
@@ -48,15 +48,15 @@
   border-radius: 999px;
   border: none;
   background: transparent;
-  color: #9ca3af;
+  color: var(--text-faint);
   font-size: 11px;
   cursor: pointer;
   transition: background-color .15s ease, color .15s ease;
 }
 
 .login-close-btn:hover {
-  background: #f1f5f9;
-  color: #374151;
+  background: var(--bg-muted);
+  color: var(--text-secondary);
 }
 
 .login-form {
@@ -74,7 +74,7 @@
 .login-field span {
   font-size: 11px;
   font-weight: 700;
-  color: #6b7280;
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -84,9 +84,9 @@
   padding: 0 12px;
   font-size: 13px;
   border-radius: 8px;
-  border: 1px solid #d1d5db;
-  background: #ffffff;
-  color: #111827;
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  color: var(--text-primary);
   transition: border-color .15s ease, box-shadow .15s ease;
 }
 
@@ -123,8 +123,8 @@
   margin: 0;
   padding: 8px 10px;
   border-radius: 8px;
-  background: #fef2f2;
-  color: #b91c1c;
+  background: var(--status-loss-bg);
+  color: var(--status-loss-text);
   font-size: 12px;
   font-weight: 600;
 }

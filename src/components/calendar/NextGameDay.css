@@ -40,7 +40,7 @@
 
 /* CARD */
 .partido-card {
-  background: linear-gradient(180deg, #ffffff, #fafafa);
+  background: var(--card-grad);
   border-radius: 16px;
   padding: 16px 20px;
   display: grid;
@@ -87,7 +87,7 @@
 .vs {
   font-weight: 800;
   font-size: 13px;
-  color: #9ca3af;
+  color: var(--text-faint);
   padding: 0 18px;
   letter-spacing: 1px;
 }
@@ -97,7 +97,7 @@
   grid-column: 1 / -1;
   margin-top: 8px;
   font-size: 12px;
-  color: #6b7280;
+  color: var(--text-muted);
   display: flex;
   align-items: center;
   gap: 6px;
@@ -105,7 +105,7 @@
 
 /* EMPTY */
 .empty {
-  color: #6b7280;
+  color: var(--text-muted);
   font-size: 14px;
 }
 

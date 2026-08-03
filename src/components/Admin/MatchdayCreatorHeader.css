@@ -2,8 +2,8 @@
   display: flex;
   gap: 20px;
   padding: 16px 24px;
-  background-color: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-color);
   align-items: flex-start;
   flex-wrap: wrap;
 }
@@ -22,7 +22,7 @@
 
 /* Pills (Liga / Temporada) */
 .context-pill {
-  background-color: #f3f4f6;
+  background-color: var(--bg-hover);
   padding: 8px 12px;
   border-radius: 8px;
   min-width: 160px;
@@ -32,14 +32,14 @@
 
 .context-pill .label {
   font-size: 12px;
-  color: #6b7280;
+  color: var(--text-muted);
   line-height: 1;
 }
 
 .context-pill .value {
   font-size: 14px;
   font-weight: 600;
-  color: #111827;
+  color: var(--text-primary);
   margin-top: 2px;
   white-space: nowrap;
 }
@@ -53,7 +53,7 @@
 
 .context-field label {
   font-size: 12px;
-  color: #6b7280;
+  color: var(--text-muted);
   margin-bottom: 4px;
 }
 
@@ -63,9 +63,9 @@
   padding: 6px 10px;
   font-size: 14px;
   border-radius: 6px;
-  border: 1px solid #d1d5db;
-  background-color: #ffffff;
-  color: #111827;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
@@ -78,13 +78,13 @@
 
 .context-field select:disabled,
 .context-field input:disabled {
-  background-color: #f9fafb;
-  color: #9ca3af;
+  background-color: var(--bg-subtle);
+  color: var(--text-faint);
   cursor: not-allowed;
 }
 
 .required {
-  color: #dc2626;
+  color: var(--status-loss-text);
 }
 
 /* Estado de jornada existente seleccionada */
@@ -92,8 +92,8 @@
   align-self: center;
   font-size: 13px;
   font-weight: 600;
-  color: #166534;
-  background: #f0fdf4;
+  color: var(--status-win-text);
+  background: var(--status-win-bg);
   padding: 8px 12px;
   border-radius: 8px;
   white-space: nowrap;

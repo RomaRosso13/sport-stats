@@ -1,0 +1,108 @@
+.team-od-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.od-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.od-section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.od-section-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.od-section-dot.offense {
+  background: #2a78d6;
+}
+
+.od-section-dot.defense {
+  background: #eb6834;
+}
+
+.od-section-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #52514e;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.od-stat-row {
+  display: grid;
+  grid-template-columns: 140px 1fr 90px;
+  align-items: center;
+  gap: 10px;
+}
+
+.od-stat-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.od-stat-track {
+  height: 10px;
+  border-radius: 999px;
+  background: var(--bg-muted);
+  overflow: hidden;
+}
+
+.od-stat-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.2s ease;
+}
+
+.od-section:first-child .od-stat-fill {
+  background: #2a78d6;
+}
+
+.od-section:last-child .od-stat-fill {
+  background: #eb6834;
+}
+
+.od-stat-value {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.od-leader-tag {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--status-pending-text);
+  background: var(--status-pending-bg);
+  border: 1px solid var(--leader-ring);
+  padding: 1px 6px;
+  border-radius: 999px;
+}
+
+@media (max-width: 640px) {
+  .od-stat-row {
+    grid-template-columns: 100px 1fr 70px;
+    gap: 6px;
+  }
+
+  .od-leader-tag {
+    display: none;
+  }
+}

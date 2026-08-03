@@ -6,20 +6,20 @@
 .position-table-empty {
   padding: 28px 16px;
   text-align: center;
-  border: 1px dashed #e5e7eb;
+  border: 1px dashed var(--border-color);
   border-radius: 14px;
-  background: #f9fafb;
-  color: #6b7280;
+  background: var(--bg-subtle);
+  color: var(--text-muted);
   font-size: 14px;
 }
 
 .tabla-posiciones {
   width: 100%;
   border-collapse: collapse;
-  background-color: #ffffff;
+  background-color: var(--bg-surface);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
 }
 
 .tabla-posiciones th,
@@ -30,7 +30,7 @@
 }
 
 .tabla-posiciones tbody tr:nth-child(even) {
-  background-color: #f1f5f9;
+  background-color: var(--bg-muted);
 }
 
 .tabla-posiciones td:nth-child(2) {
@@ -38,17 +38,17 @@
   font-weight: 500;
 }
 
+.tabla-posiciones td:first-child {
+  border-left: 6px solid var(--team-color, transparent);
+}
+
 .tabla-posiciones tr.leader {
-  background-color: #d1fae5; /* verde clarito para el líder */
+  background-color: var(--row-leader-bg);
   font-weight: bold;
 }
 
 .tabla-posiciones tr:hover {
-  background-color: #f3f4f6;
-}
-
-.tabla-posiciones tr.playoffs {
-  background-color: #fef9c3; /* amarillo clarito para playoffs */
+  background-color: var(--bg-hover);
 }
 
 .equipo-cell {
@@ -74,10 +74,36 @@
   flex-shrink: 0;
 }
 
+.equipo-cell .team-logo {
+  border-radius: 999px;
+  box-shadow: 0 0 0 2px var(--team-color, transparent);
+}
+
 .team-name {
   white-space: nowrap;
 }
 
+.racha-cell {
+  white-space: nowrap;
+}
+
+.team-form-chips {
+  justify-content: center;
+}
+
+.racha-empty {
+  color: var(--text-faint);
+}
+
+.cols-toggle-btn {
+  display: none;
+}
+
+.tabla-legend {
+  margin: 10px 2px 0;
+  font-size: 11px;
+  color: var(--text-faint);
+}
 
 @media (max-width: 768px) {
   .tabla-posiciones th,
@@ -93,17 +119,37 @@
 }
 
 @media (max-width: 640px) {
-  .tabla-posiciones th:nth-child(3),
-  .tabla-posiciones td:nth-child(3), /* PJ */
-  .tabla-posiciones th:nth-child(7),
-  .tabla-posiciones td:nth-child(7), /* PF */
-  .tabla-posiciones th:nth-child(8),
-  .tabla-posiciones td:nth-child(8), /* PC */
-  .tabla-posiciones th:nth-child(9),
-  .tabla-posiciones td:nth-child(9), /* DIF */
-  .tabla-posiciones th:nth-child(10),
-  .tabla-posiciones td:nth-child(10) { /* PROMEDIO */
+  .tabla-posiciones:not(.expanded) th:nth-child(4),
+  .tabla-posiciones:not(.expanded) td:nth-child(4), /* PJ */
+  .tabla-posiciones:not(.expanded) th:nth-child(8),
+  .tabla-posiciones:not(.expanded) td:nth-child(8), /* PA */
+  .tabla-posiciones:not(.expanded) th:nth-child(9),
+  .tabla-posiciones:not(.expanded) td:nth-child(9), /* PC */
+  .tabla-posiciones:not(.expanded) th:nth-child(10),
+  .tabla-posiciones:not(.expanded) td:nth-child(10), /* DIF */
+  .tabla-posiciones:not(.expanded) th:nth-child(11),
+  .tabla-posiciones:not(.expanded) td:nth-child(11) { /* PROMEDIO */
     display: none;
+  }
+
+  .cols-toggle-btn {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    padding: 8px;
+    border: 1px dashed var(--border-color);
+    border-radius: 10px;
+    background: var(--bg-subtle);
+    color: var(--text-secondary);
+    font-weight: 700;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  .cols-toggle-btn:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent-border-soft);
+    color: var(--accent-dark);
   }
 }
 

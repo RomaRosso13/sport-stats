@@ -100,10 +100,12 @@ export async function getLeagueMembers(leagueId) {
 // vez por cada uno.
 export async function getCoachAssignmentsByLeagueId(leagueId) {
   return cached('getCoachAssignmentsByLeagueId', [leagueId], async () => {
+    // Sin email: esta consulta corre en páginas públicas sin login (Equipos,
+    // Perfil de equipo), y esa columna ya no es legible por el rol anon.
     const coachRows = await runQuery(
       supabase
         .from('League_User')
-        .select('id, user:user_id ( id, name, email )')
+        .select('id, user:user_id ( id, name )')
         .eq('league_id', leagueId)
         .eq('role', 'Coach')
     )
@@ -164,6 +166,18 @@ export async function setCoachTeams(leagueUserId, teamIds) {
 
   invalidate('getCoachAssignmentsByLeagueId')
   return [...nextTeamIds]
+}
+
+// Para mostrar el nombre de pila en vez del correo (ej. saludo del Header),
+// sin depender de la membresía en ninguna liga en particular.
+export async function getUserByAuthId(authUserId) {
+  if (!authUserId) return null
+
+  return cached('getUserByAuthId', [authUserId], () =>
+    runQuery(
+      supabase.from('User').select('id, name, email').eq('auth_user_id', authUserId).maybeSingle()
+    )
+  )
 }
 
 export async function findUserByEmail(email) {

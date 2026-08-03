@@ -2,7 +2,7 @@
   grid-column: 1 / -1;
   margin-top: 8px;
   padding: 16px;
-  background: #f8fafc;
+  background: var(--bg-surface-alt);
   border: 1px solid #eef1f5;
   border-radius: 12px;
 }
@@ -14,7 +14,7 @@
 }
 
 .stats-column {
-  background: #ffffff;
+  background: var(--bg-surface);
   border-radius: 12px;
   padding: 14px;
   border-top: 3px solid transparent;
@@ -35,7 +35,7 @@
   margin: 0 0 12px;
   font-size: 14px;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .stats-column-title img,
@@ -74,7 +74,7 @@
 .stats-field-group label {
   font-size: 12px;
   font-weight: 600;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .stats-field-group select,
@@ -83,9 +83,9 @@
   padding: 0 10px;
   font-size: 13px;
   border-radius: 8px;
-  border: 1px solid #d1d5db;
-  background: #ffffff;
-  color: #111827;
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  color: var(--text-primary);
 }
 
 .stats-field-group select:focus,
@@ -97,7 +97,7 @@
 
 .stats-empty-hint {
   font-size: 11px;
-  color: #9ca3af;
+  color: var(--text-faint);
 }
 
 .new-player-form {
@@ -108,7 +108,7 @@
   margin-top: 10px;
   padding: 10px;
   border-radius: 8px;
-  border: 1px dashed var(--accent-border-soft, #d1d5db);
+  border: 1px dashed var(--accent-border-soft, var(--border-color));
   background: var(--accent-soft, #f8fafc);
 }
 
@@ -145,7 +145,7 @@
   display: block;
   margin-top: 10px;
   font-size: 12px;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .stats-entries-list {
@@ -162,22 +162,22 @@
   align-items: center;
   gap: 10px;
   padding: 8px 12px;
-  background: #f8fafc;
+  background: var(--bg-surface-alt);
   border-radius: 8px;
   font-size: 13px;
 }
 
 .stats-entry.saved {
-  background: #f0fdf4;
+  background: var(--status-win-bg);
 }
 
 .stats-entry.draft {
-  background: #fff7ed;
+  background: var(--status-pending-bg);
 }
 
 .stats-entry-player {
   font-weight: 600;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .stats-entry-amount {
@@ -187,7 +187,7 @@
 }
 
 .stats-entry.saved .stats-entry-amount {
-  color: #166534;
+  color: var(--status-win-text);
 }
 
 .stats-entry-edit-input {
@@ -199,8 +199,8 @@
   font-weight: 700;
   text-align: center;
   border-radius: 6px;
-  border: 1px solid #d1d5db;
-  color: #166534;
+  border: 1px solid var(--border-color);
+  color: var(--status-win-text);
 }
 
 .stats-entry-edit-input:focus {
@@ -210,7 +210,7 @@
 
 .stats-entry-amount-label {
   font-weight: 600;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .remove-stat-btn {

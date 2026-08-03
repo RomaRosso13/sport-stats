@@ -1,0 +1,63 @@
+.player-radar-chart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.player-radar-svg {
+  width: 100%;
+  max-width: 340px;
+  height: auto;
+}
+
+.player-radar-ring {
+  fill: none;
+  stroke: var(--border-color);
+  stroke-width: 1;
+}
+
+.player-radar-ring.outer {
+  stroke: #cbd5e1;
+}
+
+.player-radar-axis {
+  stroke: var(--border-color);
+  stroke-width: 1;
+}
+
+.player-radar-shape {
+  fill: rgba(var(--accent-rgb), 0.22);
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.player-radar-dot {
+  fill: var(--accent-dark);
+  stroke: #ffffff;
+  stroke-width: 1.5;
+}
+
+.player-radar-value {
+  font-size: 11px;
+  font-weight: 800;
+  fill: var(--text-primary);
+}
+
+.player-radar-label {
+  font-size: 11px;
+  font-weight: 700;
+  fill: #64748b;
+}
+
+.player-radar-empty {
+  margin: 12px 0 0;
+  padding: 20px 16px;
+  text-align: center;
+  border: 1px dashed var(--border-color);
+  border-radius: 12px;
+  background: var(--bg-subtle);
+  color: var(--text-muted);
+  font-size: 13px;
+  width: 100%;
+}

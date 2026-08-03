@@ -1,0 +1,76 @@
+.team-league-comparison {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.league-comp-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.league-comp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.league-comp-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.league-comp-diff {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.league-comp-diff.good {
+  color: var(--status-win-text);
+}
+
+.league-comp-diff.bad {
+  color: var(--status-loss-text);
+}
+
+.league-comp-track {
+  position: relative;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--bg-muted);
+  overflow: visible;
+}
+
+.league-comp-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--accent);
+  transition: width 0.2s ease;
+}
+
+.league-comp-marker {
+  position: absolute;
+  top: -3px;
+  width: 2px;
+  height: 16px;
+  background: var(--text-secondary);
+  border-radius: 2px;
+  transform: translateX(-1px);
+}
+
+.league-comp-values {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.league-comp-values strong {
+  color: var(--text-primary);
+  font-weight: 700;
+}

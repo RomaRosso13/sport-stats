@@ -9,7 +9,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  color: #1e293b;
+  color: var(--text-primary);
 }
 
 /* Nav */
@@ -26,7 +26,7 @@
 .landing-logo-wrap {
   display: inline-flex;
   align-items: center;
-  background: #fff;
+  background: var(--bg-surface);
   border-radius: 14px;
   padding: 0.4rem 0.85rem;
   box-shadow: 0 10px 24px -10px rgba(230, 0, 126, 0.45);
@@ -47,7 +47,7 @@
 .landing-nav-links button {
   background: none;
   border: none;
-  color: #475569;
+  color: var(--text-secondary);
   font-weight: 500;
   font-size: 0.9rem;
   padding: 0.4rem 0.7rem;
@@ -80,12 +80,12 @@
   font-size: 2rem;
   line-height: 1.2;
   margin: 0 0 0.75rem;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .landing-hero-subtitle {
   font-size: 1rem;
-  color: #475569;
+  color: var(--text-secondary);
   margin: 0 0 1.5rem;
   line-height: 1.5;
 }
@@ -121,7 +121,7 @@
 }
 
 .landing-btn-secondary {
-  background: #fff;
+  background: var(--bg-surface);
   color: var(--accent-dark);
   border-color: var(--accent-border-soft);
 }
@@ -149,12 +149,12 @@
   font-size: 1.4rem;
   text-align: center;
   margin: 0 0 0.35rem;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .landing-section-subtitle {
   text-align: center;
-  color: #64748b;
+  color: var(--text-secondary);
   margin: 0 auto 1.25rem;
   max-width: 560px;
   font-size: 0.95rem;
@@ -176,7 +176,7 @@
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
-  background: #fff;
+  background: var(--bg-surface);
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   padding: 1rem;
@@ -202,19 +202,19 @@
 .landing-feature-card h3 {
   margin: 0 0 0.2rem;
   font-size: 0.92rem;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .landing-feature-card p {
   margin: 0;
-  color: #64748b;
+  color: var(--text-secondary);
   font-size: 0.82rem;
   line-height: 1.35;
 }
 
 /* Mockup */
 .landing-mockup-window {
-  background: #fff;
+  background: var(--bg-surface);
   border: 1px solid #e2e8f0;
   border-radius: 16px;
   overflow: hidden;
@@ -225,7 +225,7 @@
   display: flex;
   gap: 6px;
   padding: 0.6rem 0.9rem;
-  background: #f1f5f9;
+  background: var(--bg-muted);
   border-bottom: 1px solid #e2e8f0;
 }
 
@@ -247,7 +247,7 @@
 .landing-mockup-score-title {
   font-size: 0.72rem;
   font-weight: 600;
-  color: #64748b;
+  color: var(--text-secondary);
   margin-bottom: 0.6rem;
   text-transform: uppercase;
   letter-spacing: 0.03em;
@@ -295,7 +295,7 @@
 .landing-mockup-vs {
   font-size: 0.8rem;
   font-weight: 600;
-  color: #94a3b8;
+  color: var(--text-faint);
 }
 
 /* Contacto: franja compacta, no una seccion enorme */
@@ -317,12 +317,12 @@
 .landing-contact-text h2 {
   margin: 0 0 0.2rem;
   font-size: 1.15rem;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .landing-contact-text p {
   margin: 0;
-  color: #64748b;
+  color: var(--text-secondary);
   font-size: 0.88rem;
 }
 

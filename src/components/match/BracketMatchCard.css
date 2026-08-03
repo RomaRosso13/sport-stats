@@ -1,5 +1,5 @@
 .bracket-card {
-  background: #ffffff;
+  background: var(--bg-surface);
   border-radius: 12px;
   padding: 10px 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
@@ -14,14 +14,27 @@
   border-left-color: #f59e0b;
 }
 
+/* Camino al título: mismo dorado del banner de campeón, para marcar de un
+   vistazo qué resultados formaron parte de la racha del equipo campeón. */
+.bracket-card.champion-path {
+  border-left-color: var(--leader-ring);
+  background: var(--leader-row-grad);
+}
+
+.bracket-champion-icon {
+  flex-shrink: 0;
+  font-size: 11px;
+  margin-left: 4px;
+}
+
 .bracket-card.placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 76px;
-  border: 1px dashed #e5e7eb;
-  border-left: 1px dashed #e5e7eb;
-  color: #9ca3af;
+  border: 1px dashed var(--border-color);
+  border-left: 1px dashed var(--border-color);
+  color: var(--text-faint);
   font-size: 12px;
   font-weight: 600;
   box-shadow: none;
@@ -38,7 +51,7 @@
 }
 
 .bracket-team + .bracket-team {
-  border-top: 1px solid #f1f5f9;
+  border-top: 1px solid var(--border-color);
 }
 
 .bracket-team-link {
@@ -73,7 +86,7 @@
 
 .bracket-team-score {
   font-weight: 800;
-  color: #94a3b8;
+  color: var(--text-faint);
   min-width: 18px;
   text-align: right;
 }
@@ -83,7 +96,7 @@
 }
 
 .bracket-team.winner .bracket-team-name {
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .bracket-team.winner .bracket-team-score {
@@ -93,9 +106,9 @@
 .bracket-card-meta {
   margin-top: 6px;
   padding-top: 6px;
-  border-top: 1px solid #f1f5f9;
+  border-top: 1px solid var(--border-color);
   font-size: 10px;
-  color: #9ca3af;
+  color: var(--text-faint);
   text-align: center;
 }
 

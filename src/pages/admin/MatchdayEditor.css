@@ -22,13 +22,13 @@
   margin: 0 0 4px;
   font-size: 22px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .matchday-editor-intro p {
   margin: 0;
   font-size: 14px;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .matchday-editor-empty,
@@ -36,10 +36,10 @@
   margin-top: 8px;
   padding: 32px 16px;
   text-align: center;
-  border: 1px dashed #e5e7eb;
+  border: 1px dashed var(--border-color);
   border-radius: 14px;
-  background: #ffffff;
-  color: #6b7280;
+  background: var(--bg-surface);
+  color: var(--text-muted);
   font-size: 14px;
 }
 
@@ -57,7 +57,7 @@
   gap: 16px;
 
   padding: 16px 20px;
-  background: white;
+  background: var(--bg-surface);
   border-radius: 16px;
   border-left: 4px solid transparent;
 
@@ -103,7 +103,7 @@
 .team-name {
   font-weight: 700;
   font-size: 1rem;
-  color: #0f172a;
+  color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -132,7 +132,7 @@
   font-weight: 700;
 
   border-radius: 12px;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--border-color);
 }
 
 .score input:focus {
@@ -142,7 +142,7 @@
 
 .score-locked-hint {
   font-size: 11px;
-  color: #9ca3af;
+  color: var(--text-faint);
   text-align: center;
   max-width: 180px;
 }
@@ -150,7 +150,7 @@
 .vs {
   font-size: 1.4rem;
   font-weight: 700;
-  color: #64748b;
+  color: var(--text-secondary);
 }
 
 /* Status */
@@ -164,7 +164,7 @@
 .status-label {
   font-size: 12px;
   font-weight: 600;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 /* Select principal */
@@ -182,10 +182,10 @@
   font-weight: 700;
 
   border-radius: 12px;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--border-color);
 
-  background-color: white;
-  color: #0f172a;
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
 
   cursor: pointer;
 
@@ -223,15 +223,15 @@
 
 /* Cuando está en terminado */
 .status-select.finished {
-  background-color: #f0fdf4;
+  background-color: var(--status-win-bg);
   border-color: #22c55e;
-  color: #166534;
+  color: var(--status-win-text);
 }
 
 .status-select.review {
-  background-color: #faf5ff;
+  background-color: var(--status-review-bg);
   border-color: #9333ea;
-  color: #6b21a8;
+  color: var(--status-review-text);
 }
 
 .status-select:disabled {
@@ -255,11 +255,11 @@
   width: 100%;
   font-size: 11px;
   font-weight: 600;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .match-card.finished input {
-  background: #f1f5f9;
+  background: var(--bg-muted);
   cursor: not-allowed;
 }
 
@@ -277,8 +277,8 @@
   gap: 8px;
   padding: 6px 14px;
   border-radius: 999px;
-  border: 1px solid #e5e7eb;
-  background: #ffffff;
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
   color: var(--accent);
   font-size: 12px;
   font-weight: 700;
@@ -343,13 +343,13 @@
 }
 
 .save-hint {
-  color: #6b7280;
-  background: #f3f4f6;
+  color: var(--text-muted);
+  background: var(--bg-hover);
 }
 
 .save-success {
-  color: #166534;
-  background: #f0fdf4;
+  color: var(--status-win-text);
+  background: var(--status-win-bg);
 }
 
 .save-button {
@@ -420,20 +420,20 @@
   margin-top: 32px;
   padding: 20px;
   border-radius: 16px;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
 }
 
 .summary-section h3 {
   margin: 0 0 4px;
   font-size: 16px;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .summary-hint {
   margin: 0 0 16px;
   font-size: 13px;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .summary-generate-button {
@@ -453,9 +453,9 @@
 }
 
 .summary-generate-button:disabled {
-  border-color: #e5e7eb;
-  background: #f3f4f6;
-  color: #9ca3af;
+  border-color: var(--border-color);
+  background: var(--bg-hover);
+  color: var(--text-faint);
   cursor: not-allowed;
 }
 
@@ -472,7 +472,7 @@
   margin-top: 14px;
   padding: 12px 14px;
   border-radius: 12px;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--border-color);
   font-size: 0.9rem;
   font-family: inherit;
   line-height: 1.5;

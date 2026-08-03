@@ -14,7 +14,7 @@
 }
 
 .not-found-card {
-  background: white;
+  background: var(--bg-surface);
   border-radius: 24px;
   padding: 40px 36px;
   max-width: 360px;
@@ -36,13 +36,13 @@
 .not-found-card h1 {
   font-size: 1.6rem;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--text-primary);
   margin-bottom: 8px;
 }
 
 .not-found-card p {
   font-size: 0.95rem;
-  color: #475569;
+  color: var(--text-secondary);
   line-height: 1.5;
 }
 

@@ -33,11 +33,11 @@ function invalidateBranchCaches() {
   invalidate('getBranchesWithFieldsByLeagueId')
 }
 
-export async function createBranch(leagueId, { name }) {
+export async function createBranch(leagueId, { name, mapsUrl }) {
   const result = await runQuery(
     supabase
       .from('Branch')
-      .insert([{ league_id: Number(leagueId), name }])
+      .insert([{ league_id: Number(leagueId), name, maps_url: mapsUrl || null }])
       .select()
       .single()
   )
@@ -46,11 +46,11 @@ export async function createBranch(leagueId, { name }) {
   return result
 }
 
-export async function updateBranch(branchId, { name }) {
+export async function updateBranch(branchId, { name, mapsUrl }) {
   const result = await runQuery(
     supabase
       .from('Branch')
-      .update({ name })
+      .update({ name, maps_url: mapsUrl || null })
       .eq('id', branchId)
       .select()
       .single()
