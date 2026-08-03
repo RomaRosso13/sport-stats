@@ -3,7 +3,7 @@ import "./VenueLink.css"
 // Nombre de la sede; si tiene enlace de Google Maps, se muestra como link
 // que abre el mapa en una pestaña nueva. Sin enlace, es texto plano igual
 // que antes de que esto existiera.
-function VenueLink({ branch, children }) {
+function VenueLink({ branch, children }: { branch: any, children?: any }) {
   if (!branch) return null
 
   if (!branch.maps_url) {
