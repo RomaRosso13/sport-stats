@@ -76,9 +76,8 @@ export async function getMatchById(matchId) {
 // para conservar la atribución al capturador original aunque un admin
 // lo apruebe/edite después.
 export async function updateMatches(matches, currentUserId) {
-  const updates = matches.map(match => {
+  await Promise.all(matches.map(match => {
     const row = {
-      id: match.id,
       local_points: match.local_score,
       visit_points: match.away_score,
       status: match.status
@@ -88,12 +87,10 @@ export async function updateMatches(matches, currentUserId) {
       row.submitted_by = currentUserId
     }
 
-    return row
-  })
-
-  await runQuery(
-    supabase.from('Match').upsert(updates, { onConflict: 'id' })
-  )
+    return runQuery(
+      supabase.from('Match').update(row).eq('id', match.id)
+    )
+  }))
 
   invalidate('getMatchesByMatchDayIds')
   invalidate('getMatchById')
