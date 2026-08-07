@@ -30,16 +30,23 @@
   font-weight: 600;
   color: var(--accent);
   background: var(--accent-soft);
-  padding: 6px 14px;
+  border: 1px solid transparent;
+  padding: 7px 16px;
   border-radius: 999px;
   text-decoration: none;
   white-space: nowrap;
-  transition: background .15s ease, transform .15s ease;
+  transition: background .15s ease, color .15s ease, transform .15s ease, box-shadow .15s ease;
 }
 
 .jornada-pill:hover {
   background: var(--accent-soft-2);
   transform: translateY(-1px);
+}
+
+.jornada-pill.active {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(var(--accent-rgb), 0.3);
 }
 
 .jornada-list {
@@ -61,7 +68,30 @@
 
 @media (max-width: 640px) {
   .jornada-nav {
+    /* un offset chico (menor al espacio natural que ya le da el padding
+       del contenedor + su propio margin) alcanza para separarlo del
+       header una vez que se pega — un valor grande (ej. el alto del
+       header) lo empuja de más desde el primer render, porque sticky
+       lo "engancha" apenas ese valor es mayor a su posición natural,
+       y eso lo hacía montarse sobre el inicio del calendario */
+    top: 8px;
     margin: 16px 0;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(to right, black 88%, transparent 100%);
+    mask-image: linear-gradient(to right, black 88%, transparent 100%);
+  }
+
+  .jornada-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .jornada-pill {
+    flex-shrink: 0;
+    scroll-snap-align: start;
   }
 }
 

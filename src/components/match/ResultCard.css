@@ -1,5 +1,6 @@
 .result-card {
   display: block;
+  min-width: 0;
   background: var(--card-grad);
   border-radius: 16px;
   padding: 18px 20px;

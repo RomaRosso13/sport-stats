@@ -89,6 +89,84 @@
   color: var(--accent-dark);
 }
 
+.nav-drawer-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 10px 4px;
+}
+
+.nav-drawer-toolbar .theme-toggle-btn {
+  background: var(--bg-muted);
+  color: var(--text-primary);
+}
+
+.nav-drawer-toolbar .theme-toggle-btn:hover {
+  background: var(--accent-soft);
+}
+
+.nav-drawer-toolbar .install-app-wrap {
+  display: block;
+  flex: 1;
+}
+
+.nav-drawer-install-btn {
+  display: flex !important;
+  align-items: center;
+  gap: 6px;
+  color: var(--brand-pink);
+}
+
+.nav-drawer-season {
+  margin-bottom: 4px;
+}
+
+/* SeasonSelector nace pensado para el fondo oscuro del header (texto y
+   flecha en blanco fijo); en el drawer el fondo es el tema claro/oscuro
+   de la app, así que se sobreescribe con los colores del tema */
+.nav-drawer-season .season-selector {
+  width: 100%;
+  margin: 0 10px;
+  background-color: var(--bg-muted);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--text-primary) 50%),
+    linear-gradient(135deg, var(--text-primary) 50%, transparent 50%);
+}
+
+.nav-drawer-season .season-selector:hover {
+  background-color: var(--accent-soft);
+  border-color: var(--accent-border-soft, var(--border-color));
+}
+
+.nav-drawer-season .season-selector:disabled {
+  background-color: var(--bg-subtle);
+  color: var(--text-faint);
+}
+
+.nav-drawer-account {
+  padding: 0 10px 6px;
+}
+
+.nav-drawer-user-name {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.nav-drawer .login-popover {
+  position: static;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  background: none;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .nav-drawer-scrim,
   .nav-drawer {

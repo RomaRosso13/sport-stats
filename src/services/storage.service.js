@@ -4,7 +4,7 @@ const BUCKET = 'images'
 const DOCUMENTS_BUCKET = 'documents'
 
 export async function uploadImage(blob, folder) {
-  const ext = blob.type === 'image/png' ? 'png' : 'jpg'
+  const ext = blob.type === 'image/webp' ? 'webp' : blob.type === 'image/png' ? 'png' : 'jpg'
   const uniqueId = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
   const path = `${folder}/${uniqueId}.${ext}`
 

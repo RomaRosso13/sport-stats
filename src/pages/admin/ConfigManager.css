@@ -206,8 +206,13 @@
     padding: 16px;
   }
 
+  .config-cards-grid {
+    grid-template-columns: 1fr;
+  }
+
   .config-card {
     padding: 16px;
+    min-width: 0;
   }
 
   .config-fields-row {

@@ -38,12 +38,6 @@
   text-decoration: underline;
 }
 
-.app-footer-icon {
-  width: 13px;
-  height: 13px;
-  flex-shrink: 0;
-}
-
 @media (max-width: 480px) {
   .app-footer {
     flex-direction: column;
