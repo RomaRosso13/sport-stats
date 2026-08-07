@@ -1,14 +1,14 @@
 const ALLOWED_TYPES = ['image/png', 'image/jpeg', 'image/jpg']
 
-// Redimensiona y recomprime una imagen en el navegador (canvas) antes de subirla.
-// PNG se conserva como PNG (sin pérdida, pero más chico al reducir dimensiones).
-// Cualquier otro formato soportado se reencoda como JPEG con compresión con pérdida.
+// Redimensiona y reencoda una imagen en el navegador (canvas) antes de subirla.
+// Todo se reencoda como WebP (25-35% más chico que JPEG a la misma calidad,
+// y soporta transparencia igual que PNG) — soporte de navegador ya no es problema.
 export function compressImage(file, { maxWidth = 500, maxHeight = 500, quality = 0.82 } = {}) {
   if (!ALLOWED_TYPES.includes(file.type)) {
     return Promise.reject(new Error('Solo se aceptan imágenes PNG o JPG'))
   }
 
-  const outputType = file.type === 'image/png' ? 'image/png' : 'image/jpeg'
+  const outputType = 'image/webp'
 
   return new Promise((resolve, reject) => {
     const objectUrl = URL.createObjectURL(file)

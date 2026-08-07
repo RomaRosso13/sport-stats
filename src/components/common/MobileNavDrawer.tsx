@@ -1,9 +1,23 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
+
+import ThemeToggle from './ThemeToggle'
+import InstallAppButton from './InstallAppButton'
+import SeasonSelector from '../filters/SeasonSelector'
+import LoginForm from '../auth/LoginForm'
 
 import './MobileNavDrawer.css'
 
-function MobileNavDrawer({ open, onClose, leagueSlug, publicItems, adminItems, isMember, onChangeLeague }) {
+// Temporada, tema, instalar app y cuenta viven aquí (y no en el header) para
+// que la barra superior en móvil quede en una sola fila: logo + nombre +
+// hamburguesa. Ver Header.css para las reglas que ocultan esos controles
+// del header en pantallas angostas.
+function MobileNavDrawer({
+  open, onClose, leagueSlug, publicItems, adminItems, isMember, onChangeLeague,
+  seasons, season, onChangeSeason, user, displayName, onLogout
+}) {
+  const [showLoginForm, setShowLoginForm] = useState(false)
+
   useEffect(() => {
     if (!open) return
 
@@ -21,6 +35,10 @@ function MobileNavDrawer({ open, onClose, leagueSlug, publicItems, adminItems, i
     }
   }, [open, onClose])
 
+  useEffect(() => {
+    if (!open) setShowLoginForm(false)
+  }, [open])
+
   if (!open) return null
 
   return (
@@ -31,6 +49,38 @@ function MobileNavDrawer({ open, onClose, leagueSlug, publicItems, adminItems, i
         <button type="button" className="nav-drawer-close" onClick={onClose} aria-label="Cerrar menú">
           ×
         </button>
+
+        <div className="nav-drawer-toolbar">
+          <ThemeToggle />
+          <InstallAppButton className="menu-link-btn nav-drawer-install-btn" />
+        </div>
+
+        {season && seasons?.length > 0 && (
+          <div className="nav-drawer-season">
+            <span className="menu-section-title">Temporada</span>
+            <SeasonSelector seasons={seasons} activeSeason={season} onChange={onChangeSeason} />
+          </div>
+        )}
+
+        <span className="menu-section-title">Cuenta</span>
+        <div className="nav-drawer-account">
+          {!user ? (
+            showLoginForm ? (
+              <LoginForm onClose={() => setShowLoginForm(false)} />
+            ) : (
+              <button type="button" className="menu-link-btn" onClick={() => setShowLoginForm(true)}>
+                Iniciar sesión
+              </button>
+            )
+          ) : (
+            <>
+              <span className="nav-drawer-user-name">Bienvenid@ {displayName || user.email}</span>
+              <button type="button" className="menu-link-btn" onClick={onLogout}>
+                Cerrar sesión
+              </button>
+            </>
+          )}
+        </div>
 
         <button type="button" className="menu-link-btn" onClick={onChangeLeague}>
           Cambiar de liga

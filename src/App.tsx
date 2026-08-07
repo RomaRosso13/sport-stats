@@ -6,6 +6,7 @@ import LeagueLayout from "./layouts/LeagueLayout"
 import Landing from "./pages/Landing"
 import About from "./pages/About"
 import PrivacyNotice from "./pages/PrivacyNotice"
+import Contact from "./pages/Contact"
 import Home from "./pages/Home"
 import Calendar from "./pages/Calendar"
 import Results from "./pages/Results"
@@ -38,6 +39,7 @@ function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/nosotros" element={<About />} />
         <Route path="/privacidad" element={<PrivacyNotice />} />
+        <Route path="/contacto" element={<Contact />} />
 
         <Route path="/:leagueSlug" element={<LeagueLayout />}>
           <Route index element={<Home />} />

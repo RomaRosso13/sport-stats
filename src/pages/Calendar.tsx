@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useState } from "react"
+import { useRef } from "react"
 
 import Header from "../components/common/Header"
 import Footer from '../components/common/Footer'
@@ -84,6 +85,47 @@ function Calendar() {
     loadMatchdays()
   }, [categories])
 
+  const [activeJornadaId, setActiveJornadaId] = useState<string | null>(null)
+  const scrollContainerRef = useRef(null)
+  const dayRefs = useRef<Record<string, HTMLElement | null>>({})
+  const pillRefs = useRef<Record<string, HTMLAnchorElement | null>>({})
+
+  useEffect(() => {
+    if (!matchdays.length) return
+    setActiveJornadaId(prev => prev ?? matchdays[0].id)
+  }, [matchdays])
+
+  useEffect(() => {
+    const container = scrollContainerRef.current
+    if (!matchdays.length || !container) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter(entry => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
+
+        if (visible.length > 0) {
+          setActiveJornadaId((visible[0].target as HTMLElement).dataset.jornadaId)
+        }
+      },
+      { root: container, rootMargin: '-10% 0px -75% 0px', threshold: 0 }
+    )
+
+    Object.values(dayRefs.current).forEach(el => el && observer.observe(el))
+
+    return () => observer.disconnect()
+  }, [matchdays])
+
+  useEffect(() => {
+    if (!activeJornadaId) return
+    pillRefs.current[activeJornadaId]?.scrollIntoView({
+      behavior: 'smooth',
+      inline: 'center',
+      block: 'nearest'
+    })
+  }, [activeJornadaId])
+
   const isDataLoading = !league || loadingMatchdays
   const [showLoader, setShowLoader] = useState(true)
 
@@ -109,11 +151,16 @@ function Calendar() {
       <PageWrapper loading={showLoader}/>
       <Header league={league}/>
 
-      <main className="calendar-container">
+      <main className="calendar-container" ref={scrollContainerRef}>
         {matchdays.length > 1 && (
           <nav className="jornada-nav">
             {matchdays.map(md => (
-              <a key={md.id} href={`#jornada-${md.id}`} className="jornada-pill">
+              <a
+                key={md.id}
+                href={`#jornada-${md.id}`}
+                ref={el => { pillRefs.current[md.id] = el }}
+                className={`jornada-pill ${activeJornadaId === md.id ? 'active' : ''}`}
+              >
                 {md.name}
               </a>
             ))}
@@ -127,7 +174,9 @@ function Calendar() {
         ) : (
           <div className="jornada-list">
             {matchdays.map(md => (
-              <CalendarDay key={md.id} matchday={md} calendarConfig={calendarConfig} />
+              <div key={md.id} ref={el => { dayRefs.current[md.id] = el }} data-jornada-id={md.id}>
+                <CalendarDay matchday={md} calendarConfig={calendarConfig} />
+              </div>
             ))}
           </div>
         )}

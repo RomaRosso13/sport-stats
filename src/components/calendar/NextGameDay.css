@@ -99,8 +99,9 @@
   font-size: 12px;
   color: var(--text-muted);
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 6px;
+  gap: 4px 6px;
 }
 
 /* EMPTY */

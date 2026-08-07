@@ -226,6 +226,12 @@ function Header({ league }) {
         adminItems={adminNavItemsFlat}
         isMember={isMember}
         onChangeLeague={handleChangeLeague}
+        seasons={seasons}
+        season={season}
+        onChangeSeason={setSeason}
+        user={user}
+        displayName={displayName}
+        onLogout={handleLogout}
       />
     </header>
   )
