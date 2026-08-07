@@ -87,8 +87,8 @@ function Calendar() {
 
   const [activeJornadaId, setActiveJornadaId] = useState<string | null>(null)
   const scrollContainerRef = useRef(null)
-  const dayRefs = useRef({})
-  const pillRefs = useRef({})
+  const dayRefs = useRef<Record<string, HTMLElement | null>>({})
+  const pillRefs = useRef<Record<string, HTMLAnchorElement | null>>({})
 
   useEffect(() => {
     if (!matchdays.length) return
