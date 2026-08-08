@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { createPlayer } from '../../services/player.service.js'
 import { STAT_KEYS } from '../../constants/statFields'
+import { useConfirm } from '../../context/ConfirmContext'
 import TeamLogo from '../common/TeamLogo'
 import './MatchStatsPanel.css'
 
@@ -25,6 +26,7 @@ function TeamStatsColumn({
   onUpdateSavedStat
 }) {
   const STAT_OPTIONS = STAT_KEYS.map(key => ({ key, label: statLabels[key] }))
+  const confirm = useConfirm()
 
   const [playerId, setPlayerId] = useState('')
   const [statKey, setStatKey] = useState('touchdown')
@@ -119,8 +121,13 @@ function TeamStatsColumn({
     onUpdateSavedStat(line.rowId, line.statKey, newAmount)
   }
 
-  function handleSavedDelete(line) {
-    if (!window.confirm(`¿Eliminar ${line.amount} ${line.label} de ${line.playerName}?`)) return
+  async function handleSavedDelete(line) {
+    const ok = await confirm({
+      message: `¿Eliminar ${line.amount} ${line.label} de ${line.playerName}?`,
+      confirmLabel: 'Eliminar',
+      danger: true
+    })
+    if (!ok) return
     onUpdateSavedStat(line.rowId, line.statKey, 0)
   }
 

@@ -1,5 +1,6 @@
 import TeamLogo from "../common/TeamLogo"
 import VenueLink from "../common/VenueLink"
+import { getScoreDominance, getWinProbColors } from "../../utils/getWinProbability"
 import "./RecentResults.css"
 
 function RecentResults({ games }) {
@@ -13,10 +14,12 @@ function RecentResults({ games }) {
       {games.map(p => {
         const ganadorLocal = p.local_points > p.visit_points
         const ganadorVisit = p.visit_points > p.local_points
+        const { local: localDom, visit: visitDom } = getScoreDominance(p.local_points, p.visit_points)
+        const { local: localDomColor, visit: visitDomColor } = getWinProbColors(localDom, visitDom)
 
         return (
           <div className="resultado-card" key={p.id}>
-            
+
             {/* Equipo local */}
             <div className={`equipo lado izquierdo ${ganadorLocal ? "ganador" : ""}`}>
               <TeamLogo logoUrl={p.local_team.logo_url} name={p.local_team.name} alt={p.local_team.name} className="team-logo" />
@@ -34,6 +37,19 @@ function RecentResults({ games }) {
               <span className="team-name">{p.visit_team.name}</span>
               <TeamLogo logoUrl={p.visit_team.logo_url} name={p.visit_team.name} alt={p.visit_team.name} className="team-logo" />
               {ganadorVisit && <span className="badge-win">WIN</span>}
+            </div>
+
+            {/* Dominancia del marcador */}
+            <div
+              className="dominancia"
+              title={`Dominancia del marcador: ${p.local_team.name} ${localDom}% · ${p.visit_team.name} ${visitDom}%`}
+            >
+              <span className="dominancia-pct local">{localDom}%</span>
+              <div className="dominancia-bar">
+                <span className="dominancia-fill" style={{ width: `${localDom}%`, background: localDomColor }} />
+                <span className="dominancia-fill" style={{ width: `${visitDom}%`, background: visitDomColor }} />
+              </div>
+              <span className="dominancia-pct visit">{visitDom}%</span>
             </div>
 
             {/* Meta info */}

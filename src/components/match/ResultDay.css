@@ -63,6 +63,25 @@
   color: var(--status-review-text);
 }
 
+.export-jornada-btn {
+  margin-left: auto;
+  padding: 5px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  background-color: var(--accent);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+.export-jornada-btn:hover {
+  box-shadow: 0 4px 10px rgba(var(--accent-rgb), 0.25);
+  transform: translateY(-1px);
+}
+
 .chronicle {
   margin: 0 0 20px;
   padding: 18px 20px 20px;

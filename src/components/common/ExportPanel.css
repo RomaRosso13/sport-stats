@@ -1,0 +1,353 @@
+.export-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 9999;
+}
+
+.export-panel {
+  display: flex;
+  flex-direction: column;
+  width: 760px;
+  max-width: 100%;
+  max-height: calc(100vh - 40px);
+  background: var(--bg-surface);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+}
+
+.export-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.export-panel-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.export-panel-close {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 999px;
+  background: var(--bg-muted);
+  color: var(--text-primary);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.export-panel-body {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.export-panel-options {
+  padding: 18px 18px 24px;
+  border-right: 1px solid var(--border-color);
+  background: var(--bg-surface-alt);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.opt-group h4 {
+  margin: 0 0 8px;
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-faint);
+}
+
+.seg {
+  display: flex;
+  background: var(--bg-muted);
+  border-radius: 10px;
+  padding: 3px;
+  gap: 3px;
+}
+
+/* Para grupos con más de 2-3 opciones (p.ej. las 4 estadísticas), evita que
+   el texto se comprima o se salga del panel — pasa a 2 columnas x N filas. */
+.seg-wrap {
+  flex-wrap: wrap;
+}
+
+.seg-wrap button {
+  flex: 1 1 calc(50% - 3px);
+}
+
+.seg button {
+  flex: 1;
+  border: none;
+  background: none;
+  padding: 7px 6px;
+  border-radius: 8px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: inherit;
+  transition: background-color .15s ease, color .15s ease;
+}
+
+.seg button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.seg button.active {
+  background: var(--bg-surface);
+  color: var(--accent);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.swatches {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.swatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+}
+
+.swatch.active {
+  border-color: var(--text-primary);
+}
+
+.swatch-custom {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  background: none;
+}
+
+.upload-slot {
+  display: block;
+  border: 1.5px dashed var(--border-color);
+  border-radius: 10px;
+  padding: 12px 10px;
+  text-align: center;
+  font-size: 11.5px;
+  color: var(--text-muted);
+  font-weight: 600;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.upload-slot:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.text-slot {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  font-family: inherit;
+}
+
+.text-slot:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.15);
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.toggle-row .lbl {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.toggle-row .hint {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+.switch-input {
+  appearance: none;
+  width: 34px;
+  height: 19px;
+  border-radius: 999px;
+  background: var(--bg-muted);
+  position: relative;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: background-color .15s ease;
+}
+
+.switch-input::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  transition: transform .15s ease;
+}
+
+.switch-input:checked {
+  background: var(--accent);
+}
+
+.switch-input:checked::before {
+  transform: translateX(15px);
+}
+
+.quick-default {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px dashed rgba(var(--accent-rgb), 0.4);
+  border-radius: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+}
+
+.quick-default:hover {
+  background: var(--accent-soft-2, var(--accent-soft));
+}
+
+.export-panel-preview {
+  padding: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  background:
+    linear-gradient(45deg, var(--bg-muted) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--bg-muted) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--bg-muted) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--bg-muted) 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+}
+
+.export-panel-error {
+  margin: 0;
+  padding: 10px 20px 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--status-loss-text, #dc2626);
+}
+
+.export-panel-actions {
+  display: flex;
+  gap: 10px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  flex-shrink: 0;
+}
+
+.export-panel-actions button {
+  flex: 1;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background-color .15s ease, transform .15s ease;
+}
+
+.export-panel-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-share {
+  background: var(--bg-muted);
+  color: var(--text-primary);
+}
+
+.btn-share:hover:not(:disabled) {
+  background: var(--bg-hover);
+}
+
+.btn-download {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.btn-download:hover:not(:disabled) {
+  background: var(--accent-dark);
+}
+
+@media (max-width: 720px) {
+  .export-panel-body {
+    grid-template-columns: 1fr;
+  }
+
+  /* La previsualización va primero (arriba) en móvil — más útil verla antes
+     de tocar las opciones. `order` la reacomoda sin tocar el JSX/orden del
+     desktop, que sí depende del orden real de las columnas. */
+  .export-panel-preview {
+    order: -1;
+    /* overflow:auto hace que el tamaño mínimo automático de este grid item
+       sea 0 en vez de basarse en su contenido — al pasar a su propia fila
+       en móvil (antes compartía fila con las opciones, que sí le daban
+       alto), la fila se colapsaba a una línea. Un min-height explícito
+       evita ese colapso. */
+    min-height: 380px;
+  }
+
+  .export-panel-options {
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+  }
+}

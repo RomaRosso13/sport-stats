@@ -87,3 +87,31 @@ export async function setPlayerActive(playerId, active) {
   invalidatePlayerCaches()
   return result
 }
+
+// Borra también todo lo que referencia a este jugador (estadísticas
+// individuales, asistencia) antes de borrar su fila — si no, el borrado del
+// jugador fallaría por la llave foránea en cuanto tuviera algún registro.
+export async function deletePlayer(playerId) {
+  await runQuery(
+    supabase.from('IndividualStats').delete().eq('player_id', playerId),
+    'No se pudieron eliminar las estadísticas del jugador'
+  )
+
+  await runQuery(
+    supabase.from('MatchAttendance').delete().eq('player_id', playerId),
+    'No se pudo eliminar la asistencia del jugador'
+  )
+
+  const result = await runQuery(
+    supabase.from('Player').delete().eq('id', playerId),
+    'No se pudo eliminar el jugador'
+  )
+
+  invalidatePlayerCaches()
+  invalidate('getIndividualStatsByCategory')
+  invalidate('getIndividualStatsByMatchId')
+  invalidate('getAttendanceByMatchIds')
+  invalidate('getAttendanceByPlayerId')
+
+  return result
+}

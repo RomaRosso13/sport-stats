@@ -1,6 +1,8 @@
 import { Routes, Route } from "react-router-dom"
 import { AuthProvider } from "./context/AuthContext"
 import { ThemeProvider } from "./context/ThemeContext"
+import { ConfirmProvider } from "./context/ConfirmContext"
+import { ToastProvider } from "./context/ToastContext"
 
 import LeagueLayout from "./layouts/LeagueLayout"
 import Landing from "./pages/Landing"
@@ -34,6 +36,8 @@ import AttendanceManager from "./pages/admin/AttendanceManager"
 function App() {
   return (
     <ThemeProvider>
+    <ToastProvider>
+    <ConfirmProvider>
     <AuthProvider>
       <Routes>
         <Route path="/" element={<Landing />} />
@@ -69,6 +73,8 @@ function App() {
         <Route path="*" element={<p>Liga no encontrada</p>} />
       </Routes>
     </AuthProvider>
+    </ConfirmProvider>
+    </ToastProvider>
     </ThemeProvider>
   )
 }

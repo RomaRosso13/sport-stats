@@ -14,19 +14,23 @@ import InstallAppButton from './InstallAppButton'
 import AdminMenu from './AdminMenu'
 import MobileNavDrawer from './MobileNavDrawer'
 import ThemeToggle from './ThemeToggle'
+import {
+  HomeIcon, CalendarIcon, FootballIcon, TableIcon, TrophyIcon, StatsIcon, UsersIcon, BookIcon, CameraIcon,
+  DashboardIcon, GearIcon, LayersIcon, ListIcon, EditIcon, ClipboardCheckIcon, MapPinIcon
+} from './NavIcons'
 
 import './Header.css'
 
 const PUBLIC_NAV_ITEMS = [
-  { to: '', label: 'Inicio', end: true },
-  { to: '/calendario', label: 'Calendario' },
-  { to: '/results', label: 'Partidos' },
-  { to: '/tabla', label: 'Tabla' },
-  { to: '/playoffs', label: 'Playoffs' },
-  { to: '/estadisticas', label: 'Estadísticas' },
-  { to: '/equipos', label: 'Equipos' },
-  { to: '/reglamento', label: 'Reglamento' },
-  { to: '/fotos', label: 'Fotos' }
+  { to: '', label: 'Inicio', end: true, icon: HomeIcon },
+  { to: '/calendario', label: 'Calendario', icon: CalendarIcon },
+  { to: '/results', label: 'Partidos', icon: FootballIcon },
+  { to: '/tabla', label: 'Tabla', icon: TableIcon },
+  { to: '/playoffs', label: 'Playoffs', icon: TrophyIcon },
+  { to: '/estadisticas', label: 'Estadísticas', icon: StatsIcon },
+  { to: '/equipos', label: 'Equipos', icon: UsersIcon },
+  { to: '/reglamento', label: 'Reglamento', icon: BookIcon },
+  { to: '/fotos', label: 'Fotos', icon: CameraIcon }
 ]
 
 // Mismos links y condiciones de rol que ya existían en el dropdown viejo —
@@ -39,19 +43,19 @@ function getAdminNavGroups({ isFullAdmin, isReferee, isCoach }) {
   const partidos = []
   const equipos = []
 
-  if (isFullAdmin) general.push({ to: '/admin', label: 'Panel de Administración' })
-  if (isFullAdmin) general.push({ to: '/admin/configuracion', label: 'Configuración General' })
-  if (isFullAdmin) general.push({ to: '/admin/usuarios', label: 'Gestor de Usuarios' })
+  if (isFullAdmin) general.push({ to: '/admin', label: 'Panel de Administración', icon: DashboardIcon })
+  if (isFullAdmin) general.push({ to: '/admin/configuracion', label: 'Configuración General', icon: GearIcon })
+  if (isFullAdmin) general.push({ to: '/admin/usuarios', label: 'Gestor de Usuarios', icon: UsersIcon })
 
-  if (isFullAdmin) temporada.push({ to: '/admin/gestor', label: 'Gestor de temporadas' })
-  if (isFullAdmin) temporada.push({ to: '/admin/crear', label: 'Gestor de Jornadas' })
+  if (isFullAdmin) temporada.push({ to: '/admin/gestor', label: 'Gestor de temporadas', icon: LayersIcon })
+  if (isFullAdmin) temporada.push({ to: '/admin/crear', label: 'Gestor de Jornadas', icon: ListIcon })
 
-  if (isFullAdmin || isReferee) partidos.push({ to: '/admin/editar', label: 'Registrar resultados' })
-  if (isFullAdmin || isReferee) partidos.push({ to: '/admin/asistencia', label: 'Asistencia' })
+  if (isFullAdmin || isReferee) partidos.push({ to: '/admin/editar', label: 'Registrar resultados', icon: EditIcon })
+  if (isFullAdmin || isReferee) partidos.push({ to: '/admin/asistencia', label: 'Asistencia', icon: ClipboardCheckIcon })
 
-  if (isFullAdmin) equipos.push({ to: '/admin/equipos', label: 'Gestor de Equipos' })
-  if (isFullAdmin) equipos.push({ to: '/admin/sedes', label: 'Gestor de Sedes' })
-  if (isFullAdmin || isCoach) equipos.push({ to: '/admin/mi-equipo', label: 'Mi Equipo' })
+  if (isFullAdmin) equipos.push({ to: '/admin/equipos', label: 'Gestor de Equipos', icon: UsersIcon })
+  if (isFullAdmin) equipos.push({ to: '/admin/sedes', label: 'Gestor de Sedes', icon: MapPinIcon })
+  if (isFullAdmin || isCoach) equipos.push({ to: '/admin/mi-equipo', label: 'Mi Equipo', icon: UsersIcon })
 
   return [
     { title: 'General', items: general },
@@ -213,6 +217,7 @@ function Header({ league }) {
             end={item.end}
             className={({ isActive }) => `primary-nav-link ${isActive ? 'active' : ''}`}
           >
+            <item.icon />
             {item.label}
           </NavLink>
         ))}

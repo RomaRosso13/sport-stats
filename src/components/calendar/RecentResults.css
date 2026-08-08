@@ -95,6 +95,44 @@
   padding: 0 14px;
 }
 
+/* DOMINANCIA DEL MARCADOR */
+.dominancia {
+  grid-column: 1 / -1;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dominancia-bar {
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  overflow: hidden;
+  display: flex;
+  background: var(--bg-muted);
+}
+
+.dominancia-fill {
+  height: 100%;
+}
+
+.dominancia-pct {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  min-width: 30px;
+  flex-shrink: 0;
+}
+
+.dominancia-pct.local {
+  text-align: left;
+}
+
+.dominancia-pct.visit {
+  text-align: right;
+}
+
 .meta {
   grid-column: 1 / -1;
   margin-top: 6px;

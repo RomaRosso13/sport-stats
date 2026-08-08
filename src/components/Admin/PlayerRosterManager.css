@@ -123,6 +123,15 @@
   background: var(--status-win-bg);
 }
 
+.roster-actions .delete-btn {
+  color: var(--status-loss-text);
+  border-color: var(--status-loss-border);
+}
+
+.roster-actions .delete-btn:hover {
+  background: var(--status-loss-bg);
+}
+
 @media (max-width: 640px) {
   .roster-row {
     padding: 10px;

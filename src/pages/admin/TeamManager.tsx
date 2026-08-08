@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 
 import { useLeague } from '../../context/LeagueContext'
 import { useCategory } from '../../context/CategoryContext'
+import { useConfirm } from '../../context/ConfirmContext'
+import { useToast } from '../../context/ToastContext'
 
 import Header from '../../components/common/Header'
 import Footer from '../../components/common/Footer'
@@ -11,8 +13,8 @@ import TeamFormModal from '../../components/Admin/TeamFormModal'
 import PlayerFormModal from '../../components/Admin/PlayerFormModal'
 import PlayerRosterManager from '../../components/Admin/PlayerRosterManager'
 
-import { getTeamsByCategoryId, deleteTeam } from '../../services/team.service.js'
-import { setPlayerActive } from '../../services/player.service.js'
+import { getTeamsByCategoryId, deleteTeam, setTeamActive } from '../../services/team.service.js'
+import { setPlayerActive, deletePlayer } from '../../services/player.service.js'
 import { getCoachAssignmentsByLeagueId } from '../../services/league_user.service.js'
 
 import './TeamManager.css'
@@ -20,6 +22,8 @@ import './TeamManager.css'
 function TeamManager() {
   const { league } = useLeague()
   const { categories, category, setCategory } = useCategory()
+  const confirm = useConfirm()
+  const toast = useToast()
 
   const [teams, setTeams] = useState([])
   const [loadingTeams, setLoadingTeams] = useState(true)
@@ -98,7 +102,12 @@ function TeamManager() {
   }
 
   async function handleDeleteTeam(team) {
-    if (!window.confirm(`¿Eliminar el equipo "${team.name}"? Esta acción no se puede deshacer.`)) return
+    const ok = await confirm({
+      message: `¿Eliminar el equipo "${team.name}"? También se borrarán todos sus partidos, jugadores, estadísticas y asistencia (incluyendo lo que afecte a los equipos rivales de esos partidos). Esta acción no se puede deshacer.`,
+      confirmLabel: 'Eliminar',
+      danger: true
+    })
+    if (!ok) return
 
     try {
       await deleteTeam(team.id)
@@ -106,7 +115,17 @@ function TeamManager() {
       if (selectedTeamId === team.id) setSelectedTeamId(null)
     } catch (err) {
       console.error(err)
-      alert(err.message || 'No se pudo eliminar el equipo')
+      toast.error(err.message || 'No se pudo eliminar el equipo')
+    }
+  }
+
+  async function handleToggleTeamActive(team) {
+    try {
+      const updated = await setTeamActive(team.id, !team.active)
+      setTeams(prev => prev.map(t => t.id === updated.id ? { ...t, ...updated } : t))
+    } catch (err) {
+      console.error(err)
+      toast.error('No se pudo actualizar el estado del equipo')
     }
   }
 
@@ -116,7 +135,27 @@ function TeamManager() {
       handlePlayerSaved(updated)
     } catch (err) {
       console.error(err)
-      alert('No se pudo actualizar el estado del jugador')
+      toast.error('No se pudo actualizar el estado del jugador')
+    }
+  }
+
+  async function handleDeletePlayer(player) {
+    const ok = await confirm({
+      message: `¿Eliminar a "${player.name}"? También se borrarán todas sus estadísticas y asistencia registradas. Esta acción no se puede deshacer.`,
+      confirmLabel: 'Eliminar',
+      danger: true
+    })
+    if (!ok) return
+
+    try {
+      await deletePlayer(player.id)
+      setTeams(prev => prev.map(t => t.id === selectedTeamId
+        ? { ...t, Player: (t.Player || []).filter(p => p.id !== player.id) }
+        : t
+      ))
+    } catch (err) {
+      console.error(err)
+      toast.error(err.message || 'No se pudo eliminar el jugador')
     }
   }
 
@@ -155,6 +194,7 @@ function TeamManager() {
                 onSelect={t => setSelectedTeamId(t.id)}
                 onEdit={t => { setEditingTeam(t); setShowTeamModal(true) }}
                 onDelete={handleDeleteTeam}
+                onToggleActive={handleToggleTeamActive}
               />
             ))}
           </div>
@@ -166,6 +206,7 @@ function TeamManager() {
             onAddPlayer={() => { setEditingPlayer(null); setShowPlayerModal(true) }}
             onEditPlayer={p => { setEditingPlayer(p); setShowPlayerModal(true) }}
             onToggleActive={handleToggleActive}
+            onDeletePlayer={handleDeletePlayer}
           />
         )}
       </main>

@@ -88,7 +88,9 @@ function Teams() {
     const standings = calculateTable(regularSeasonMatches, teams)
     const rankById = {}
     standings.forEach((row, index) => { rankById[row.id] = index })
-    const sortedTeams = [...teams].sort((a, b) => (rankById[a.id] ?? Infinity) - (rankById[b.id] ?? Infinity))
+    const sortedTeams = teams
+      .filter(t => t.active !== false)
+      .sort((a, b) => (rankById[a.id] ?? Infinity) - (rankById[b.id] ?? Infinity))
 
     const isDataLoading = !league || !matchdays.length
     const [showLoader, setShowLoader] = useState(true)
@@ -116,7 +118,7 @@ function Teams() {
     <main className="teams-container">
       <CategorySwitcher categories={categories} active={category} onChange={setCategory}/>
       <h2 className="teams-title">Equipos</h2>
-        {!isDataLoading && teams.length === 0 ? (
+        {!isDataLoading && sortedTeams.length === 0 ? (
           <p className="empty-teams">Esta categoría aún no tiene equipos registrados</p>
         ) : (
           <div className="teams-grid">

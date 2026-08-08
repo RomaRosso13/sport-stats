@@ -24,7 +24,7 @@ function RosterAvatar({ imageUrl, name }) {
   return <div className="roster-avatar">{getInitial(name)}</div>
 }
 
-function PlayerRosterManager({ team, onAddPlayer, onEditPlayer, onToggleActive }) {
+function PlayerRosterManager({ team, onAddPlayer, onEditPlayer, onToggleActive, onDeletePlayer }) {
   const players = sortPlayersByNumber(team.Player || [])
 
   return (
@@ -63,6 +63,13 @@ function PlayerRosterManager({ team, onAddPlayer, onEditPlayer, onToggleActive }
                   onClick={() => onToggleActive(player)}
                 >
                   {player.active ? 'Desactivar' : 'Activar'}
+                </button>
+                <button
+                  type="button"
+                  className="delete-btn"
+                  onClick={() => onDeletePlayer(player)}
+                >
+                  Eliminar
                 </button>
               </div>
             </div>

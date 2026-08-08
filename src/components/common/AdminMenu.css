@@ -64,6 +64,9 @@
 }
 
 .admin-menu-dropdown a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   text-decoration: none;
   color: var(--text-primary);
   font-weight: 600;
@@ -71,6 +74,12 @@
   padding: 8px 10px;
   border-radius: 10px;
   transition: background-color .15s ease, color .15s ease;
+}
+
+.admin-menu-dropdown .nav-icon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
 }
 
 .admin-menu-dropdown a:hover,

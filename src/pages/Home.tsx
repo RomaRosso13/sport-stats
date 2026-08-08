@@ -110,7 +110,11 @@ function Home() {
   }, [category?.id])
 
   const matches = matchdays.flatMap(j => j.games).filter(m => !isScrimmage(m.type))
-  const calculatedTable = calculateTable(matches, teams)
+  // Se calcula con TODOS los equipos/partidos (para que el récord del rival
+  // de un equipo desactivado siga siendo correcto), y solo después se
+  // esconde la fila del equipo desactivado.
+  const activeTeamIds = new Set(teams.filter(t => t.active !== false).map(t => t.id))
+  const calculatedTable = calculateTable(matches, teams).filter(row => activeTeamIds.has(row.id))
   const nextGameDay = getNextGameDay(matchdays)
   const recentResults = getRecentResults(matchdays, 4)
   const leaderboard = classifyTopPlayersByStats(stats, STAT_KEYS)
@@ -170,7 +174,7 @@ return (
             <div className="home-card">
               <h2 className="card-title">Próximos partidos</h2>
               <div className="card-body">
-                <NextGameDay data={nextGameDay} />
+                <NextGameDay data={nextGameDay} standings={calculatedTable} />
               </div>
             </div>
           </>

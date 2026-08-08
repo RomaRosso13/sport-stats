@@ -64,6 +64,9 @@
 
 .nav-drawer a,
 .nav-drawer button.menu-link-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   text-decoration: none;
   color: var(--text-primary);
   font-weight: 600;
@@ -71,6 +74,12 @@
   padding: 12px 10px;
   border-radius: 10px;
   transition: background-color .15s ease, color .15s ease;
+}
+
+.nav-drawer .nav-icon {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
 }
 
 .nav-drawer button.menu-link-btn {

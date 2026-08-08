@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useCategory } from '../../context/CategoryContext'
 import { useLeague } from '../../context/LeagueContext'
+import { useToast } from '../../context/ToastContext'
 
 import MatchdaySelector from '../../components/Admin/MatchdaySelector'
 import AttendanceList from '../../components/Admin/AttendanceList'
@@ -20,6 +21,7 @@ function AttendanceManager() {
   const { categories, category, setCategory } = useCategory()
   const [selectedMatchday, setSelectedMatchday] = useState(null)
   const { league } = useLeague()
+  const toast = useToast()
 
   const [teams, setTeams] = useState([])
   const [teamsLoaded, setTeamsLoaded] = useState(false)
@@ -99,7 +101,7 @@ function AttendanceManager() {
       }))
     } catch (error) {
       console.error(error)
-      alert('No se pudo actualizar la asistencia')
+      toast.error('No se pudo actualizar la asistencia')
     } finally {
       setSavingKey(null)
     }

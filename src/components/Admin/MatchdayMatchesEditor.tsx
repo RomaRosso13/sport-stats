@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 
 import { useCategory } from '../../context/CategoryContext'
 import { useLeague } from '../../context/LeagueContext'
+import { useConfirm } from '../../context/ConfirmContext'
+import { useToast } from '../../context/ToastContext'
 
 import { getTeamsByCategoryIds } from '../../services/team.service.js'
 import { getBranchByLeagueId } from '../../services/branch.service.js'
@@ -26,6 +28,8 @@ const CATEGORY_LABELS = {
 function MatchdayMatchesEditor({ matchday, matches, setMatches, reloadToken }) {
   const { league } = useLeague()
   const { categories } = useCategory()
+  const confirm = useConfirm()
+  const toast = useToast()
 
   const [teams, setTeams] = useState([])
   const [branches, setBranches] = useState([])
@@ -95,7 +99,8 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches, reloadToken }) {
   }, [categories, league?.id, reloadToken])
 
   // Equipos disponibles para la categoría elegida en el partido que se está armando
-  const categoryTeams = teams.filter(t => String(t.category_id) === String(draftMatch.categoryId))
+  // — un equipo desactivado ya no es elegible para partidos nuevos.
+  const categoryTeams = teams.filter(t => t.active !== false && String(t.category_id) === String(draftMatch.categoryId))
 
   // Partidos ya guardados de ESTA jornada (cualquier categoría) que aún no
   // terminan, para poder corregirlos si hubo un error al crearlos.
@@ -361,9 +366,12 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches, reloadToken }) {
     const homeName = match.local_team?.name || 'Local'
     const awayName = match.visit_team?.name || 'Visitante'
 
-    if (!window.confirm(`¿Eliminar el partido ${homeName} vs ${awayName}? Esta acción no se puede deshacer.`)) {
-      return
-    }
+    const ok = await confirm({
+      message: `¿Eliminar el partido ${homeName} vs ${awayName}? Esta acción no se puede deshacer.`,
+      confirmLabel: 'Eliminar',
+      danger: true
+    })
+    if (!ok) return
 
     try {
       setDeletingId(match.id)
@@ -376,7 +384,7 @@ function MatchdayMatchesEditor({ matchday, matches, setMatches, reloadToken }) {
       }
     } catch (err) {
       console.error('Error eliminando el partido', err)
-      alert('No se pudo eliminar el partido')
+      toast.error('No se pudo eliminar el partido')
     } finally {
       setDeletingId(null)
     }

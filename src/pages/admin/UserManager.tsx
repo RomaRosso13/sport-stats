@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react'
 import { useLeague } from '../../context/LeagueContext'
 import { useAuth } from '../../context/AuthContext'
 import { useLeagueMembership } from '../../hooks/useLeagueMembership'
+import { useConfirm } from '../../context/ConfirmContext'
+import { useToast } from '../../context/ToastContext'
 
 import Header from '../../components/common/Header'
 import Footer from '../../components/common/Footer'
@@ -29,6 +31,8 @@ function UserManager() {
   const { user } = useAuth()
   const { role: viewerRole } = useLeagueMembership()
   const viewerIsSuperAdmin = viewerRole === 'SuperAdmin'
+  const confirm = useConfirm()
+  const toast = useToast()
 
   const [members, setMembers] = useState([])
   const [loadingMembers, setLoadingMembers] = useState(true)
@@ -74,7 +78,7 @@ function UserManager() {
       setMembers(prev => prev.map(m => m.id === member.id ? { ...m, role } : m))
     } catch (err) {
       console.error(err)
-      alert('No se pudo actualizar el rol')
+      toast.error('No se pudo actualizar el rol')
     } finally {
       setUpdatingId(null)
     }
@@ -82,10 +86,11 @@ function UserManager() {
 
   async function handleRemove(member) {
     const name = member.user?.name || member.user?.email
-    const confirmed = window.confirm(
-      `¿Quitar a ${name} de la liga? Si no pertenece a ninguna otra liga, su cuenta se eliminará ` +
-      `por completo (incluyendo su acceso para iniciar sesión). Esta acción no se puede deshacer.`
-    )
+    const confirmed = await confirm({
+      message: `¿Quitar a ${name} de la liga? Si no pertenece a ninguna otra liga, su cuenta se eliminará por completo (incluyendo su acceso para iniciar sesión). Esta acción no se puede deshacer.`,
+      confirmLabel: 'Quitar',
+      danger: true
+    })
     if (!confirmed) return
 
     try {
@@ -94,7 +99,7 @@ function UserManager() {
       setMembers(prev => prev.filter(m => m.id !== member.id))
     } catch (err) {
       console.error(err)
-      alert(err.message || 'No se pudo quitar al usuario')
+      toast.error(err.message || 'No se pudo quitar al usuario')
     } finally {
       setUpdatingId(null)
     }

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 
 import { useLeague } from '../../context/LeagueContext'
+import { useConfirm } from '../../context/ConfirmContext'
+import { useToast } from '../../context/ToastContext'
 
 import Header from '../../components/common/Header'
 import Footer from '../../components/common/Footer'
@@ -16,6 +18,8 @@ import './VenueManager.css'
 
 function VenueManager() {
   const { league } = useLeague()
+  const confirm = useConfirm()
+  const toast = useToast()
 
   const [branches, setBranches] = useState([])
   const [loadingBranches, setLoadingBranches] = useState(true)
@@ -75,7 +79,8 @@ function VenueManager() {
   }
 
   async function handleDeleteBranch(branch) {
-    if (!window.confirm(`¿Eliminar la sede "${branch.name}"? Esta acción no se puede deshacer.`)) return
+    const ok = await confirm({ message: `¿Eliminar la sede "${branch.name}"? Esta acción no se puede deshacer.`, confirmLabel: 'Eliminar', danger: true })
+    if (!ok) return
 
     try {
       await deleteBranch(branch.id)
@@ -83,12 +88,13 @@ function VenueManager() {
       if (selectedBranchId === branch.id) setSelectedBranchId(null)
     } catch (err) {
       console.error(err)
-      alert(err.message || 'No se pudo eliminar la sede')
+      toast.error(err.message || 'No se pudo eliminar la sede')
     }
   }
 
   async function handleDeleteField(field) {
-    if (!window.confirm(`¿Eliminar la cancha "${field.name}"? Esta acción no se puede deshacer.`)) return
+    const ok = await confirm({ message: `¿Eliminar la cancha "${field.name}"? Esta acción no se puede deshacer.`, confirmLabel: 'Eliminar', danger: true })
+    if (!ok) return
 
     try {
       await deleteField(field.id)
@@ -99,7 +105,7 @@ function VenueManager() {
       ))
     } catch (err) {
       console.error(err)
-      alert(err.message || 'No se pudo eliminar la cancha')
+      toast.error(err.message || 'No se pudo eliminar la cancha')
     }
   }
 
