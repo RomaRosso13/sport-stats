@@ -21,6 +21,21 @@
   background: linear-gradient(180deg, var(--accent-soft), var(--bg-surface));
 }
 
+.team-manager-card.inactive {
+  opacity: 0.6;
+}
+
+.team-manager-inactive-tag {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--bg-muted);
+  color: var(--text-muted);
+}
+
 .team-manager-logo {
   width: 40px;
   height: 40px;
@@ -71,6 +86,8 @@
 }
 
 .team-manager-edit-btn,
+.team-manager-deactivate-btn,
+.team-manager-activate-btn,
 .team-manager-delete-btn {
   flex-shrink: 0;
   padding: 6px 12px;
@@ -88,11 +105,22 @@
   background: var(--bg-hover);
 }
 
+.team-manager-deactivate-btn,
 .team-manager-delete-btn {
   color: var(--status-loss-text);
   border-color: var(--status-loss-border);
 }
 
+.team-manager-deactivate-btn:hover,
 .team-manager-delete-btn:hover {
   background: var(--status-loss-bg);
+}
+
+.team-manager-activate-btn {
+  color: #16a34a;
+  border-color: var(--status-win-border);
+}
+
+.team-manager-activate-btn:hover {
+  background: var(--status-win-bg);
 }

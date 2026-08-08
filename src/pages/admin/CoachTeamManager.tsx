@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 
 import { useLeague } from '../../context/LeagueContext'
 import { useLeagueMembership } from '../../hooks/useLeagueMembership'
+import { useConfirm } from '../../context/ConfirmContext'
+import { useToast } from '../../context/ToastContext'
 
 import Header from '../../components/common/Header'
 import Footer from '../../components/common/Footer'
@@ -11,7 +13,7 @@ import PlayerRosterManager from '../../components/Admin/PlayerRosterManager'
 import TeamLogo from '../../components/common/TeamLogo'
 
 import { getTeamsByIds } from '../../services/team.service.js'
-import { setPlayerActive } from '../../services/player.service.js'
+import { setPlayerActive, deletePlayer } from '../../services/player.service.js'
 
 import './CoachTeamManager.css'
 
@@ -24,6 +26,8 @@ const CATEGORY_LABELS = {
 function CoachTeamManager() {
   const { league } = useLeague()
   const { teamIds, loading: membershipLoading } = useLeagueMembership()
+  const confirm = useConfirm()
+  const toast = useToast()
 
   const [teams, setTeams] = useState([])
   const [loadingTeams, setLoadingTeams] = useState(true)
@@ -86,7 +90,27 @@ function CoachTeamManager() {
       handlePlayerSaved(updated)
     } catch (err) {
       console.error(err)
-      alert('No se pudo actualizar el estado del jugador')
+      toast.error('No se pudo actualizar el estado del jugador')
+    }
+  }
+
+  async function handleDeletePlayer(player) {
+    const ok = await confirm({
+      message: `¿Eliminar a "${player.name}"? También se borrarán todas sus estadísticas y asistencia registradas. Esta acción no se puede deshacer.`,
+      confirmLabel: 'Eliminar',
+      danger: true
+    })
+    if (!ok) return
+
+    try {
+      await deletePlayer(player.id)
+      setTeams(prev => prev.map(t => t.id === selectedTeamId
+        ? { ...t, Player: (t.Player || []).filter(p => p.id !== player.id) }
+        : t
+      ))
+    } catch (err) {
+      console.error(err)
+      toast.error(err.message || 'No se pudo eliminar el jugador')
     }
   }
 
@@ -151,6 +175,7 @@ function CoachTeamManager() {
                   onAddPlayer={() => { setEditingPlayer(null); setShowPlayerModal(true) }}
                   onEditPlayer={p => { setEditingPlayer(p); setShowPlayerModal(true) }}
                   onToggleActive={handleToggleActive}
+                  onDeletePlayer={handleDeletePlayer}
                 />
               </>
             )}

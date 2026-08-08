@@ -1,8 +1,11 @@
+import { useState } from "react"
 import ResultCard from "./ResultCard"
+import JornadaExportPanel from "./JornadaExportPanel"
 import TeamLogo from "../common/TeamLogo"
 import "./ResultDay.css"
 
-function ResultsDay({ matchday, teams, mvpByMatch = {} }) {
+function ResultsDay({ matchday, teams, mvpByMatch = {}, standingsById = {}, league, category, season, canExport = false }) {
+  const [showExportPanel, setShowExportPanel] = useState(false)
   const byeTeams = getByeTeams(teams, matchday.games)
 
   function getByeTeams(teams, games) {
@@ -43,6 +46,11 @@ function ResultsDay({ matchday, teams, mvpByMatch = {} }) {
           {pendingGames > 0 && (
             <span className="summary-pill pending">{pendingGames} por jugar</span>
           )}
+          {canExport && (
+            <button type="button" className="export-jornada-btn" onClick={() => setShowExportPanel(true)}>
+              Exportar imagen
+            </button>
+          )}
         </div>
       </header>
 
@@ -62,7 +70,7 @@ function ResultsDay({ matchday, teams, mvpByMatch = {} }) {
 
       <div className="results-grid">
         {matchday.games.map(match => (
-          <ResultCard key={match.id} match={match} mvp={mvpByMatch[match.id]} />
+          <ResultCard key={match.id} match={match} mvp={mvpByMatch[match.id]} standingsById={standingsById} />
         ))}
       </div>
 
@@ -79,6 +87,16 @@ function ResultsDay({ matchday, teams, mvpByMatch = {} }) {
             ))}
           </div>
         </div>
+      )}
+
+      {showExportPanel && (
+        <JornadaExportPanel
+          onClose={() => setShowExportPanel(false)}
+          league={league}
+          category={category}
+          season={season}
+          matchday={matchday}
+        />
       )}
     </section>
   )

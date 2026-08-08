@@ -1,12 +1,12 @@
 import TeamLogo from '../common/TeamLogo'
 import './TeamManagerCard.css'
 
-function TeamManagerCard({ team, coach, isSelected, onSelect, onEdit, onDelete }) {
+function TeamManagerCard({ team, coach, isSelected, onSelect, onEdit, onDelete, onToggleActive }) {
   const playerCount = team.Player?.length || 0
 
   return (
     <div
-      className={`team-manager-card ${isSelected ? 'selected' : ''}`}
+      className={`team-manager-card ${isSelected ? 'selected' : ''} ${team.active === false ? 'inactive' : ''}`}
       onClick={() => onSelect(team)}
     >
       <TeamLogo logoUrl={team.logo_url} name={team.name} alt={team.name} className="team-manager-logo" />
@@ -16,6 +16,9 @@ function TeamManagerCard({ team, coach, isSelected, onSelect, onEdit, onDelete }
         <span className="team-manager-count">
           {playerCount} jugador{playerCount === 1 ? '' : 'es'}
         </span>
+        {team.active === false && (
+          <span className="team-manager-inactive-tag">Inactivo</span>
+        )}
         {coach ? (
           <span className="team-manager-coach-tag assigned" title={coach.email}>
             Coach: {coach.name || coach.email}
@@ -37,6 +40,17 @@ function TeamManagerCard({ team, coach, isSelected, onSelect, onEdit, onDelete }
           }}
         >
           Editar
+        </button>
+
+        <button
+          type="button"
+          className={team.active === false ? 'team-manager-activate-btn' : 'team-manager-deactivate-btn'}
+          onClick={e => {
+            e.stopPropagation()
+            onToggleActive(team)
+          }}
+        >
+          {team.active === false ? 'Activar' : 'Desactivar'}
         </button>
 
         <button

@@ -9,10 +9,12 @@ import PageWrapper from '../../components/common/PageWrapper'
 
 import { createMatches } from '../../services/match.service.js'
 import { useLeague } from '../../context/LeagueContext'
+import { useToast } from '../../context/ToastContext'
 
 
 function MatchDayCreator () {
   const { league } = useLeague()
+  const toast = useToast()
   const [selectedMatchday, setSelectedMatchday] = useState(null)
   const [matches, setMatches] = useState([])
   const [saving, setSaving] = useState(false)
@@ -43,7 +45,7 @@ function MatchDayCreator () {
 
     } catch (error) {
       console.error('Supabase error:', error.message)
-      alert('Error al guardar los cambios')
+      toast.error('Error al guardar los cambios')
     } finally {
       setSaving(false)
     }

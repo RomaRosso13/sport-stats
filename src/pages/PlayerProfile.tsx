@@ -51,6 +51,15 @@ function PlayerProfile() {
           getPlayerById(playerId),
           getAttendanceByPlayerId(playerId)
         ])
+
+        // Un jugador desactivado se trata como si no existiera fuera del
+        // Gestor de Equipos / Mi Equipo — esta pantalla pública no es
+        // ninguna de las dos, así que no debe ser accesible ni por URL directa.
+        if (!playerData?.active) {
+          setPlayer(null)
+          return
+        }
+
         setPlayer(playerData)
 
         const totalMarked = attendanceRows.length
@@ -148,9 +157,6 @@ function PlayerProfile() {
                 )}
                 {player.position && (
                   <span className="player-profile-tag position">{player.position}</span>
-                )}
-                {!player.active && (
-                  <span className="player-profile-tag inactive">Inactivo</span>
                 )}
               </div>
 

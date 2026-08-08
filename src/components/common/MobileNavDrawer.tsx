@@ -95,6 +95,7 @@ function MobileNavDrawer({
             onClick={onClose}
             className={({ isActive }) => isActive ? 'active' : ''}
           >
+            <item.icon />
             {item.label}
           </NavLink>
         ))}
@@ -109,6 +110,7 @@ function MobileNavDrawer({
                 onClick={onClose}
                 className={({ isActive }) => isActive ? 'active' : ''}
               >
+                <item.icon />
                 {item.label}
               </NavLink>
             ))}

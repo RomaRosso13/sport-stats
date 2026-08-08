@@ -5,11 +5,14 @@ import Footer from '../components/common/Footer'
 import CategorySwitcher from "../components/filters/CategorySwitcher"
 import PlayerStatsTable from "../components/team/PlayerStatsTable"
 import CompletePlayersCard from "../components/team/CompletePlayersCard"
+import PlayerStatsExportPanel from "../components/team/PlayerStatsExportPanel"
 import Loader from '../components/common/Loader'
 import PageWrapper from '../components/common/PageWrapper'
 
 import { useLeague } from '../context/LeagueContext'
 import { useCategory } from '../context/CategoryContext'
+import { useSeason } from '../context/SeasonContext'
+import { useAuth } from '../context/AuthContext'
 
 import { getIndividualStatsByCategory } from '../services/individual_stats.service'
 import { getTeamsByCategoryId } from '../services/team.service'
@@ -22,11 +25,14 @@ import "./PlayerStats.css"
 function PlayerStats() {
   const { league } = useLeague()
   const { categories, category, setCategory } = useCategory()
+  const { season } = useSeason()
+  const { user } = useAuth()
   const [stats, setStats] = useState([])
   const [teams, setTeams] = useState([])
   const [loadingStats, setLoadingStats] = useState(true)
   const [activeStat, setActiveStat] = useState(STAT_KEYS[0])
   const [teamFilter, setTeamFilter] = useState('all')
+  const [showExportPanel, setShowExportPanel] = useState(false)
   const statLabels = getStatLabels(league)
   const STAT_SECTIONS = STAT_KEYS.map(key => ({ key, title: statLabels[key], label: statLabels[key] }))
 
@@ -65,6 +71,10 @@ function PlayerStats() {
     () => getMostCompletePlayers(leaderboards, STAT_KEYS),
     [leaderboards]
   )
+  const completePlayersForExport = useMemo(
+    () => getMostCompletePlayers(leaderboards, STAT_KEYS, { limit: 10 }),
+    [leaderboards]
+  )
 
   const activeData = teamFilter === 'all'
     ? leaderboards[activeStat]
@@ -96,7 +106,18 @@ function PlayerStats() {
       <Header league={league}/>
       <main className="player-stats-container">
         <CategorySwitcher categories={categories} active={category} onChange={setCategory}/>
-        <h2 className="player-stats-title">Estadísticas Individuales</h2>
+        <div className="player-stats-header">
+          <h2 className="player-stats-title">Estadísticas Individuales</h2>
+          {user && (
+            <button
+              className="export-image-btn"
+              onClick={() => setShowExportPanel(true)}
+              disabled={isDataLoading}
+            >
+              Exportar imagen
+            </button>
+          )}
+        </div>
 
         <CompletePlayersCard players={mostCompletePlayers} statLabels={statLabels} />
 
@@ -137,6 +158,19 @@ function PlayerStats() {
         />
       </main>
       <Footer />
+
+      {showExportPanel && (
+        <PlayerStatsExportPanel
+          onClose={() => setShowExportPanel(false)}
+          league={league}
+          category={category}
+          season={season}
+          leaderboards={leaderboards}
+          statSections={STAT_SECTIONS}
+          completePlayers={completePlayersForExport}
+          statKey={activeSection.key}
+        />
+      )}
     </div>
   )
 }

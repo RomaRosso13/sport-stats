@@ -47,6 +47,7 @@ function AdminMenu({ leagueSlug, groups }) {
                   onClick={() => setOpen(false)}
                   className={({ isActive }) => isActive ? 'active' : ''}
                 >
+                  <item.icon />
                   {item.label}
                 </NavLink>
               ))}

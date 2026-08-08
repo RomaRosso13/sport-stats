@@ -164,6 +164,43 @@
   min-width: 0;
 }
 
+/* PROBABILIDAD DE VICTORIA */
+.result-win-prob {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.result-win-prob-bar {
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  overflow: hidden;
+  display: flex;
+  background: var(--bg-surface-alt);
+}
+
+.result-win-prob-fill {
+  height: 100%;
+}
+
+.result-win-prob-pct {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  min-width: 30px;
+  flex-shrink: 0;
+}
+
+.result-win-prob-pct.local {
+  text-align: left;
+}
+
+.result-win-prob-pct.visit {
+  text-align: right;
+}
+
 /* DESTACADO DEL PARTIDO */
 .result-mvp {
   display: flex;

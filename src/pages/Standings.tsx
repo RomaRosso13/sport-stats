@@ -1,15 +1,16 @@
-import { useEffect, useRef, useState } from 'react'
-import html2canvas from 'html2canvas'
+import { useEffect, useState } from 'react'
 
 import Header from "../components/common/Header"
 import Footer from '../components/common/Footer'
 import CategorySwitcher from "../components/filters/CategorySwitcher"
 import PositionTable from "../components/team/PositionTable"
+import StandingsExportPanel from '../components/team/StandingsExportPanel'
 import Loader from '../components/common/Loader'
 import PageWrapper from '../components/common/PageWrapper'
 
 import { useLeague } from '../context/LeagueContext'
 import { useCategory } from '../context/CategoryContext'
+import { useSeason } from '../context/SeasonContext'
 import { useAuth } from '../context/AuthContext'
 
 import { getMatchDaysByCategoryId } from '../services/matchday.service'
@@ -24,6 +25,7 @@ import "./Standings.css"
 function Standings() {
     const { league } = useLeague()
     const { categories, category, setCategory } = useCategory()
+    const { season } = useSeason()
     const { user } = useAuth()
     const [matchdays, setMatchdays] = useState([])
     const [teams, setTeams] = useState([])
@@ -70,37 +72,15 @@ function Standings() {
       games: md.games.filter(m => !isPlayoffStage(m.type) && !isScrimmage(m.type))
     }))
     const matches = regularSeasonMatchdays.flatMap(j => j.games)
-    const calculatedTable = calculateTable(matches, teams)
+    // Se calcula con TODOS los equipos/partidos (para que el récord del rival
+    // de un equipo desactivado siga siendo correcto), y solo después se
+    // esconde la fila del equipo desactivado.
+    const activeTeamIds = new Set(teams.filter(t => t.active !== false).map(t => t.id))
+    const calculatedTable = calculateTable(matches, teams).filter(row => activeTeamIds.has(row.id))
 
   const isDataLoading = !league || !matchdays.length
   const [showLoader, setShowLoader] = useState(true)
-  const [exporting, setExporting] = useState(false)
-  const tableRef = useRef(null)
-
-  async function handleExportImage() {
-    if (!tableRef.current) return
-
-    try {
-      setExporting(true)
-      await new Promise(resolve => requestAnimationFrame(resolve))
-
-      const canvas = await html2canvas(tableRef.current, {
-        backgroundColor: '#ffffff',
-        useCORS: true,
-        scale: 2
-      })
-
-      const link = document.createElement('a')
-      const categoryLabel = category?.type ? `-${category.type}` : ''
-      link.download = `tabla-posiciones${categoryLabel}.png`
-      link.href = canvas.toDataURL('image/png')
-      link.click()
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setExporting(false)
-    }
-  }
+  const [showExportPanel, setShowExportPanel] = useState(false)
 
   useEffect(() => {
     if (!isDataLoading) {
@@ -129,18 +109,27 @@ function Standings() {
         {user && (
           <button
             className="export-image-btn"
-            onClick={handleExportImage}
-            disabled={exporting || isDataLoading}
+            onClick={() => setShowExportPanel(true)}
+            disabled={isDataLoading}
           >
-            {exporting ? 'Exportando...' : 'Exportar imagen'}
+            Exportar imagen
           </button>
         )}
       </div>
-      <div ref={tableRef}>
-        <PositionTable table={calculatedTable} matchdays={regularSeasonMatchdays} hideControls={exporting} />
-      </div>
+      <PositionTable table={calculatedTable} matchdays={regularSeasonMatchdays} />
     </main>
     <Footer />
+
+    {showExportPanel && (
+      <StandingsExportPanel
+        onClose={() => setShowExportPanel(false)}
+        league={league}
+        category={category}
+        season={season}
+        calculatedTable={calculatedTable}
+        matchdays={regularSeasonMatchdays}
+      />
+    )}
   </div>
   )
 }

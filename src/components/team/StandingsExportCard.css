@@ -1,0 +1,217 @@
+/* Tarjeta exportable de la tabla de posiciones — pensada para verse igual
+   sin importar el tema (claro/oscuro) de quien la genera, porque es una
+   imagen fija que se comparte, no parte de la UI en vivo. Por eso los
+   colores van fijos aquí en vez de las variables de tema de la app. */
+
+.export-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.export-flagstats-badge {
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.14);
+  padding: 5px 9px;
+  border-radius: 999px;
+}
+
+.export-card-head {
+  padding: 20px 20px 12px;
+  color: #ffffff;
+}
+
+.export-card-head-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.export-card-head-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.export-league-badge {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.export-league-name {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.export-title {
+  font-size: 17px;
+  font-weight: 800;
+  margin-top: 2px;
+}
+
+.export-subtitle {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 1px;
+}
+
+.export-rows {
+  flex: 1;
+  margin: 0 14px 12px;
+  /* el fondo real se calcula en JS (ver rowsBackground en
+     StandingsExportCard.tsx) — esto es solo el fallback */
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 12px;
+  padding: 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.export-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.export-pos {
+  width: 14px;
+  text-align: center;
+  font-size: 10px;
+  opacity: 0.55;
+  flex-shrink: 0;
+}
+
+.export-team-logo {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  font-weight: 800;
+  color: #fff;
+  background: #64748b;
+}
+
+.export-team-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.export-stat {
+  font-size: 11px;
+  font-weight: 800;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+.export-form {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.export-form-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.export-form-dot.result-G { background: #16a34a; }
+.export-form-dot.result-P { background: #dc2626; }
+.export-form-dot.result-E { background: #f59e0b; }
+
+/* Modo "tabla completa" — PJ/PG/PE/PP/Pts en vez de un solo dato */
+.export-row-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px 3px;
+  font-size: 8.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #64748b;
+}
+
+.export-row.export-row-full {
+  gap: 5px;
+}
+
+.export-row-full .export-team-name {
+  font-size: 11px;
+}
+
+.export-col {
+  width: 16px;
+  flex-shrink: 0;
+  text-align: center;
+  font-size: 10.5px;
+  font-weight: 700;
+  opacity: 0.75;
+}
+
+.export-col-pts {
+  width: 20px;
+  font-weight: 800;
+  opacity: 1;
+}
+
+.export-row-header .export-col-pts {
+  color: #334155;
+}
+
+.export-row.gold {
+  background: #fde68a;
+  color: #78350f;
+}
+
+.export-row.silver {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.export-row.bronze {
+  background: #fdba74;
+  color: #7c2d12;
+}
+
+/* En formato historia hay más alto disponible: filas y tipografía un
+   poco más generosas para no dejar espacio vacío. */
+.export-card-story .export-row {
+  padding: 8px 9px;
+  font-size: 13px;
+}

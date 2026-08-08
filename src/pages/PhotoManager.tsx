@@ -4,6 +4,8 @@ import { useLeague } from '../context/LeagueContext'
 import { useSeason } from '../context/SeasonContext'
 import { useCategory } from '../context/CategoryContext'
 import { useLeagueMembership } from '../hooks/useLeagueMembership'
+import { useConfirm } from '../context/ConfirmContext'
+import { useToast } from '../context/ToastContext'
 
 import Header from '../components/common/Header'
 import Footer from '../components/common/Footer'
@@ -24,6 +26,8 @@ function PhotoManager() {
   const { categories } = useCategory()
   const { isFullAdmin, isPhotographer } = useLeagueMembership()
   const canManage = isFullAdmin || isPhotographer
+  const confirm = useConfirm()
+  const toast = useToast()
 
   const [jornadas, setJornadas] = useState([])
   const [links, setLinks] = useState([])
@@ -83,14 +87,15 @@ function PhotoManager() {
   }
 
   async function handleDeleteLink(link) {
-    if (!window.confirm('¿Quitar el enlace de esta jornada?')) return
+    const ok = await confirm({ message: '¿Quitar el enlace de esta jornada?', confirmLabel: 'Quitar', danger: true })
+    if (!ok) return
 
     try {
       await deleteJornadaLink(link.id)
       setLinks(prev => prev.filter(l => l.id !== link.id))
     } catch (err) {
       console.error(err)
-      alert('No se pudo quitar el enlace')
+      toast.error('No se pudo quitar el enlace')
     }
   }
 

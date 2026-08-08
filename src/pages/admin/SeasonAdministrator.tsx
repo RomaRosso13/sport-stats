@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 
 import { useLeague } from '../../context/LeagueContext'
 import { useCategory } from '../../context/CategoryContext'
+import { useToast } from '../../context/ToastContext'
 
 import SeasonCard from '../../components/Admin/SeasonCard'
 import Header from '../../components/common/Header'
@@ -17,6 +18,7 @@ import './SeasonAdministrator.css'
 function SeasonAdministrator () {
   const { league } = useLeague()
   const { category, setCategory } = useCategory()
+  const toast = useToast()
   const [, setLoading ] = useState(false)
   const [ seasonsData, setSeasonsData ] = useState([])
   const [ selectedSeason, setSelectedSeason ] = useState(null)
@@ -67,7 +69,7 @@ function SeasonAdministrator () {
       if (selectedSeason?.id === updated.id) setSelectedSeason(updated)
     } catch (err) {
       console.error(err)
-      alert(err.message || 'No se pudo actualizar la temporada')
+      toast.error(err.message || 'No se pudo actualizar la temporada')
     }
   }
 
@@ -77,7 +79,7 @@ function SeasonAdministrator () {
       setCategoriesData(prev => prev.map(c => c.id === updated.id ? updated : c))
     } catch (err) {
       console.error(err)
-      alert(err.message || 'No se pudo actualizar la categoría')
+      toast.error(err.message || 'No se pudo actualizar la categoría')
     }
   }
 

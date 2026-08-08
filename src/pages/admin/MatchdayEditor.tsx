@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useCategory } from '../../context/CategoryContext';
 import { useLeague } from '../../context/LeagueContext'
 import { useLeagueMembership } from '../../hooks/useLeagueMembership'
+import { useConfirm } from '../../context/ConfirmContext'
+import { useToast } from '../../context/ToastContext'
 
 import MatchdaySelector from '../../components/Admin/MatchdaySelector'
 import MatchList from '../../components/Admin/MatchList'
@@ -52,6 +55,9 @@ function EditMatchday() {
   const [selectedMatchday, setSelectedMatchday] = useState(null)
   const { league } = useLeague()
   const { isReferee, isFullAdmin, userId } = useLeagueMembership()
+  const navigate = useNavigate()
+  const confirm = useConfirm()
+  const toast = useToast()
   const statLabels = getStatLabels(league)
   const [saving, setSaving] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
@@ -172,7 +178,7 @@ function EditMatchday() {
       await loadRostersAndStats()
     } catch (error) {
       console.error(error)
-      alert('Error al actualizar la estadística')
+      toast.error('Error al actualizar la estadística')
     }
   }
 
@@ -252,18 +258,25 @@ function EditMatchday() {
       const destination = new URL(link.href, window.location.href)
       if (destination.pathname === window.location.pathname) return
 
-      const confirmed = window.confirm(
-        'Tienes cambios sin guardar. Si sales de esta pantalla, todos los datos no guardados se perderán. ¿Deseas continuar?'
-      )
-      if (!confirmed) {
-        e.preventDefault()
-        e.stopPropagation()
-      }
+      // A diferencia de window.confirm (síncrono, bloqueante), nuestro modal
+      // es async — hay que bloquear la navegación de una vez y, si confirma,
+      // navegar nosotros mismos después (en vez de dejar seguir el click).
+      e.preventDefault()
+      e.stopPropagation()
+
+      confirm({
+        title: '¿Salir sin guardar?',
+        message: 'Tienes cambios sin guardar. Si sales de esta pantalla, todos los datos no guardados se perderán. ¿Deseas continuar?',
+        confirmLabel: 'Salir sin guardar',
+        danger: true
+      }).then(confirmed => {
+        if (confirmed) navigate(destination.pathname + destination.search)
+      })
     }
 
     document.addEventListener('click', handleClickCapture, true)
     return () => document.removeEventListener('click', handleClickCapture, true)
-  }, [isDirty])
+  }, [isDirty, confirm, navigate])
 
 async function handleSave() {
   if (!currentMatchday) return
@@ -311,7 +324,7 @@ async function handleSave() {
 
   } catch (error) {
     console.error('Supabase error:', error.message)
-    alert('Error al guardar los cambios')
+    toast.error('Error al guardar los cambios')
   } finally {
     setSaving(false)
   }

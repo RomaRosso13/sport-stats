@@ -18,7 +18,7 @@ function TeamCard({ team, matchdays, coach }) {
   const [open, setOpen] = useState(false)
   const stats = calculateTeamStats(team.name, matchdays)
   const recentForm = calculateTeamGameLog(team.name, matchdays).slice(-5)
-  const sortedPlayers = sortPlayersByNumber(team.Player || [])
+  const sortedPlayers = sortPlayersByNumber((team.Player || []).filter(p => p.active))
 
   return (
     <div className="team-card" style={getTeamColorStyle(team.primary_color)}>

@@ -10,7 +10,8 @@ const STATS_SELECT = `
     id,
     name,
     number,
-    image_url
+    image_url,
+    active
   ),
   team:team_id (
     id,
@@ -38,11 +39,14 @@ export async function getIndividualStatsByCategory(categoryId) {
     )
   )
 
-  return (rows || []).filter(row => !isScrimmage(row.match?.type))
+  return (rows || []).filter(row => !isScrimmage(row.match?.type) && row.player?.active !== false)
 }
 
+// Un jugador desactivado desaparece de las estadísticas por completo (como
+// si no existiera) — solo el Gestor de Equipos / Mi Equipo pueden verlo,
+// para poder reactivarlo si hace falta.
 export async function getIndividualStatsByMatchId(matchId) {
-  return cached('getIndividualStatsByMatchId', [matchId], () =>
+  const rows = await cached('getIndividualStatsByMatchId', [matchId], () =>
     runQuery(
       supabase
         .from('IndividualStats')
@@ -50,6 +54,8 @@ export async function getIndividualStatsByMatchId(matchId) {
         .eq('match_id', matchId)
     )
   )
+
+  return (rows || []).filter(row => row.player?.active !== false)
 }
 
 // `entries`: [{ matchId, playerId, teamId, touchdown, touchdown_pass, sacks, interceptions }]

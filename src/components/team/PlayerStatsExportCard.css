@@ -1,0 +1,191 @@
+/* Tarjeta exportable de estadísticas individuales — pensada para verse
+   igual sin importar el tema (claro/oscuro) de quien la genera, porque es
+   una imagen fija que se comparte, no parte de la UI en vivo. Por eso los
+   colores van fijos aquí en vez de las variables de tema de la app. */
+
+.export-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.export-card-head {
+  padding: 20px 20px 12px;
+  color: #ffffff;
+}
+
+.export-card-head-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.export-card-head-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.export-league-badge {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  flex-shrink: 0;
+  object-fit: contain;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.export-league-badge-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.export-league-name {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.export-title {
+  font-size: 17px;
+  font-weight: 800;
+  margin-top: 2px;
+}
+
+.export-subtitle {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 1px;
+}
+
+.export-flagstats-badge {
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.14);
+  padding: 5px 9px;
+  border-radius: 999px;
+}
+
+.export-rows {
+  flex: 1;
+  margin: 0 14px 12px;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 18px;
+  padding: 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.export-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px 6px 34px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1e293b;
+  overflow: hidden;
+}
+
+.export-rank-tab {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-right: 6px;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 9px) 100%, 0 100%);
+}
+
+.export-player-photo {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.export-player-photo-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #64748b;
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.export-player-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.export-player-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12.5px;
+}
+
+.export-player-team {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 10px;
+  font-weight: 600;
+  opacity: 0.65;
+}
+
+.export-stat {
+  font-size: 15px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.export-row.gold {
+  background: #fde68a;
+  color: #78350f;
+}
+
+.export-row.silver {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.export-row.bronze {
+  background: #fdba74;
+  color: #7c2d12;
+}
+
+/* En formato historia hay más alto disponible: filas un poco más
+   generosas para no dejar espacio vacío. */
+.export-card-story .export-row {
+  padding: 8px 10px 8px 36px;
+}

@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useState } from "react"
 
 import Header from "../components/common/Header"
@@ -10,12 +10,16 @@ import PageWrapper from '../components/common/PageWrapper'
 
 import { useLeague } from '../context/LeagueContext'
 import { useCategory } from '../context/CategoryContext'
+import { useSeason } from '../context/SeasonContext'
+import { useAuth } from '../context/AuthContext'
 
 import { getMatchDaysByCategoryId } from '../services/matchday.service'
 import { getMatchesByMatchDayIds } from '../services/match.service'
 import { getTeamsByCategoryId } from '../services/team.service'
 import { getIndividualStatsByCategory } from '../services/individual_stats.service'
 import { calculateMatchMVP } from '../utils/calculateMatchMVP'
+import { calculateTable } from '../utils/calculateTable'
+import { isScrimmage } from '../utils/matchStages'
 import { STAT_KEYS } from '../constants/statFields'
 
 import "./Results.css"
@@ -23,6 +27,8 @@ import "./Results.css"
 function Results() {
   const { league } = useLeague()
   const { categories, category, setCategory } = useCategory()
+  const { season } = useSeason()
+  const { user } = useAuth()
   const [matchdays, setMatchdays] = useState([])
   const [, setLoadingMatchdays] = useState(true)
   const [ teamData, setTeamData ] = useState([])
@@ -86,6 +92,12 @@ function Results() {
     }))
     .filter(j => j.games.length > 0)
 
+  const standingsById = useMemo(() => {
+    const allMatches = matchdays.flatMap(j => j.games).filter(m => !isScrimmage(m.type))
+    const calculatedTable = calculateTable(allMatches, teamData)
+    return Object.fromEntries(calculatedTable.map(row => [row.id, row]))
+  }, [matchdays, teamData])
+
     const isDataLoading = !league || !matchdays.length
     const [showLoader, setShowLoader] = useState(true)
   
@@ -117,7 +129,17 @@ function Results() {
           <p className="empty-results">Aún no hay resultados</p>
         ) : (
           matchdaysWithResults.map(matchday => (
-            <ResultsDay key={matchday.id} matchday={matchday} teams={teamData} mvpByMatch={mvpByMatch} />
+            <ResultsDay
+              key={matchday.id}
+              matchday={matchday}
+              teams={teamData}
+              mvpByMatch={mvpByMatch}
+              standingsById={standingsById}
+              league={league}
+              category={category}
+              season={season}
+              canExport={!!user}
+            />
           ))
         )}
       </main>
