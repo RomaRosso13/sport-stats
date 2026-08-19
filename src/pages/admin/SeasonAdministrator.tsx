@@ -11,7 +11,7 @@ import CreateSeasonModal from '../../components/Admin/CreateSeasonModal'
 import CreateCategoyModal from '../../components/Admin/CreateCategoryModal'
 
 import { getSeasonsByLeagueId, setSeasonActive } from '../../services/season.service.js'
-import { getCategoriesBySeasonId, setCategoryActive } from '../../services/category.service.js'
+import { getCategoriesBySeasonId, setCategoryActive, reorderCategories } from '../../services/category.service.js'
 
 import './SeasonAdministrator.css'
 
@@ -25,6 +25,7 @@ function SeasonAdministrator () {
   const [ categoriesData, setCategoriesData ] = useState([])
   const [ showCreateSeason, setShowCreateSeason] = useState(false)
   const [ showCreateCategory, setShowCreateCategory ] = useState(false)
+  const [ editingCategory, setEditingCategory ] = useState(null)
   
   useEffect(() => {
     if (!league) return
@@ -83,6 +84,26 @@ function SeasonAdministrator () {
     }
   }
 
+  async function handleMoveCategory(cat, direction) {
+    const currentIndex = categoriesData.findIndex(c => c.id === cat.id)
+    const targetIndex = currentIndex + direction
+    if (targetIndex < 0 || targetIndex >= categoriesData.length) return
+
+    const reordered = [...categoriesData]
+    ;[reordered[currentIndex], reordered[targetIndex]] = [reordered[targetIndex], reordered[currentIndex]]
+
+    const previous = categoriesData
+    setCategoriesData(reordered)
+
+    try {
+      await reorderCategories(reordered.map(c => c.id))
+    } catch (err) {
+      console.error(err)
+      toast.error(err.message || 'No se pudo actualizar el orden de las categorías')
+      setCategoriesData(previous)
+    }
+  }
+
   return (
     <div className="app-layout">
       <Header league={league}/>
@@ -115,7 +136,7 @@ function SeasonAdministrator () {
           <section className="category-section">
             <div className="section-header">
               <h3>Categorías – {selectedSeason.name}</h3>
-              <button className="primary-btn" onClick={() => setShowCreateCategory(true)}>
+              <button className="primary-btn" onClick={() => { setEditingCategory(null); setShowCreateCategory(true) }}>
                 + Nueva Categoría
               </button>
             </div>
@@ -126,8 +147,19 @@ function SeasonAdministrator () {
                   Esta temporada aún no tiene categorías
                 </p>
               ) : (
-                categoriesData.map(cat => (
-                  <CategoryCard key={cat.id} category={cat} isSelected={category?.id === cat.id} onSelect={setCategory} onToggleActive={handleToggleCategoryActive}/>
+                categoriesData.map((cat, index) => (
+                  <CategoryCard
+                    key={cat.id}
+                    category={cat}
+                    isSelected={category?.id === cat.id}
+                    onSelect={setCategory}
+                    onToggleActive={handleToggleCategoryActive}
+                    onEdit={c => { setEditingCategory(c); setShowCreateCategory(true) }}
+                    onMoveUp={c => handleMoveCategory(c, -1)}
+                    onMoveDown={c => handleMoveCategory(c, 1)}
+                    canMoveUp={index > 0}
+                    canMoveDown={index < categoriesData.length - 1}
+                  />
                 ))
               )}
             </div>
@@ -145,9 +177,16 @@ function SeasonAdministrator () {
         />
       )}
       {showCreateCategory && (
-        <CreateCategoyModal seasonId={selectedSeason.id} onClose={() => setShowCreateCategory(false)}
+        <CreateCategoyModal
+          seasonId={selectedSeason.id}
+          category={editingCategory}
+          onClose={() => { setShowCreateCategory(false); setEditingCategory(null) }}
           onCreated={(newCategory) => {
-            setCategoriesData(prev => [newCategory, ...prev])
+            setCategoriesData(prev => [...prev, newCategory])
+          }}
+          onSaved={(updated) => {
+            setCategoriesData(prev => prev.map(c => c.id === updated.id ? updated : c))
+            if (category?.id === updated.id) setCategory(updated)
           }}
         />
       )}

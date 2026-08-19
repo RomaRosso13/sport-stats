@@ -1,11 +1,13 @@
 import { useState } from 'react'
-import { createCategory } from '../../services/category.service.js'
+import { createCategory, updateCategory } from '../../services/category.service.js'
 
 import './CreateCategoryModal.css'
 
-function CreateCategoyModal({ seasonId, onClose, onCreated }) {
-  const [name, setName] = useState('')
+function CreateCategoyModal({ seasonId, category, onClose, onCreated, onSaved }) {
+  const isEditing = !!category
+  const [name, setName] = useState(category?.type || '')
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -13,11 +15,21 @@ function CreateCategoyModal({ seasonId, onClose, onCreated }) {
 
     try {
       setLoading(true)
-      const newCategory = await createCategory(seasonId, name)
-      onCreated(newCategory)
+      setError('')
+
+      const saved = isEditing
+        ? await updateCategory(category.id, name.trim())
+        : await createCategory(seasonId, name.trim())
+
+      if (isEditing) {
+        onSaved(saved)
+      } else {
+        onCreated(saved)
+      }
       onClose()
     } catch (err) {
       console.error(err)
+      setError(err.message || 'No se pudo guardar la categoría')
     } finally {
       setLoading(false)
     }
@@ -26,9 +38,9 @@ function CreateCategoyModal({ seasonId, onClose, onCreated }) {
   return (
     <div className="modal-backdrop">
       <div className="modal">
-        <h3>Nueva Categoría</h3>
+        <h3>{isEditing ? 'Editar categoría' : 'Nueva Categoría'}</h3>
 
-        <form onSubmit={handleSubmit}>  
+        <form onSubmit={handleSubmit}>
           <label>Nombre</label>
           <input
             value={name}
@@ -36,12 +48,14 @@ function CreateCategoyModal({ seasonId, onClose, onCreated }) {
             placeholder="Ej. Mixto / Femenil"
           />
 
+          {error && <p className="modal-error">{error}</p>}
+
           <div className="modal-actions">
             <button type="button" onClick={onClose}>
               Cancelar
             </button>
             <button type="submit" disabled={loading}>
-              Crear
+              {loading ? 'Guardando...' : isEditing ? 'Guardar' : 'Crear'}
             </button>
           </div>
         </form>

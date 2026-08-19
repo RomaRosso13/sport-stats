@@ -1,6 +1,7 @@
 .team-manager-card {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 12px;
   padding: 14px 16px;
   border-radius: 14px;
@@ -83,6 +84,9 @@
   display: flex;
   gap: 8px;
   flex-shrink: 0;
+  flex-basis: 100%;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .team-manager-edit-btn,
