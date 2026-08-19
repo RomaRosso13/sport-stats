@@ -22,6 +22,11 @@ export function classifyTopPlayersByStats( stats, statKeys = [], limit = 3) {
           team: row.team?.name ?? null,
           teamId: row.team?.id ?? null,
           teamLogo: row.team?.logo_url ?? null,
+          // Solo presente cuando el llamador ya etiquetó las filas (ej. el
+          // ranking general de toda la liga, que junta varias categorías) —
+          // un jugador siempre pertenece a una sola categoría/división, así
+          // que basta con tomarla la primera vez que aparece.
+          categoryLabel: row.categoryLabel ?? null,
           [statKey]: 0
         }
       }

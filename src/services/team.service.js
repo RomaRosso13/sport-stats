@@ -161,6 +161,23 @@ export async function setTeamActive(teamId, active) {
   return result
 }
 
+// `divisionId` en null quita al equipo de su división (vuelve a jugar en el
+// grupo general de la categoría).
+export async function setTeamDivision(teamId, divisionId) {
+  const result = await runQuery(
+    supabase
+      .from('Team')
+      .update({ division_id: divisionId })
+      .eq('id', teamId)
+      .select()
+      .single(),
+    'No se pudo actualizar la división del equipo'
+  )
+
+  invalidateTeamCaches()
+  return result
+}
+
 // Borra también todo rastro del equipo: sus partidos (y las estadísticas y
 // asistencia de ESOS partidos, que también afectan al rival), sus jugadores
 // y su asignación de coach — para que sea como si el equipo (y los partidos
@@ -228,6 +245,7 @@ export async function deleteTeam(teamId) {
   invalidateTeamCaches()
   invalidate('getPlayerById')
   invalidate('getIndividualStatsByCategory')
+  invalidate('getIndividualStatsByCategoryIds')
   invalidate('getIndividualStatsByMatchId')
   invalidate('getAttendanceByMatchIds')
   invalidate('getAttendanceByPlayerId')

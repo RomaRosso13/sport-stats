@@ -1,5 +1,6 @@
 .team-manager-card {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 12px;
   padding: 14px 16px;
@@ -79,10 +80,31 @@
   font-weight: 600;
 }
 
+.team-manager-division-select {
+  display: block;
+  margin-top: 6px;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Con 3 botones (Editar/Desactivar/Eliminar) ya no caben en una sola fila
+   junto al logo y la info del equipo — como el grid usa columnas de ancho
+   variable (minmax), una card puede quedar angosta incluso en pantallas
+   grandes si hay varias columnas, así que los botones siempre van en su
+   propia fila (no solo en móvil) para nunca encimarse con el nombre/coach. */
 .team-manager-actions {
   display: flex;
+  flex-basis: 100%;
+  flex-wrap: wrap;
   gap: 8px;
-  flex-shrink: 0;
+  justify-content: flex-end;
 }
 
 .team-manager-edit-btn,

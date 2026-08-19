@@ -7,12 +7,14 @@ const MATCH_SELECT = `
   local_team:local_team_id (
     id,
     name,
-    logo_url
+    logo_url,
+    division_id
   ),
   visit_team:visit_team_id (
     id,
     name,
-    logo_url
+    logo_url,
+    division_id
   ),
   branch:branch_id (
     id,

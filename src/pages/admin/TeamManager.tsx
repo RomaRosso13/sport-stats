@@ -13,9 +13,10 @@ import TeamFormModal from '../../components/Admin/TeamFormModal'
 import PlayerFormModal from '../../components/Admin/PlayerFormModal'
 import PlayerRosterManager from '../../components/Admin/PlayerRosterManager'
 
-import { getTeamsByCategoryId, deleteTeam, setTeamActive } from '../../services/team.service.js'
+import { getTeamsByCategoryId, deleteTeam, setTeamActive, setTeamDivision } from '../../services/team.service.js'
 import { setPlayerActive, deletePlayer } from '../../services/player.service.js'
 import { getCoachAssignmentsByLeagueId } from '../../services/league_user.service.js'
+import { getActiveDivisionsByCategoryId } from '../../services/division.service.js'
 
 import './TeamManager.css'
 
@@ -29,6 +30,7 @@ function TeamManager() {
   const [loadingTeams, setLoadingTeams] = useState(true)
   const [selectedTeamId, setSelectedTeamId] = useState(null)
   const [coachesByTeamId, setCoachesByTeamId] = useState({})
+  const [divisions, setDivisions] = useState([])
 
   const [editingTeam, setEditingTeam] = useState(null)
   const [showTeamModal, setShowTeamModal] = useState(false)
@@ -53,6 +55,24 @@ function TeamManager() {
 
     loadTeams()
     setSelectedTeamId(null)
+  }, [category?.id])
+
+  useEffect(() => {
+    if (!category) {
+      setDivisions([])
+      return
+    }
+
+    async function loadDivisions() {
+      try {
+        const data = await getActiveDivisionsByCategoryId(category.id)
+        setDivisions(data || [])
+      } catch (err) {
+        console.error(err)
+      }
+    }
+
+    loadDivisions()
   }, [category?.id])
 
   useEffect(() => {
@@ -129,6 +149,16 @@ function TeamManager() {
     }
   }
 
+  async function handleSetDivision(team, divisionId) {
+    try {
+      const updated = await setTeamDivision(team.id, divisionId)
+      setTeams(prev => prev.map(t => t.id === updated.id ? { ...t, ...updated } : t))
+    } catch (err) {
+      console.error(err)
+      toast.error(err.message || 'No se pudo actualizar la división del equipo')
+    }
+  }
+
   async function handleToggleActive(player) {
     try {
       const updated = await setPlayerActive(player.id, !player.active)
@@ -195,6 +225,8 @@ function TeamManager() {
                 onEdit={t => { setEditingTeam(t); setShowTeamModal(true) }}
                 onDelete={handleDeleteTeam}
                 onToggleActive={handleToggleTeamActive}
+                divisions={divisions}
+                onSetDivision={handleSetDivision}
               />
             ))}
           </div>

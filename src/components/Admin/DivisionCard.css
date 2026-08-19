@@ -1,0 +1,28 @@
+.division-section {
+  margin-top: 28px;
+  padding-top: 20px;
+  padding-left: 20px;
+  border-top: 1px dashed var(--border-color);
+  border-left: 3px solid var(--accent-soft);
+  margin-left: 8px;
+}
+
+.division-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.division-card {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--bg-surface);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border: 2px solid transparent;
+}
+
+.division-card h4 {
+  margin: 0 0 6px;
+  font-size: 14px;
+  font-weight: 700;
+}
