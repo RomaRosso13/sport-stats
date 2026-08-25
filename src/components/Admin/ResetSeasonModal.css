@@ -1,0 +1,129 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal {
+  background: var(--bg-surface);
+  border-radius: 16px;
+  padding: 22px;
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  --primary: var(--accent);
+  --primary-hover: var(--accent-dark);
+  --secondary: var(--border-color);
+  --secondary-text: #374151;
+  --disabled: #9ca3af;
+}
+
+.reset-season-modal {
+  width: 420px;
+}
+
+.modal h3 {
+  margin: 0 0 14px;
+}
+
+.modal form {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-top: 10px;
+}
+
+.modal input {
+  width: 100%;
+  padding: 8px 10px;
+  margin-top: 6px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  font-size: 14px;
+}
+
+.modal input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.15);
+}
+
+.reset-season-warning {
+  margin: 14px 0 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.reset-season-warning:first-of-type {
+  margin-top: 0;
+}
+
+.reset-season-list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.reset-season-list.danger {
+  color: var(--status-loss-text);
+}
+
+.reset-season-list.safe {
+  color: var(--status-win-text);
+}
+
+.modal-error {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: var(--status-loss-text);
+  font-weight: 600;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.modal-actions button {
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  transition: all .2s ease;
+}
+
+.modal-actions button[type="button"] {
+  background: var(--secondary);
+  color: var(--secondary-text);
+}
+
+.modal-actions button[type="button"]:hover {
+  background: #d1d5db;
+}
+
+.reset-season-confirm-btn {
+  background: var(--status-loss-text);
+  color: #ffffff;
+}
+
+.reset-season-confirm-btn:hover:not(:disabled) {
+  filter: brightness(0.9);
+}
+
+.modal-actions button:disabled {
+  background: var(--disabled);
+  cursor: not-allowed;
+}

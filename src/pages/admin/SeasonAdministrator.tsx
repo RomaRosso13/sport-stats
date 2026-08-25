@@ -9,6 +9,7 @@ import Header from '../../components/common/Header'
 import CategoryCard from '../../components/Admin/CategoryCard'
 import CreateSeasonModal from '../../components/Admin/CreateSeasonModal'
 import CreateCategoyModal from '../../components/Admin/CreateCategoryModal'
+import ResetSeasonModal from '../../components/Admin/ResetSeasonModal'
 
 import { getSeasonsByLeagueId, setSeasonActive } from '../../services/season.service.js'
 import { getCategoriesBySeasonId, setCategoryActive, reorderCategories } from '../../services/category.service.js'
@@ -26,6 +27,7 @@ function SeasonAdministrator () {
   const [ showCreateSeason, setShowCreateSeason] = useState(false)
   const [ showCreateCategory, setShowCreateCategory ] = useState(false)
   const [ editingCategory, setEditingCategory ] = useState(null)
+  const [ showResetSeason, setShowResetSeason ] = useState(false)
   
   useEffect(() => {
     if (!league) return
@@ -136,9 +138,14 @@ function SeasonAdministrator () {
           <section className="category-section">
             <div className="section-header">
               <h3>Categorías – {selectedSeason.name}</h3>
-              <button className="primary-btn" onClick={() => { setEditingCategory(null); setShowCreateCategory(true) }}>
-                + Nueva Categoría
-              </button>
+              <div className="section-header-actions">
+                <button className="danger-btn" onClick={() => setShowResetSeason(true)}>
+                  Resetear temporada
+                </button>
+                <button className="primary-btn" onClick={() => { setEditingCategory(null); setShowCreateCategory(true) }}>
+                  + Nueva Categoría
+                </button>
+              </div>
             </div>
 
             <div className="category-grid">
@@ -188,6 +195,13 @@ function SeasonAdministrator () {
             setCategoriesData(prev => prev.map(c => c.id === updated.id ? updated : c))
             if (category?.id === updated.id) setCategory(updated)
           }}
+        />
+      )}
+      {showResetSeason && (
+        <ResetSeasonModal
+          season={selectedSeason}
+          onClose={() => setShowResetSeason(false)}
+          onReset={() => toast.success('Temporada reseteada: jornadas, partidos y estadísticas eliminados')}
         />
       )}
     </div>
