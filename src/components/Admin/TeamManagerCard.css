@@ -1,7 +1,7 @@
 .team-manager-card {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
+  flex-wrap: wrap;
   gap: 12px;
   padding: 14px 16px;
   border-radius: 14px;
@@ -101,6 +101,7 @@
    propia fila (no solo en móvil) para nunca encimarse con el nombre/coach. */
 .team-manager-actions {
   display: flex;
+  flex-shrink: 0;
   flex-basis: 100%;
   flex-wrap: wrap;
   gap: 8px;

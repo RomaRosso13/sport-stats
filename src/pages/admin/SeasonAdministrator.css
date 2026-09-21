@@ -67,6 +67,27 @@
   transform: translateY(-1px);
 }
 
+.section-header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.danger-btn {
+  background: var(--bg-surface);
+  color: var(--status-loss-text);
+  border: 1px solid var(--status-loss-border);
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color .15s ease;
+}
+
+.danger-btn:hover {
+  background: var(--status-loss-bg);
+}
+
 .empty-state {
   padding: 28px 16px;
   text-align: center;
@@ -89,6 +110,15 @@
   }
 
   .primary-btn {
+    width: 100%;
+  }
+
+  .section-header-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .danger-btn {
     width: 100%;
   }
 }

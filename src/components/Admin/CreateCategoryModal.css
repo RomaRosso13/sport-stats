@@ -33,6 +33,13 @@
   border: 1px solid var(--border-color);
 }
 
+.modal-error {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: var(--status-loss-text);
+  font-weight: 600;
+}
+
 .modal-actions {
   display: flex;
   justify-content: flex-end;

@@ -37,6 +37,12 @@
   padding: 4px;
   background: rgba(255, 255, 255, 0.15);
   border-radius: 999px;
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
 }
 
 .category-switcher-tab {
@@ -49,6 +55,7 @@
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
+  flex-shrink: 0;
   transition: background-color .15s ease, color .15s ease;
 }
 
@@ -71,14 +78,6 @@
 
   .category-switcher-tabs {
     width: 100%;
-    justify-content: center;
-  }
-
-  .category-switcher-tab {
-    flex: 1;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: center;
+    justify-content: flex-start;
   }
 }
