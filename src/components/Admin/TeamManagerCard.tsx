@@ -1,7 +1,7 @@
 import TeamLogo from '../common/TeamLogo'
 import './TeamManagerCard.css'
 
-function TeamManagerCard({ team, coach, isSelected, onSelect, onEdit, onDelete, onToggleActive }) {
+function TeamManagerCard({ team, coach, isSelected, onSelect, onEdit, onDelete, onToggleActive, divisions = [], onSetDivision }) {
   const playerCount = team.Player?.length || 0
 
   return (
@@ -27,6 +27,20 @@ function TeamManagerCard({ team, coach, isSelected, onSelect, onEdit, onDelete, 
           <span className="team-manager-coach-tag pending">
             Sin coach asignado
           </span>
+        )}
+
+        {divisions.length > 0 && (
+          <select
+            className="team-manager-division-select"
+            value={team.division_id ?? ''}
+            onClick={e => e.stopPropagation()}
+            onChange={e => onSetDivision(team, e.target.value ? Number(e.target.value) : null)}
+          >
+            <option value="">Sin asignar</option>
+            {divisions.map(division => (
+              <option key={division.id} value={division.id}>{division.name}</option>
+            ))}
+          </select>
         )}
       </div>
 

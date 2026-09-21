@@ -49,6 +49,16 @@ export async function createSeason(leagueId, name) {
   return result
 }
 
+export async function updateSeason(seasonId, name) {
+  const result = await runQuery(
+    supabase.from('Season').update({ name }).eq('id', seasonId).select().single(),
+    'No se pudo actualizar la temporada'
+  )
+
+  invalidateSeasonCaches()
+  return result
+}
+
 export async function setSeasonActive(seasonId, active) {
   const result = await runQuery(
     supabase.from('Season').update({ active }).eq('id', seasonId).select().single(),
@@ -96,10 +106,18 @@ export async function resetSeason(seasonId) {
       )
     }
 
-    await runQuery(
-      supabase.from('Matchday').delete().in('category_id', categoryIds),
+    // .select() fuerza a traer las filas realmente borradas: si RLS bloquea
+    // el delete, Postgres no lanza error (solo borra 0 filas), así que sin
+    // esto el fallo pasaría desapercibido y las jornadas sobrevivirían al
+    // reset sin que nadie se entere (mismo caso que deleteMatch).
+    const deletedMatchdays = await runQuery(
+      supabase.from('Matchday').delete().in('category_id', categoryIds).select(),
       'No se pudieron eliminar las jornadas'
     )
+
+    if (matchdayIds.length > 0 && (!deletedMatchdays || deletedMatchdays.length === 0)) {
+      throw new Error('No se pudieron eliminar las jornadas. Es posible que falte un permiso (RLS) para borrar en la tabla Matchday.')
+    }
   }
 
   await runQuery(

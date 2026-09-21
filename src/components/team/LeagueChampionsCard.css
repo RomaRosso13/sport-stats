@@ -1,0 +1,44 @@
+.league-champions-card .leader-info {
+  gap: 2px;
+}
+
+.leader-category-tag,
+.rest-category-tag {
+  display: inline-block;
+  width: fit-content;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .3px;
+  text-transform: uppercase;
+  color: var(--accent, #dc2626);
+  background: var(--bg-muted);
+  border-radius: 999px;
+  padding: 1px 6px;
+}
+
+.champions-row.stats-row {
+  grid-template-columns: 16px 1fr auto;
+  align-items: center;
+}
+
+.rest-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.rest-name-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+@media (max-width: 640px) {
+  .leader-category-tag,
+  .rest-category-tag {
+    font-size: 8px;
+    padding: 1px 5px;
+  }
+}

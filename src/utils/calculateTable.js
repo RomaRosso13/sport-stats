@@ -1,13 +1,14 @@
 export function calculateTable(matches, teams = []) {
   const tabla = {}
 
-  function ensureTeam(id, name, logo, color) {
+  function ensureTeam(id, name, logo, color, divisionId) {
     if (!tabla[id]) {
       tabla[id] = {
         id,
         equipo: name,
         logo,
         color: color || null,
+        division_id: divisionId ?? null,
         pj: 0,
         g: 0,
         e: 0,
@@ -22,15 +23,15 @@ export function calculateTable(matches, teams = []) {
     return tabla[id]
   }
 
-  teams.forEach(team => ensureTeam(team.id, team.name, team.logo_url, team.primary_color))
+  teams.forEach(team => ensureTeam(team.id, team.name, team.logo_url, team.primary_color, team.division_id))
 
   matches
     .filter(p => p.status === 'Terminado')
     .forEach(partido => {
       const { local_team, visit_team, local_points, visit_points } = partido
 
-      const local = ensureTeam(local_team.id, local_team.name, local_team.logo_url, local_team.primary_color)
-      const visit = ensureTeam(visit_team.id, visit_team.name, visit_team.logo_url, visit_team.primary_color)
+      const local = ensureTeam(local_team.id, local_team.name, local_team.logo_url, local_team.primary_color, local_team.division_id)
+      const visit = ensureTeam(visit_team.id, visit_team.name, visit_team.logo_url, visit_team.primary_color, visit_team.division_id)
 
       local.pj += 1
       visit.pj += 1

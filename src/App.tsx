@@ -23,6 +23,7 @@ import MatchDetail from "./pages/MatchDetail"
 import ProtectedRoute from "./guards/ProtectedRoute"
 import MatchDayEditor from './pages/admin/MatchdayEditor'
 import MatchDayCreator from "./pages/admin/MatchdayCreator"
+import MatchdayManager from "./pages/admin/MatchdayManager"
 import SeasonAdministrator from "./pages/admin/SeasonAdministrator"
 import TeamManager from "./pages/admin/TeamManager"
 import VenueManager from "./pages/admin/VenueManager"
@@ -63,6 +64,7 @@ function App() {
           <Route path="/:leagueSlug/admin/editar" element={ <ProtectedRoute allowReferee> <MatchDayEditor /> </ProtectedRoute> }/>
           <Route path="/:leagueSlug/admin/asistencia" element={ <ProtectedRoute allowReferee> <AttendanceManager /> </ProtectedRoute> }/>
           <Route path="/:leagueSlug/admin/crear" element={ <ProtectedRoute> <MatchDayCreator /> </ProtectedRoute> }/>
+          <Route path="/:leagueSlug/admin/jornadas" element={ <ProtectedRoute> <MatchdayManager /> </ProtectedRoute> }/>
           <Route path="/:leagueSlug/admin/equipos" element={ <ProtectedRoute> <TeamManager /> </ProtectedRoute> }/>
           <Route path="/:leagueSlug/admin/sedes" element={ <ProtectedRoute> <VenueManager /> </ProtectedRoute> }/>
           <Route path="/:leagueSlug/admin/usuarios" element={ <ProtectedRoute> <UserManager /> </ProtectedRoute> }/>

@@ -41,18 +41,29 @@
   color: var(--text-secondary);
 }
 
+.season-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.season-edit-btn,
 .archive-btn,
 .activate-btn {
-  display: block;
-  margin-top: 10px;
   padding: 5px 12px;
   border-radius: 8px;
   border: 1px solid var(--border-color);
   background: var(--bg-surface);
+  color: var(--text-secondary);
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   transition: background-color .15s ease;
+}
+
+.season-edit-btn:hover {
+  background: var(--bg-hover);
 }
 
 .archive-btn {

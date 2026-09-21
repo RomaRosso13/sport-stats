@@ -59,6 +59,15 @@ function PositionTable({ table, matchdays = [], hideControls = false }) {
                       <span className="team-name">{fila.equipo}</span>
                     </span>
                   )}
+                  {fila.divisionColor && (
+                    <span
+                      className="division-badge"
+                      style={{ backgroundColor: fila.divisionColor }}
+                      title={`División ${fila.divisionName}`}
+                    >
+                      {fila.divisionName}
+                    </span>
+                  )}
                 </td>
                 <td className="racha-cell">
                   {recentForm.length > 0 ? (

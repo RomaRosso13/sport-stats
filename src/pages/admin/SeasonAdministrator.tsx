@@ -7,12 +7,15 @@ import { useToast } from '../../context/ToastContext'
 import SeasonCard from '../../components/Admin/SeasonCard'
 import Header from '../../components/common/Header'
 import CategoryCard from '../../components/Admin/CategoryCard'
+import DivisionCard from '../../components/Admin/DivisionCard'
 import CreateSeasonModal from '../../components/Admin/CreateSeasonModal'
 import CreateCategoyModal from '../../components/Admin/CreateCategoryModal'
+import CreateDivisionModal from '../../components/Admin/CreateDivisionModal'
 import ResetSeasonModal from '../../components/Admin/ResetSeasonModal'
 
 import { getSeasonsByLeagueId, setSeasonActive } from '../../services/season.service.js'
 import { getCategoriesBySeasonId, setCategoryActive, reorderCategories } from '../../services/category.service.js'
+import { getDivisionsByCategoryId, setDivisionActive } from '../../services/division.service.js'
 
 import './SeasonAdministrator.css'
 
@@ -24,8 +27,11 @@ function SeasonAdministrator () {
   const [ seasonsData, setSeasonsData ] = useState([])
   const [ selectedSeason, setSelectedSeason ] = useState(null)
   const [ categoriesData, setCategoriesData ] = useState([])
+  const [ divisionsData, setDivisionsData ] = useState([])
   const [ showCreateSeason, setShowCreateSeason] = useState(false)
+  const [ editingSeason, setEditingSeason ] = useState(null)
   const [ showCreateCategory, setShowCreateCategory ] = useState(false)
+  const [ showCreateDivision, setShowCreateDivision ] = useState(false)
   const [ editingCategory, setEditingCategory ] = useState(null)
   const [ showResetSeason, setShowResetSeason ] = useState(false)
   
@@ -65,6 +71,22 @@ function SeasonAdministrator () {
     loadCategories()
   }, [selectedSeason?.id])
 
+  useEffect(() => {
+    if (!category) {
+      setDivisionsData([])
+      return
+    }
+    async function loadDivisions() {
+      try {
+        const allDivisions = await getDivisionsByCategoryId(category.id)
+        setDivisionsData(allDivisions)
+      } catch (err) {
+        console.error(err)
+      }
+    }
+    loadDivisions()
+  }, [category?.id])
+
   async function handleToggleSeasonActive(season) {
     try {
       const updated = await setSeasonActive(season.id, !season.active)
@@ -83,6 +105,16 @@ function SeasonAdministrator () {
     } catch (err) {
       console.error(err)
       toast.error(err.message || 'No se pudo actualizar la categoría')
+    }
+  }
+
+  async function handleToggleDivisionActive(division) {
+    try {
+      const updated = await setDivisionActive(division.id, !division.active)
+      setDivisionsData(prev => prev.map(d => d.id === updated.id ? updated : d))
+    } catch (err) {
+      console.error(err)
+      toast.error(err.message || 'No se pudo actualizar la división')
     }
   }
 
@@ -119,7 +151,7 @@ function SeasonAdministrator () {
 
         <div className="section-header">
           <h3>Temporadas</h3>
-          <button className="primary-btn" onClick={() => setShowCreateSeason(true)}>
+          <button className="primary-btn" onClick={() => { setEditingSeason(null); setShowCreateSeason(true) }}>
             + Nueva temporada
           </button>
         </div>
@@ -129,7 +161,14 @@ function SeasonAdministrator () {
         ) : (
           <div className="season-grid">
             {seasonsData.map(season => (
-              <SeasonCard key={season.id} season={season} isSelected={selectedSeason?.id === season?.id} onSelect={setSelectedSeason} onToggleActive={handleToggleSeasonActive} />
+              <SeasonCard
+                key={season.id}
+                season={season}
+                isSelected={selectedSeason?.id === season?.id}
+                onSelect={setSelectedSeason}
+                onToggleActive={handleToggleSeasonActive}
+                onEdit={s => { setEditingSeason(s); setShowCreateSeason(true) }}
+              />
             ))}
           </div>
         )}
@@ -170,16 +209,46 @@ function SeasonAdministrator () {
                 ))
               )}
             </div>
+
+            {category && (
+              <section className="division-section">
+                <div className="section-header">
+                  <h3>Divisiones – {category.type}</h3>
+                  <button className="primary-btn" onClick={() => setShowCreateDivision(true)}>
+                    + Nueva división
+                  </button>
+                </div>
+
+                <div className="division-grid">
+                  {divisionsData.length === 0 ? (
+                    <p className="empty-state">
+                      Esta categoría aún no tiene divisiones — sigue funcionando normal, con todos los equipos juntos.
+                    </p>
+                  ) : (
+                    divisionsData.map(division => (
+                      <DivisionCard key={division.id} division={division} onToggleActive={handleToggleDivisionActive} />
+                    ))
+                  )}
+                </div>
+              </section>
+            )}
           </section>
         )}
       </main>
 
       {showCreateSeason && (
-        <CreateSeasonModal leagueId={league.id} onClose={() => setShowCreateSeason(false)}
+        <CreateSeasonModal
+          leagueId={league.id}
+          season={editingSeason}
+          onClose={() => { setShowCreateSeason(false); setEditingSeason(null) }}
           onCreated={(newSeason) => {
             setSeasonsData(prev => [newSeason, ...prev])
             setSelectedSeason(newSeason)
             setCategoriesData([])
+          }}
+          onSaved={(updated) => {
+            setSeasonsData(prev => prev.map(s => s.id === updated.id ? updated : s))
+            if (selectedSeason?.id === updated.id) setSelectedSeason(updated)
           }}
         />
       )}
@@ -202,6 +271,13 @@ function SeasonAdministrator () {
           season={selectedSeason}
           onClose={() => setShowResetSeason(false)}
           onReset={() => toast.success('Temporada reseteada: jornadas, partidos y estadísticas eliminados')}
+        />
+      )}
+      {showCreateDivision && (
+        <CreateDivisionModal categoryId={category.id} onClose={() => setShowCreateDivision(false)}
+          onCreated={(newDivision) => {
+            setDivisionsData(prev => [newDivision, ...prev])
+          }}
         />
       )}
     </div>

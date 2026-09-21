@@ -16,7 +16,8 @@ const STATS_SELECT = `
   team:team_id (
     id,
     name,
-    logo_url
+    logo_url,
+    division_id
   ),
   match:match_id (
     type,
@@ -36,6 +37,24 @@ export async function getIndividualStatsByCategory(categoryId) {
         .from('IndividualStats')
         .select(STATS_SELECT)
         .eq('category_id', categoryId)
+    )
+  )
+
+  return (rows || []).filter(row => !isScrimmage(row.match?.type) && row.player?.active !== false)
+}
+
+// Para el ranking general de TODA la liga (todas las categorías/divisiones
+// de la temporada a la vez) — ej. "campeón de campeones" en Estadísticas.
+export async function getIndividualStatsByCategoryIds(categoryIds) {
+  const ids = Array.isArray(categoryIds) ? categoryIds : [categoryIds]
+  const sortedIds = [...ids].sort()
+
+  const rows = await cached('getIndividualStatsByCategoryIds', [sortedIds], () =>
+    runQuery(
+      supabase
+        .from('IndividualStats')
+        .select(STATS_SELECT)
+        .in('category_id', ids)
     )
   )
 
@@ -127,6 +146,7 @@ export async function saveIndividualStatsForMatch(categoryId, entries) {
   }
 
   invalidate('getIndividualStatsByCategory')
+  invalidate('getIndividualStatsByCategoryIds')
   invalidate('getIndividualStatsByMatchId')
 
   return results
@@ -142,6 +162,7 @@ export async function updateIndividualStatField(rowId, statKey, amount) {
   )
 
   invalidate('getIndividualStatsByCategory')
+  invalidate('getIndividualStatsByCategoryIds')
   invalidate('getIndividualStatsByMatchId')
 
   return result

@@ -25,8 +25,13 @@ const QUICK_LINKS = [
   },
   {
     to: 'admin/crear',
-    label: 'Gestor de Jornadas',
+    label: 'Agregar Partidos',
     description: 'Crea jornadas y agrega partidos'
+  },
+  {
+    to: 'admin/jornadas',
+    label: 'Gestor de Jornadas',
+    description: 'Edita el nombre y la fecha de tus jornadas'
   },
   {
     to: 'admin/editar',

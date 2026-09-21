@@ -48,7 +48,8 @@ function getAdminNavGroups({ isFullAdmin, isReferee, isCoach }) {
   if (isFullAdmin) general.push({ to: '/admin/usuarios', label: 'Gestor de Usuarios', icon: UsersIcon })
 
   if (isFullAdmin) temporada.push({ to: '/admin/gestor', label: 'Gestor de temporadas', icon: LayersIcon })
-  if (isFullAdmin) temporada.push({ to: '/admin/crear', label: 'Gestor de Jornadas', icon: ListIcon })
+  if (isFullAdmin) temporada.push({ to: '/admin/jornadas', label: 'Gestor de Jornadas', icon: ListIcon })
+  if (isFullAdmin) temporada.push({ to: '/admin/crear', label: 'Agregar Partidos', icon: FootballIcon })
 
   if (isFullAdmin || isReferee) partidos.push({ to: '/admin/editar', label: 'Registrar resultados', icon: EditIcon })
   if (isFullAdmin || isReferee) partidos.push({ to: '/admin/asistencia', label: 'Asistencia', icon: ClipboardCheckIcon })
