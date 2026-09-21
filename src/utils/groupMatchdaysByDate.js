@@ -2,6 +2,10 @@
 // renglón de Matchday por categoría (mismo nombre y fecha) para que cada
 // categoría tenga su propio matchday_id al que asociar sus partidos, pero
 // desde la UI se ve y se edita como una sola jornada.
+/**
+ * @param {Array<any>} matchdaysData
+ * @returns {Array<{ id: string, date: string, name: string, sortOrder: number|null, matchdaysByCategory: Record<string, any> }>}
+ */
 export function groupMatchdaysByDate(matchdaysData) {
   const byDate = new Map()
 

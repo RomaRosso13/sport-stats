@@ -9,7 +9,7 @@ function EditJornadaModal({ jornada, hasMatches, onClose, onSaved }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  const matchdayIds = Object.values(jornada.matchdaysByCategory).map(md => md.id)
+  const matchdayIds = (Object.values(jornada.matchdaysByCategory) as any[]).map(md => md.id)
 
   async function handleSubmit(e) {
     e.preventDefault()

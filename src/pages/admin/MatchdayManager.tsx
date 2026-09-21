@@ -71,13 +71,13 @@ function MatchdayManager() {
   const jornadas = useMemo(() => groupMatchdaysByDate(matchdaysData), [matchdaysData])
 
   function getMatchCount(jornada) {
-    return Object.values(jornada.matchdaysByCategory)
+    return (Object.values(jornada.matchdaysByCategory) as any[])
       .reduce((sum, md) => sum + (matchCountByMatchdayId[md.id] || 0), 0)
   }
 
   function handleSaved(updatedJornada) {
     setMatchdaysData(prev => prev.map(md => {
-      const belongsToJornada = Object.values(updatedJornada.matchdaysByCategory).some(m => m.id === md.id)
+      const belongsToJornada = (Object.values(updatedJornada.matchdaysByCategory) as any[]).some(m => m.id === md.id)
       return belongsToJornada ? { ...md, name: updatedJornada.name, date: updatedJornada.date } : md
     }))
     toast.success('Jornada actualizada')
@@ -91,7 +91,7 @@ function MatchdayManager() {
     const reordered = [...jornadas]
     ;[reordered[currentIndex], reordered[targetIndex]] = [reordered[targetIndex], reordered[currentIndex]]
 
-    const orderedGroups = reordered.map(j => Object.values(j.matchdaysByCategory).map(md => md.id))
+    const orderedGroups = reordered.map(j => (Object.values(j.matchdaysByCategory) as any[]).map(md => md.id))
     const sortOrderByMatchdayId = {}
     orderedGroups.forEach((ids, index) => ids.forEach(id => { sortOrderByMatchdayId[id] = index }))
 
@@ -111,7 +111,7 @@ function MatchdayManager() {
 
   async function handleDeleteJornada(jornada) {
     const matchCount = getMatchCount(jornada)
-    const matchdayIds = Object.values(jornada.matchdaysByCategory).map(md => md.id)
+    const matchdayIds = (Object.values(jornada.matchdaysByCategory) as any[]).map(md => md.id)
 
     const ok = await confirm({
       message: matchCount > 0
