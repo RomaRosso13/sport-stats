@@ -5,6 +5,7 @@ import { useCategory } from '../../context/CategoryContext'
 import { useSeason } from '../../context/SeasonContext'
 
 import { getMatchDaysByCategoryIds, createMatchdayForCategories } from '../../services/matchday.service.js'
+import { groupMatchdaysByDate } from '../../utils/groupMatchdaysByDate'
 
 import './MatchdayCreatorHeader.css'
 
@@ -12,22 +13,6 @@ const CATEGORY_LABELS = {
   Mixto: 'Mixto',
   Femenil: 'Femenil',
   Varonil: 'Varonil'
-}
-
-// Cada jornada es compartida por todas las categorías activas de la
-// temporada: se agrupan los renglones de Matchday (uno por categoría) que
-// caen en la misma fecha, para tratarlos como una sola jornada en la UI.
-function groupMatchdaysByDate(matchdaysData) {
-  const byDate = new Map()
-
-  matchdaysData.forEach(md => {
-    if (!byDate.has(md.date)) {
-      byDate.set(md.date, { id: md.date, date: md.date, name: md.name, matchdaysByCategory: {} })
-    }
-    byDate.get(md.date).matchdaysByCategory[md.category_id] = md
-  })
-
-  return Array.from(byDate.values()).sort((a, b) => a.date.localeCompare(b.date))
 }
 
 function MatchdayCreatorHeader({ selectedMatchday, setSelectedMatchday }) {

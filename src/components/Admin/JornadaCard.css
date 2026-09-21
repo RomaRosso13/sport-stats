@@ -1,0 +1,113 @@
+.jornada-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.jornada-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--card-grad);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+  transition: box-shadow .2s ease, transform .2s ease;
+}
+
+.jornada-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.08);
+}
+
+.jornada-order-controls {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.jornada-order-btn {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 10px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color .15s ease;
+}
+
+.jornada-order-btn:hover:not(:disabled) {
+  background: var(--bg-hover);
+}
+
+.jornada-order-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.jornada-card h4 {
+  margin: 0 0 4px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.jornada-card-date {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.jornada-card-count {
+  margin-top: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--status-win-bg);
+  color: var(--status-win-text);
+}
+
+.jornada-card-count.empty {
+  background: var(--bg-muted);
+  color: var(--text-muted);
+}
+
+.jornada-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.jornada-edit-btn,
+.jornada-delete-btn {
+  padding: 5px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color .15s ease;
+}
+
+.jornada-edit-btn:hover {
+  background: var(--bg-hover);
+}
+
+.jornada-delete-btn {
+  color: var(--status-loss-text);
+  border-color: var(--status-loss-border);
+}
+
+.jornada-delete-btn:hover {
+  background: var(--status-loss-bg);
+}

@@ -29,6 +29,7 @@ function SeasonAdministrator () {
   const [ categoriesData, setCategoriesData ] = useState([])
   const [ divisionsData, setDivisionsData ] = useState([])
   const [ showCreateSeason, setShowCreateSeason] = useState(false)
+  const [ editingSeason, setEditingSeason ] = useState(null)
   const [ showCreateCategory, setShowCreateCategory ] = useState(false)
   const [ showCreateDivision, setShowCreateDivision ] = useState(false)
   const [ editingCategory, setEditingCategory ] = useState(null)
@@ -150,7 +151,7 @@ function SeasonAdministrator () {
 
         <div className="section-header">
           <h3>Temporadas</h3>
-          <button className="primary-btn" onClick={() => setShowCreateSeason(true)}>
+          <button className="primary-btn" onClick={() => { setEditingSeason(null); setShowCreateSeason(true) }}>
             + Nueva temporada
           </button>
         </div>
@@ -160,7 +161,14 @@ function SeasonAdministrator () {
         ) : (
           <div className="season-grid">
             {seasonsData.map(season => (
-              <SeasonCard key={season.id} season={season} isSelected={selectedSeason?.id === season?.id} onSelect={setSelectedSeason} onToggleActive={handleToggleSeasonActive} />
+              <SeasonCard
+                key={season.id}
+                season={season}
+                isSelected={selectedSeason?.id === season?.id}
+                onSelect={setSelectedSeason}
+                onToggleActive={handleToggleSeasonActive}
+                onEdit={s => { setEditingSeason(s); setShowCreateSeason(true) }}
+              />
             ))}
           </div>
         )}
@@ -229,11 +237,18 @@ function SeasonAdministrator () {
       </main>
 
       {showCreateSeason && (
-        <CreateSeasonModal leagueId={league.id} onClose={() => setShowCreateSeason(false)}
+        <CreateSeasonModal
+          leagueId={league.id}
+          season={editingSeason}
+          onClose={() => { setShowCreateSeason(false); setEditingSeason(null) }}
           onCreated={(newSeason) => {
             setSeasonsData(prev => [newSeason, ...prev])
             setSelectedSeason(newSeason)
             setCategoriesData([])
+          }}
+          onSaved={(updated) => {
+            setSeasonsData(prev => prev.map(s => s.id === updated.id ? updated : s))
+            if (selectedSeason?.id === updated.id) setSelectedSeason(updated)
           }}
         />
       )}
