@@ -85,7 +85,7 @@ function Teams() {
     const regularSeasonMatches = matchdays
       .flatMap(md => md.games)
       .filter(m => !isPlayoffStage(m.type) && !isScrimmage(m.type))
-    const standings = calculateTable(regularSeasonMatches, teams)
+    const standings = calculateTable(regularSeasonMatches, teams, league?.tiebreaker_config)
     const rankById = {}
     standings.forEach((row, index) => { rankById[row.id] = index })
     const sortedTeams = teams

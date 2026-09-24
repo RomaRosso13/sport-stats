@@ -94,7 +94,7 @@ function Results() {
 
   const standingsById = useMemo(() => {
     const allMatches = matchdays.flatMap(j => j.games).filter(m => !isScrimmage(m.type))
-    const calculatedTable = calculateTable(allMatches, teamData)
+    const calculatedTable = calculateTable(allMatches, teamData, league?.tiebreaker_config)
     return Object.fromEntries(calculatedTable.map(row => [row.id, row]))
   }, [matchdays, teamData])
 

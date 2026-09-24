@@ -113,7 +113,7 @@ function Standings() {
     const showDivisionBadges = !activeDivisionId && divisions.length > 0
     const divisionColorById = getDivisionColorMap(divisions)
     const divisionNameById = Object.fromEntries(divisions.map(d => [d.id, d.name]))
-    const calculatedTable = calculateTable(divisionMatches, divisionTeams)
+    const calculatedTable = calculateTable(divisionMatches, divisionTeams, league?.tiebreaker_config)
       .filter(row => activeTeamIds.has(row.id))
       .map(row => (showDivisionBadges && row.division_id)
         ? { ...row, divisionColor: divisionColorById[row.division_id], divisionName: divisionNameById[row.division_id] }

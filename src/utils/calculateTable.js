@@ -1,4 +1,31 @@
-export function calculateTable(matches, teams = []) {
+import { DEFAULT_TIEBREAKER_CONFIG } from '../constants/tiebreakerCriteria'
+
+// Cada comparador regresa >0 si `b` debe ir antes que `a`, <0 si `a` va antes,
+// 0 si no desempata (se pasa al siguiente criterio activo). `against` es el
+// único donde "menos es mejor", por eso va al revés que los demás.
+const CRITERIA_COMPARATORS = {
+  wins: (a, b) => b.g - a.g,
+  points: (a, b) => b.puntos - a.puntos,
+  scored: (a, b) => b.pf - a.pf,
+  against: (a, b) => a.pc - b.pc,
+  sum: (a, b) => (b.pf + b.pc) - (a.pf + a.pc),
+  average: (a, b) => b.average - a.average,
+  headToHead: (a, b, matches) => {
+    const game = matches.find(m => (
+      m.status === 'Terminado' &&
+      ((m.local_team.id === a.id && m.visit_team.id === b.id) ||
+       (m.local_team.id === b.id && m.visit_team.id === a.id))
+    ))
+    if (!game) return 0
+
+    const aIsLocal = game.local_team.id === a.id
+    const aPoints = aIsLocal ? game.local_points : game.visit_points
+    const bPoints = aIsLocal ? game.visit_points : game.local_points
+    return bPoints - aPoints
+  }
+}
+
+export function calculateTable(matches, teams = [], tiebreakerConfig = DEFAULT_TIEBREAKER_CONFIG) {
   const tabla = {}
 
   function ensureTeam(id, name, logo, color, divisionId) {
@@ -67,12 +94,16 @@ export function calculateTable(matches, teams = []) {
     equipo.pj > 0 ? Number(((equipo.pf - equipo.pc) / equipo.pj).toFixed(2)) : 0
   })
 
+  const activeCriteria = (tiebreakerConfig || DEFAULT_TIEBREAKER_CONFIG).filter(c => c.enabled)
 
   return Object.values(tabla).sort((a, b) => {
-    if (b.puntos !== a.puntos) return b.puntos - a.puntos
-    if (b.difference !== a.difference) return b.difference - a.difference
-    if (b.average !== a.average) return b.average - a.average
-    return b.pf - a.pf
-  })
+    for (const criterion of activeCriteria) {
+      const comparator = CRITERIA_COMPARATORS[criterion.key]
+      if (!comparator) continue
 
+      const result = comparator(a, b, matches)
+      if (result !== 0) return result
+    }
+    return 0
+  })
 }

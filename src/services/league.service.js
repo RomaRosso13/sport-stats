@@ -58,6 +58,19 @@ export async function updateLeagueMembershipDate(leagueId, date) {
   return result
 }
 
+// `config`: arreglo ordenado de { key, enabled } — el orden en el arreglo ES
+// la prioridad del criterio (el primero que desempate gana); los criterios
+// con enabled:false se ignoran por completo en calculateTable.
+export async function updateLeagueTiebreakerConfig(leagueId, config) {
+  const result = await runQuery(
+    supabase.from('League').update({ tiebreaker_config: config }).eq('id', leagueId).select().single(),
+    'No se pudo guardar el orden de criterios de desempate'
+  )
+
+  invalidate('getLeagueBySlug')
+  return result
+}
+
 export async function updateLeagueStatLabels(leagueId, labels) {
   const payload = {}
   STAT_KEYS.forEach(key => {

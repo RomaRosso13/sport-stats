@@ -8,12 +8,13 @@ import Header from '../../components/common/Header'
 import Footer from '../../components/common/Footer'
 
 import { updateSeasonCalendarConfig } from '../../services/season.service'
-import { updateLeagueStatLabels, updateLeagueMembershipDate } from '../../services/league.service'
+import { updateLeagueStatLabels, updateLeagueMembershipDate, updateLeagueTiebreakerConfig } from '../../services/league.service'
 import { getPlatformSettings, updatePlatformReleaseNotes } from '../../services/platform_settings.service'
 import { getHeroImagesByLeagueId, addHeroImage, deleteHeroImage } from '../../services/league_hero_image.service'
 import { uploadImage } from '../../services/storage.service'
 import { compressImage } from '../../utils/compressImage'
 import { STAT_KEYS, DEFAULT_STAT_LABELS, getStatLabels } from '../../constants/statFields'
+import { TIEBREAKER_LABELS, DEFAULT_TIEBREAKER_CONFIG } from '../../constants/tiebreakerCriteria'
 
 import './ConfigManager.css'
 
@@ -239,6 +240,50 @@ function ConfigManager() {
     }
   }
 
+  // --- Criterios de desempate de la tabla de posiciones ---
+  const [tiebreakerConfig, setTiebreakerConfig] = useState(
+    league?.tiebreaker_config?.length ? league.tiebreaker_config : DEFAULT_TIEBREAKER_CONFIG
+  )
+  const [savingTiebreaker, setSavingTiebreaker] = useState(false)
+  const [tiebreakerError, setTiebreakerError] = useState('')
+  const [tiebreakerSaved, setTiebreakerSaved] = useState(false)
+
+  useEffect(() => {
+    setTiebreakerConfig(league?.tiebreaker_config?.length ? league.tiebreaker_config : DEFAULT_TIEBREAKER_CONFIG)
+  }, [league?.id])
+
+  function handleMoveTiebreaker(index, direction) {
+    const targetIndex = index + direction
+    if (targetIndex < 0 || targetIndex >= tiebreakerConfig.length) return
+
+    const reordered = [...tiebreakerConfig]
+    ;[reordered[index], reordered[targetIndex]] = [reordered[targetIndex], reordered[index]]
+    setTiebreakerConfig(reordered)
+    setTiebreakerSaved(false)
+  }
+
+  function handleToggleTiebreaker(key) {
+    setTiebreakerConfig(prev => prev.map(c => c.key === key ? { ...c, enabled: !c.enabled } : c))
+    setTiebreakerSaved(false)
+  }
+
+  async function handleSaveTiebreaker() {
+    try {
+      setSavingTiebreaker(true)
+      setTiebreakerError('')
+      setTiebreakerSaved(false)
+
+      await updateLeagueTiebreakerConfig(league.id, tiebreakerConfig)
+
+      setTiebreakerSaved(true)
+    } catch (err) {
+      console.error(err)
+      setTiebreakerError(err.message || 'No se pudo guardar el orden de criterios de desempate')
+    } finally {
+      setSavingTiebreaker(false)
+    }
+  }
+
   return (
     <div className="app-layout">
       <Header league={league} />
@@ -458,6 +503,61 @@ function ConfigManager() {
               </button>
             </div>
           </form>
+        </section>
+
+        <section className="config-card">
+          <h3>Criterios de desempate</h3>
+          <p className="config-card-subtitle">
+            Cuando dos equipos empatan en la tabla de posiciones, se comparan estos criterios en orden hasta que alguno los diferencie. Usa las flechas para cambiar el orden y la casilla para activar o desactivar cada uno — los desactivados no se toman en cuenta.
+          </p>
+
+          <div className="tiebreaker-list">
+            {tiebreakerConfig.map((criterion, index) => (
+              <div key={criterion.key} className={`tiebreaker-row ${criterion.enabled ? '' : 'disabled'}`}>
+                <div className="tiebreaker-order-controls">
+                  <button
+                    type="button"
+                    className="tiebreaker-order-btn"
+                    disabled={index === 0}
+                    onClick={() => handleMoveTiebreaker(index, -1)}
+                    aria-label="Subir prioridad"
+                  >
+                    ▲
+                  </button>
+                  <button
+                    type="button"
+                    className="tiebreaker-order-btn"
+                    disabled={index === tiebreakerConfig.length - 1}
+                    onClick={() => handleMoveTiebreaker(index, 1)}
+                    aria-label="Bajar prioridad"
+                  >
+                    ▼
+                  </button>
+                </div>
+
+                <span className="tiebreaker-priority">{index + 1}</span>
+                <span className="tiebreaker-label">{TIEBREAKER_LABELS[criterion.key] || criterion.key}</span>
+
+                <label className="tiebreaker-toggle">
+                  <input
+                    type="checkbox"
+                    checked={criterion.enabled}
+                    onChange={() => handleToggleTiebreaker(criterion.key)}
+                  />
+                  {criterion.enabled ? 'Activo' : 'Desactivado'}
+                </label>
+              </div>
+            ))}
+          </div>
+
+          {tiebreakerError && <p className="modal-error">{tiebreakerError}</p>}
+          {tiebreakerSaved && <p className="config-success">✓ Guardado</p>}
+
+          <div className="config-card-actions">
+            <button type="button" disabled={savingTiebreaker} onClick={handleSaveTiebreaker}>
+              {savingTiebreaker ? 'Guardando...' : 'Guardar criterios'}
+            </button>
+          </div>
         </section>
         </div>
       </main>

@@ -114,7 +114,7 @@ function Home() {
   // de un equipo desactivado siga siendo correcto), y solo después se
   // esconde la fila del equipo desactivado.
   const activeTeamIds = new Set(teams.filter(t => t.active !== false).map(t => t.id))
-  const calculatedTable = calculateTable(matches, teams).filter(row => activeTeamIds.has(row.id))
+  const calculatedTable = calculateTable(matches, teams, league?.tiebreaker_config).filter(row => activeTeamIds.has(row.id))
   const nextGameDay = getNextGameDay(matchdays)
   const recentResults = getRecentResults(matchdays, 4)
   const leaderboard = classifyTopPlayersByStats(stats, STAT_KEYS)
