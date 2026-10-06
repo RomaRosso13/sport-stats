@@ -21,7 +21,7 @@ import { getActiveDivisionsByCategoryId } from '../services/division.service'
 
 import { calculateTable } from "../utils/calculateTable"
 import { isPlayoffStage, isScrimmage } from "../utils/matchStages"
-import { filterMatchesByDivision, filterTeamsByDivision } from "../utils/divisionFilter"
+import { filterTeamsByDivision } from "../utils/divisionFilter"
 import { getDivisionColorMap } from "../utils/divisionColors"
 
 import "./Standings.css"
@@ -98,10 +98,6 @@ function Standings() {
       games: md.games.filter(m => !isPlayoffStage(m.type) && !isScrimmage(m.type))
     }))
     const matches = regularSeasonMatchdays.flatMap(j => j.games)
-    // "General" (activeDivisionId null) usa todos los equipos/partidos, igual
-    // que una liga sin divisiones. Con una división elegida, solo cuentan los
-    // partidos entre dos equipos de esa misma división.
-    const divisionMatches = filterMatchesByDivision(matches, activeDivisionId)
     const divisionTeams = filterTeamsByDivision(teams, activeDivisionId)
     // Se calcula con TODOS los equipos/partidos de la vista (para que el
     // récord del rival de un equipo desactivado siga siendo correcto), y
@@ -113,7 +109,13 @@ function Standings() {
     const showDivisionBadges = !activeDivisionId && divisions.length > 0
     const divisionColorById = getDivisionColorMap(divisions)
     const divisionNameById = Object.fromEntries(divisions.map(d => [d.id, d.name]))
-    const calculatedTable = calculateTable(divisionMatches, divisionTeams, league?.tiebreaker_config)
+    // La tabla de una división suma TODOS los partidos que haya jugado cada
+    // equipo (incluyendo los de antes de tener división asignada, contra
+    // cualquier rival) — no solo los jugados ya entre equipos de esa misma
+    // división. Por eso aquí se usan `matches` (el set completo, igual que en
+    // "General") y no un subconjunto filtrado; lo que sí cambia por división
+    // es qué FILAS se muestran al final.
+    const calculatedTable = calculateTable(matches, divisionTeams, league?.tiebreaker_config)
       .filter(row => activeTeamIds.has(row.id))
       .map(row => (showDivisionBadges && row.division_id)
         ? { ...row, divisionColor: divisionColorById[row.division_id], divisionName: divisionNameById[row.division_id] }
