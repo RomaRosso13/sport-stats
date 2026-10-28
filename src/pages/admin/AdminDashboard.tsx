@@ -55,6 +55,12 @@ const QUICK_LINKS = [
   }
 ]
 
+const TOURNAMENT_LINK = {
+  to: 'admin/torneo',
+  label: 'Asistente de Torneo',
+  description: 'Arma grupos, partidos y el bracket de playoffs'
+}
+
 const MAX_ALERTS = 6
 
 function formatMembershipDate(dateStr) {
@@ -204,6 +210,10 @@ function AdminDashboard() {
 
   const isLoading = !league || !season || loading
 
+  const quickLinks = league?.format === 'torneo'
+    ? [...QUICK_LINKS, TOURNAMENT_LINK]
+    : QUICK_LINKS
+
   return (
     <div className="app-layout">
       <Loader show={isLoading} label="Cargando..." />
@@ -229,7 +239,7 @@ function AdminDashboard() {
         )}
 
         <div className="quick-links-grid">
-          {QUICK_LINKS.map(link => (
+          {quickLinks.map(link => (
             <Link key={link.to} to={`/${league?.slug}/${link.to}`} className="quick-link-card">
               <span className="quick-link-label">{link.label}</span>
               <span className="quick-link-description">{link.description}</span>

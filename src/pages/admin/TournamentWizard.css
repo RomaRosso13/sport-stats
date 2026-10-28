@@ -1,0 +1,548 @@
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.tournament-wizard-container {
+  flex: 1;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.tournament-wizard-intro h2 {
+  margin: 0 0 4px;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.tournament-wizard-intro p {
+  margin: 0 0 20px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.tw-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.tw-step {
+  background: var(--card-grad);
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.tw-step.locked {
+  opacity: 0.6;
+}
+
+.tw-step-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tw-step-num {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.tw-step-num.done {
+  background: var(--status-win-bg);
+  color: var(--status-win-text);
+}
+
+.tw-step-title-wrap {
+  flex: 1;
+}
+
+.tw-step-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.tw-step-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.tw-step-status {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--bg-muted);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.tw-step-body {
+  padding: 20px 22px;
+}
+
+.tw-locked-note {
+  font-size: 13px;
+  color: var(--text-faint);
+}
+
+.tw-field-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.tw-field-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.tw-hint {
+  font-size: 12px;
+  color: var(--text-faint);
+}
+
+.tw-stepper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tw-stepper button {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.tw-stepper span {
+  min-width: 20px;
+  text-align: center;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.tw-btn {
+  border: none;
+  border-radius: 10px;
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tw-btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.tw-btn-primary:hover {
+  background: var(--accent-dark);
+}
+
+.tw-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.tw-btn-ghost {
+  background: var(--bg-muted);
+  color: var(--text-secondary);
+}
+
+.tw-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.tw-groups-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.tw-group-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.tw-group-card-unassigned {
+  border-style: dashed;
+  border-color: var(--status-pending-text);
+}
+
+.tw-group-card h4 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.tw-group-team-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--bg-muted);
+}
+
+.tw-group-team-row:last-child {
+  border-bottom: none;
+}
+
+.tw-group-team-row select {
+  font-size: 12px;
+  padding: 3px 6px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface-alt);
+  color: var(--text-muted);
+}
+
+.tw-schedule-defaults {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.tw-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tw-field-group label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.tw-field-group input,
+.tw-field-group select {
+  padding: 7px 9px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-size: 13px;
+}
+
+.tw-match-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.tw-match-group-col h4 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.tw-match-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+.tw-match-row.repeat {
+  border-color: var(--status-pending-text);
+  background: var(--status-pending-bg);
+}
+
+.tw-match-row.editing {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.12);
+}
+
+.tw-match-row select,
+.tw-match-row input {
+  padding: 5px 7px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface-alt);
+  color: var(--text-primary);
+  font-size: 12px;
+}
+
+.tw-vs {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-faint);
+}
+
+.tw-repeat-tag {
+  background: var(--status-pending-text);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 999px;
+}
+
+.tw-match-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+.tw-match-status {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--status-pending-text);
+  background: var(--status-pending-bg);
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+
+.tw-match-status.done {
+  color: var(--status-win-text);
+  background: var(--status-win-bg);
+}
+
+.tw-edit-btn,
+.tw-mini-btn {
+  border: none;
+  background: var(--bg-muted);
+  color: var(--text-secondary);
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.tw-mini-btn.save {
+  background: var(--status-win-bg);
+  color: var(--status-win-text);
+}
+
+.tw-mini-btn.cancel {
+  background: var(--status-loss-bg);
+  color: var(--status-loss-text);
+}
+
+.tw-switch-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.tw-switch {
+  position: relative;
+  display: inline-block;
+  width: 38px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.tw-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.tw-track {
+  position: absolute;
+  inset: 0;
+  background: var(--bg-muted);
+  border-radius: 999px;
+  transition: 0.2s;
+}
+
+.tw-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: 0.2s;
+}
+
+.tw-switch input:checked + .tw-track {
+  background: var(--accent);
+}
+
+.tw-switch input:checked ~ .tw-thumb {
+  transform: translateX(16px);
+}
+
+.tw-switch-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.tw-mode-toggle {
+  display: flex;
+  gap: 8px;
+  margin: 10px 0 16px;
+}
+
+.tw-mode-toggle button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tw-mode-toggle button.active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-dark);
+}
+
+.tw-pairing-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.tw-pairing-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+.tw-pairing-name {
+  font-weight: 700;
+  color: var(--text-primary);
+  min-width: 90px;
+}
+
+.tw-pairing-row select {
+  margin-left: auto;
+  padding: 6px 9px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface-alt);
+}
+
+.tw-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.tw-progress-track {
+  flex: 1;
+  height: 6px;
+  background: var(--bg-muted);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.tw-progress-fill {
+  height: 100%;
+  background: var(--brand-pink);
+  border-radius: 999px;
+  transition: width 0.3s;
+}
+
+.tw-brackets-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 14px;
+  margin-bottom: 8px;
+}
+
+.tw-mini-bracket-card {
+  background: var(--status-review-bg);
+  border: 1px solid var(--status-review-text);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.tw-mini-bracket-card h4 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  color: var(--status-review-text);
+}
+
+.tw-summary {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0 0 14px;
+}
+
+.tw-bracket-block {
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tw-bracket-block:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.tw-bracket-block-title {
+  margin: 0 0 12px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.tw-success-banner {
+  background: var(--champion-grad);
+  color: #78350f;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+}

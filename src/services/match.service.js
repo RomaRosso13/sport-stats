@@ -99,21 +99,28 @@ export async function updateMatches(matches, currentUserId) {
 }
 
 // Edita los datos de programación de un partido ya guardado (equipos, sede,
-// cancha, hora, fase, categoría/jornada) — distinto de updateMatches, que solo
-// toca marcador y estatus al registrar resultados.
-export async function updateMatchDetails(matchId, { homeTeamId, awayTeamId, branchId, field, time, type, matchdayId }) {
+// cancha, hora, fecha, fase, categoría/jornada) — distinto de updateMatches,
+// que solo toca marcador y estatus al registrar resultados.
+// `date` es opcional (hasta ahora nadie la editaba después de creada, por
+// eso no estaba aquí) — se usa en el Asistente de Torneo para poder
+// reprogramar un partido generado automáticamente.
+export async function updateMatchDetails(matchId, { homeTeamId, awayTeamId, branchId, field, time, type, matchdayId, date }) {
+  const payload = {
+    local_team_id: homeTeamId,
+    visit_team_id: awayTeamId,
+    branch_id: Number(branchId),
+    field_id: Number(field),
+    hour: time,
+    type: type || 'Regular',
+    matchday_id: matchdayId
+  }
+
+  if (date) payload.date = date
+
   const result = await runQuery(
     supabase
       .from('Match')
-      .update({
-        local_team_id: homeTeamId,
-        visit_team_id: awayTeamId,
-        branch_id: Number(branchId),
-        field_id: Number(field),
-        hour: time,
-        type: type || 'Regular',
-        matchday_id: matchdayId
-      })
+      .update(payload)
       .eq('id', matchId)
       .select(MATCH_SELECT)
       .single()

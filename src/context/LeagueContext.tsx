@@ -13,21 +13,31 @@ export function LeagueProvider({ children }) {
 
   useEffect(() => {
     if (!leagueSlug) return
-
-    async function loadLeague() {
-      try {
-        setLoading(true)
-        const leagueData = await getLeagueBySlug(leagueSlug)
-        setLeague(leagueData)
-      } catch (err) {
-        console.error(err)
-      } finally {
-        setLoading(false)
-      }
-    }
-
     loadLeague()
   }, [leagueSlug])
+
+  async function loadLeague() {
+    try {
+      setLoading(true)
+      const leagueData = await getLeagueBySlug(leagueSlug)
+      setLeague(leagueData)
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Quien guarda un cambio en la liga (Configuración General: criterios de
+  // desempate, módulos del Inicio, nombres de estadísticas, etc.) ya invalida
+  // la caché de getLeagueBySlug desde el service, pero este contexto solo
+  // vuelve a pedir los datos cuando cambia leagueSlug — sin esto, el resto de
+  // la app (ej. Inicio) seguiría viendo el `league` viejo en memoria hasta
+  // recargar la página. Se llama justo después de guardar para refrescarlo
+  // al instante, sin esperar a un refresh manual.
+  function refreshLeague() {
+    return loadLeague()
+  }
 
   useEffect(() => {
     applyAccentColor(league?.primary_color)
@@ -38,7 +48,7 @@ export function LeagueProvider({ children }) {
   }, [league?.name, league?.image_url])
 
   return (
-    <LeagueContext.Provider value={{ league, loading }}>
+    <LeagueContext.Provider value={{ league, loading, refreshLeague }}>
       {children}
     </LeagueContext.Provider>
   )

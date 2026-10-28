@@ -23,6 +23,7 @@ function Playoffs() {
   const { league } = useLeague()
   const { categories, category, setCategory } = useCategory()
   const [matches, setMatches] = useState([])
+  const [matchdays, setMatchdays] = useState([])
   const [loadingMatches, setLoadingMatches] = useState(true)
 
   useEffect(() => {
@@ -34,8 +35,9 @@ function Playoffs() {
 
         const matchdaysData = await getMatchDaysByCategoryId(category.id)
         const ids = matchdaysData.map(md => md.id)
-        const matchesData = await getMatchesByMatchDayIds(ids)
+        const matchesData = ids.length ? await getMatchesByMatchDayIds(ids) : []
 
+        setMatchdays(matchdaysData || [])
         setMatches(matchesData || [])
       } catch (err) {
         console.error(err)
@@ -49,17 +51,37 @@ function Playoffs() {
 
   const playoffMatches = matches.filter(m => PLAYOFF_STAGES.includes(m.type))
 
-  const matchesByStage = {}
-  PLAYOFF_STAGES.forEach(stage => {
-    matchesByStage[stage] = playoffMatches
-      .filter(m => m.type === stage)
-      .sort((a, b) => `${a.date} ${a.hour}`.localeCompare(`${b.date} ${b.hour}`))
+  // Cada bracket de playoffs (puede haber varios independientes, uno por
+  // división, o uno solo general) vive en su propia jornada — se agrupan
+  // por matchday_id para poder mostrarlos como brackets separados, igual
+  // que en el Asistente del Torneo.
+  const playoffMatchdayIds = [...new Set(playoffMatches.map(m => m.matchday_id))].sort((a, b) => {
+    const dateA = matchdays.find(md => md.id === a)?.date || ''
+    const dateB = matchdays.find(md => md.id === b)?.date || ''
+    return dateA.localeCompare(dateB)
   })
 
-  const finalMatch = matchesByStage['Final']?.[0]
-  const champion = finalMatch && finalMatch.status === 'Terminado'
-    ? (finalMatch.local_points > finalMatch.visit_points ? finalMatch.local_team : finalMatch.visit_team)
-    : null
+  const playoffBrackets = playoffMatchdayIds.map(matchdayId => {
+    const mdMatches = playoffMatches.filter(m => m.matchday_id === matchdayId)
+    const matchesByStage = {}
+    PLAYOFF_STAGES.forEach(stage => {
+      matchesByStage[stage] = mdMatches
+        .filter(m => m.type === stage)
+        .sort((a, b) => `${a.date} ${a.hour}`.localeCompare(`${b.date} ${b.hour}`))
+    })
+    const finalMatch = matchesByStage['Final']?.[0]
+    const champion = finalMatch && finalMatch.status === 'Terminado'
+      ? (finalMatch.local_points > finalMatch.visit_points ? finalMatch.local_team : finalMatch.visit_team)
+      : null
+    const matchday = matchdays.find(md => md.id === matchdayId)
+    return { matchdayId, label: matchday?.name || 'Playoffs', matchesByStage, champion }
+  })
+
+  // La mayoría de las ligas solo usa un bracket general — en ese caso se
+  // mantiene la vista de siempre (sin encabezado extra). Solo cuando hay
+  // más de uno (playoffs por división) se muestran como bloques separados.
+  const showBracketLabels = playoffBrackets.length > 1
+  const champion = playoffBrackets.length === 1 ? playoffBrackets[0].champion : null
 
   const isDataLoading = !league || loadingMatches
   const [showLoader, setShowLoader] = useState(true)
@@ -102,7 +124,19 @@ function Playoffs() {
         {playoffMatches.length === 0 ? (
           <p className="empty-playoffs">Aún no hay partidos de playoffs registrados</p>
         ) : (
-          <PlayoffBracket matchesByStage={matchesByStage} championId={champion?.id} />
+          playoffBrackets.map(b => (
+            <div key={b.matchdayId} className="playoff-bracket-block">
+              {showBracketLabels && (
+                <>
+                  <h3 className="playoff-bracket-block-title">🏆 {b.label}</h3>
+                  {b.champion && (
+                    <p className="playoff-bracket-block-champion">Campeón: {b.champion.name}</p>
+                  )}
+                </>
+              )}
+              <PlayoffBracket matchesByStage={b.matchesByStage} championId={b.champion?.id} />
+            </div>
+          ))
         )}
       </main>
       <Footer />

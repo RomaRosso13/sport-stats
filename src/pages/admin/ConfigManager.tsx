@@ -8,13 +8,14 @@ import Header from '../../components/common/Header'
 import Footer from '../../components/common/Footer'
 
 import { updateSeasonCalendarConfig } from '../../services/season.service'
-import { updateLeagueStatLabels, updateLeagueMembershipDate, updateLeagueTiebreakerConfig } from '../../services/league.service'
+import { updateLeagueStatLabels, updateLeagueMembershipDate, updateLeagueTiebreakerConfig, updateLeagueHomeModulesConfig } from '../../services/league.service'
 import { getPlatformSettings, updatePlatformReleaseNotes } from '../../services/platform_settings.service'
 import { getHeroImagesByLeagueId, addHeroImage, deleteHeroImage } from '../../services/league_hero_image.service'
 import { uploadImage } from '../../services/storage.service'
 import { compressImage } from '../../utils/compressImage'
 import { STAT_KEYS, DEFAULT_STAT_LABELS, getStatLabels } from '../../constants/statFields'
 import { TIEBREAKER_LABELS, DEFAULT_TIEBREAKER_CONFIG } from '../../constants/tiebreakerCriteria'
+import { HOME_MODULE_LABELS, HOME_MODULE_SIZES, getDefaultHomeModulesConfig, reconcileHomeModulesConfig } from '../../constants/homeModules'
 
 import './ConfigManager.css'
 
@@ -26,7 +27,7 @@ const DEFAULT_CALENDAR_CONFIG = {
 }
 
 function ConfigManager() {
-  const { league } = useLeague()
+  const { league, refreshLeague } = useLeague()
   const { seasons, season: activeSeason } = useSeason()
   const { isSuperAdmin, isFullAdmin } = useLeagueMembership()
 
@@ -45,6 +46,7 @@ function ConfigManager() {
       setMembershipSaved(false)
 
       await updateLeagueMembershipDate(league.id, membershipDate)
+      await refreshLeague()
 
       setMembershipSaved(true)
     } catch (err) {
@@ -274,6 +276,7 @@ function ConfigManager() {
       setTiebreakerSaved(false)
 
       await updateLeagueTiebreakerConfig(league.id, tiebreakerConfig)
+      await refreshLeague()
 
       setTiebreakerSaved(true)
     } catch (err) {
@@ -281,6 +284,60 @@ function ConfigManager() {
       setTiebreakerError(err.message || 'No se pudo guardar el orden de criterios de desempate')
     } finally {
       setSavingTiebreaker(false)
+    }
+  }
+
+  // --- Módulos de la página de Inicio ---
+  const [homeModulesConfig, setHomeModulesConfig] = useState(
+    reconcileHomeModulesConfig(league?.home_modules_config?.length ? league.home_modules_config : getDefaultHomeModulesConfig(league?.format))
+  )
+  const [savingHomeModules, setSavingHomeModules] = useState(false)
+  const [homeModulesError, setHomeModulesError] = useState('')
+  const [homeModulesSaved, setHomeModulesSaved] = useState(false)
+
+  useEffect(() => {
+    setHomeModulesConfig(reconcileHomeModulesConfig(league?.home_modules_config?.length ? league.home_modules_config : getDefaultHomeModulesConfig(league?.format)))
+  }, [league?.id, league?.format])
+
+  function handleMoveHomeModule(index, direction) {
+    const targetIndex = index + direction
+    if (targetIndex < 0 || targetIndex >= homeModulesConfig.length) return
+
+    const reordered = [...homeModulesConfig]
+    ;[reordered[index], reordered[targetIndex]] = [reordered[targetIndex], reordered[index]]
+    setHomeModulesConfig(reordered)
+    setHomeModulesSaved(false)
+  }
+
+  function handleToggleHomeModule(key) {
+    const enabledCount = homeModulesConfig.filter(m => m.enabled).length
+    const current = homeModulesConfig.find(m => m.key === key)
+
+    if (current.enabled && enabledCount <= 1) {
+      setHomeModulesError('Debe quedar al menos un módulo activo.')
+      return
+    }
+
+    setHomeModulesError('')
+    setHomeModulesConfig(prev => prev.map(m => m.key === key ? { ...m, enabled: !m.enabled } : m))
+    setHomeModulesSaved(false)
+  }
+
+  async function handleSaveHomeModules() {
+    try {
+      setSavingHomeModules(true)
+      setHomeModulesError('')
+      setHomeModulesSaved(false)
+
+      await updateLeagueHomeModulesConfig(league.id, homeModulesConfig)
+      await refreshLeague()
+
+      setHomeModulesSaved(true)
+    } catch (err) {
+      console.error(err)
+      setHomeModulesError(err.message || 'No se pudo guardar los módulos del Inicio')
+    } finally {
+      setSavingHomeModules(false)
     }
   }
 
@@ -556,6 +613,66 @@ function ConfigManager() {
           <div className="config-card-actions">
             <button type="button" disabled={savingTiebreaker} onClick={handleSaveTiebreaker}>
               {savingTiebreaker ? 'Guardando...' : 'Guardar criterios'}
+            </button>
+          </div>
+        </section>
+
+        <section className="config-card">
+          <h3>Módulos del Inicio</h3>
+          <p className="config-card-subtitle">
+            Elige qué bloques se muestran en la página de Inicio y en qué orden. Usa las flechas para cambiar la prioridad y la casilla para activar o desactivar cada uno — siempre debe quedar al menos uno activo. El Banner usa las imágenes que subas más abajo, en "Imágenes del Inicio".
+          </p>
+
+          <div className="home-module-list">
+            {homeModulesConfig.map((mod, index) => (
+              <div key={mod.key} className={`home-module-row ${mod.enabled ? '' : 'disabled'}`}>
+                <div className="home-module-order-controls">
+                  <button
+                    type="button"
+                    className="home-module-order-btn"
+                    disabled={index === 0}
+                    onClick={() => handleMoveHomeModule(index, -1)}
+                    aria-label="Subir prioridad"
+                  >
+                    ▲
+                  </button>
+                  <button
+                    type="button"
+                    className="home-module-order-btn"
+                    disabled={index === homeModulesConfig.length - 1}
+                    onClick={() => handleMoveHomeModule(index, 1)}
+                    aria-label="Bajar prioridad"
+                  >
+                    ▼
+                  </button>
+                </div>
+
+                <span className="home-module-priority">{index + 1}</span>
+                <span className="home-module-label">
+                  {HOME_MODULE_LABELS[mod.key] || mod.key}
+                  <span className={`home-module-size ${HOME_MODULE_SIZES[mod.key]}`}>
+                    {HOME_MODULE_SIZES[mod.key] === 'full' ? 'Franja completa' : HOME_MODULE_SIZES[mod.key] === 'main' ? 'Bloque principal' : 'Barra lateral'}
+                  </span>
+                </span>
+
+                <label className="home-module-toggle">
+                  <input
+                    type="checkbox"
+                    checked={mod.enabled}
+                    onChange={() => handleToggleHomeModule(mod.key)}
+                  />
+                  {mod.enabled ? 'Activo' : 'Desactivado'}
+                </label>
+              </div>
+            ))}
+          </div>
+
+          {homeModulesError && <p className="modal-error">{homeModulesError}</p>}
+          {homeModulesSaved && <p className="config-success">✓ Guardado</p>}
+
+          <div className="config-card-actions">
+            <button type="button" disabled={savingHomeModules} onClick={handleSaveHomeModules}>
+              {savingHomeModules ? 'Guardando...' : 'Guardar módulos'}
             </button>
           </div>
         </section>

@@ -33,6 +33,22 @@ const PUBLIC_NAV_ITEMS = [
   { to: '/fotos', label: 'Fotos', icon: CameraIcon }
 ]
 
+// En un torneo relámpago (League.format === 'torneo') el bracket importa
+// más que la tabla de grupos — se muestra "Playoffs" antes que "Tabla" en
+// el menú. Una liga normal mantiene el orden de siempre.
+function getPublicNavItems(format) {
+  if (format !== 'torneo') return PUBLIC_NAV_ITEMS
+
+  const items = [...PUBLIC_NAV_ITEMS]
+  const playoffsIndex = items.findIndex(i => i.to === '/playoffs')
+  if (playoffsIndex === -1) return items
+
+  const [playoffsItem] = items.splice(playoffsIndex, 1)
+  const tablaIndex = items.findIndex(i => i.to === '/tabla')
+  items.splice(tablaIndex === -1 ? items.length : tablaIndex, 0, playoffsItem)
+  return items
+}
+
 // Mismos links y condiciones de rol que ya existían en el dropdown viejo —
 // solo se movieron aquí para no duplicarlos entre AdminMenu (escritorio) y
 // MobileNavDrawer (móvil). Agrupados por tema para que AdminMenu los pinte
@@ -70,6 +86,7 @@ function Header({ league }) {
   const { user } = useAuth()
   const { seasons, season, setSeason, loading } = useSeason()
   const { isMember, isFullAdmin, isReferee, isCoach } = useLeagueMembership()
+  const navItems = getPublicNavItems(league?.format)
 
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [showLoginForm, setShowLoginForm] = useState(false)
@@ -211,7 +228,7 @@ function Header({ league }) {
       </div>
 
       <nav className="primary-nav">
-        {PUBLIC_NAV_ITEMS.map(item => (
+        {navItems.map(item => (
           <NavLink
             key={item.to || 'home'}
             to={`/${league.slug}${item.to}`}
@@ -228,7 +245,7 @@ function Header({ league }) {
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
         leagueSlug={league.slug}
-        publicItems={PUBLIC_NAV_ITEMS}
+        publicItems={navItems}
         adminItems={adminNavItemsFlat}
         isMember={isMember}
         onChangeLeague={handleChangeLeague}

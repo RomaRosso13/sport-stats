@@ -71,6 +71,21 @@ export async function updateLeagueTiebreakerConfig(leagueId, config) {
   return result
 }
 
+// `config`: arreglo ordenado de { key, enabled } — el orden ES la prioridad
+// de los módulos en el Inicio; Home.tsx acomoda automáticamente cuáles van
+// de franja completa, cuáles de bloque principal y cuáles de barra lateral
+// (ver constants/homeModules.js). Si la liga nunca guarda nada aquí,
+// home_modules_config queda null y Home.tsx usa su layout de siempre.
+export async function updateLeagueHomeModulesConfig(leagueId, config) {
+  const result = await runQuery(
+    supabase.from('League').update({ home_modules_config: config }).eq('id', leagueId).select().single(),
+    'No se pudo guardar los módulos del Inicio'
+  )
+
+  invalidate('getLeagueBySlug')
+  return result
+}
+
 export async function updateLeagueStatLabels(leagueId, labels) {
   const payload = {}
   STAT_KEYS.forEach(key => {

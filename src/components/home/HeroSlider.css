@@ -15,10 +15,33 @@
 }
 
 .hero-slider-slide {
+  position: relative;
   flex: 0 0 100%;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  overflow: hidden;
+}
+
+.hero-slider-slide-backdrop {
+  position: absolute;
+  inset: -20px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(24px) brightness(0.7) saturate(1.15);
+  transform: scale(1.15);
+}
+
+.hero-slider-slide-img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* `contain` para que la imagen completa siempre sea visible, sin recortar
+     nada sin importar si es muy ancha o muy alta — el espacio sobrante lo
+     cubre el fondo desenfocado de arriba en vez de quedar vacío. */
+  object-fit: contain;
 }
 
 .hero-slider-arrow {

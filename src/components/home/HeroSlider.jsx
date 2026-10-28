@@ -40,7 +40,18 @@ function HeroSlider({ images }) {
         style={{ transform: `translateX(-${index * 100}%)` }}
       >
         {images.map(img => (
-          <img key={img.id} src={img.image_url} alt="" className="hero-slider-slide" />
+          <div key={img.id} className="hero-slider-slide">
+            {/* Fondo desenfocado con la misma imagen, para rellenar el espacio
+                que deja `contain` cuando la foto no comparte proporción con el
+                espacio disponible (muy ancha o muy alta) — así nunca se
+                recorta el banner, y el espacio sobrante no se ve vacío. */}
+            <div
+              className="hero-slider-slide-backdrop"
+              style={{ backgroundImage: `url(${img.image_url})` }}
+              aria-hidden="true"
+            />
+            <img src={img.image_url} alt="" className="hero-slider-slide-img" />
+          </div>
         ))}
       </div>
 

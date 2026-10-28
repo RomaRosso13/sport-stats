@@ -15,6 +15,17 @@
   overflow: hidden; /* desktop: scroll interno */
 }
 
+/* El layout de módulos configurables puede apilar varias filas que cada una
+   quiera ocupar bastante alto (un bloque principal "solo" se estira a casi
+   toda la pantalla) — a diferencia del layout fijo de siempre (pensado para
+   caber en una sola pantalla con scroll interno por tarjeta), aquí el total
+   puede superar el alto visible. En vez de recortarlo sin poder verlo, se
+   deja que la página entera haga scroll normal (mismo truco que ya se usa
+   en mobile para .home-container). */
+.home-container.home-container--flow {
+  overflow: visible;
+}
+
 /* ===============================
    GRID DE STATS SUPERIORES
 ================================ */
@@ -134,6 +145,91 @@
 }
 
 /* ===============================
+   MOTOR DE FILAS (módulos configurables)
+   Mismo criterio de .home-layout/.right-column de arriba, pero repetible
+   por fila en vez de un único grid fijo — así una liga puede tener, por
+   ejemplo, el Banner y la Tabla de Posiciones como dos bloques principales
+   distintos, cada uno con su propia compañía lateral (o sin ella).
+================================ */
+.home-rows {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-top: 12px;
+  min-height: 0;
+  min-width: 0;
+}
+
+.home-row-full {
+  min-width: 0;
+}
+
+.home-row-split {
+  display: grid;
+  grid-template-columns: 1.3fr 1.3fr;
+  gap: 24px;
+  align-items: stretch;
+  min-width: 0;
+}
+
+.home-row-split .main-slot {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.home-row-split .main-slot .home-card {
+  flex: 1;
+}
+
+/* Sin compañero lateral: el bloque principal ocupa todo el ancho (en vez de
+   quedarse a medio ancho dentro del grid de 2 columnas de .home-row-split)
+   y ocupa el resto del alto disponible en pantalla. Es `height` fijo (no
+   `min-height`): si el contenido es más corto, queda ese espacio dentro de
+   la tarjeta; si es más largo, no empuja la página — hace scroll interno
+   por el `.card-body{overflow-y:auto}` de adentro. */
+.home-row-main-alone .home-card {
+  height: calc(100vh - 340px);
+}
+
+.empty-bracket {
+  margin-top: 12px;
+  padding: 32px 16px;
+  text-align: center;
+  border: 1px dashed var(--border-color);
+  border-radius: 14px;
+  background: var(--bg-surface);
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.home-row-side-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-height: 0;
+  min-width: 0;
+}
+
+.home-row-side-stack .home-card {
+  flex: 1;
+}
+
+/* Un solo módulo en la barra lateral (sin otro apilado debajo): mismo
+   criterio que un bloque principal solo — se fija a casi toda la pantalla
+   (con scroll interno si el contenido no cabe) en vez de quedarse chico, y
+   el bloque principal de al lado lo sigue por el `align-items: stretch`
+   del grid de .home-row-split. */
+.home-row-side-stack > div:only-child .home-card {
+  /* `flex: 1` (de la regla de arriba) usa flex-basis:0 y ganaría sobre
+     `height` al repartir el espacio — se anula aquí para que el `height`
+     fijo sí mande. */
+  flex: none;
+  height: calc(100vh - 340px);
+}
+
+/* ===============================
    FOOTER
 ================================ */
 /* ===============================
@@ -141,6 +237,10 @@
 ================================ */
 @media (max-width: 1024px) {
   .home-layout {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .home-row-split {
     grid-template-columns: 1fr 1fr;
   }
 }
@@ -188,6 +288,32 @@
 
   .home-card.positions-wrapper {
     max-height: none;
+  }
+
+  .home-rows {
+    gap: 16px;
+  }
+
+  .home-row-split {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .home-row-main-alone .home-card {
+    height: auto;
+  }
+
+  .home-row-side-stack > div:only-child .home-card {
+    height: auto;
+  }
+
+  .home-row-side-stack {
+    gap: 16px;
+  }
+
+  .home-row-side-stack .home-card,
+  .home-row-split .main-slot .home-card {
+    flex: none;
   }
 
   /* no scroll interno en mobile */

@@ -33,6 +33,7 @@ import PhotoManager from "./pages/PhotoManager"
 import ConfigManager from "./pages/admin/ConfigManager"
 import CoachTeamManager from "./pages/admin/CoachTeamManager"
 import AttendanceManager from "./pages/admin/AttendanceManager"
+import TournamentWizard from "./pages/admin/TournamentWizard"
 
 function App() {
   return (
@@ -70,6 +71,7 @@ function App() {
           <Route path="/:leagueSlug/admin/usuarios" element={ <ProtectedRoute> <UserManager /> </ProtectedRoute> }/>
           <Route path="/:leagueSlug/admin/configuracion" element={ <ProtectedRoute> <ConfigManager /> </ProtectedRoute> }/>
           <Route path="/:leagueSlug/admin/mi-equipo" element={ <ProtectedRoute allowCoach> <CoachTeamManager /> </ProtectedRoute> }/>
+          <Route path="/:leagueSlug/admin/torneo" element={ <ProtectedRoute> <TournamentWizard /> </ProtectedRoute> }/>
         </Route>
 
         <Route path="*" element={<p>Liga no encontrada</p>} />
