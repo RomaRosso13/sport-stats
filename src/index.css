@@ -3,6 +3,10 @@
 }
 
 :root {
+  /* Tipografía de títulos/marcadores — condensada, con energía de
+     scoreboard. El cuerpo se queda en la sans-serif del sistema de siempre. */
+  --font-display: 'Oswald', 'Arial Narrow', sans-serif;
+
   /* Acento dinámico: se recalcula por liga en applyAccentColor.js.
      Estos valores son el default (azul) hasta que carga la liga. */
   --accent: #2563eb;
@@ -56,6 +60,10 @@
   --cat-varonil-text: #1d4ed8;
   --cat-mixto-text: #047857;
 
+  --franchise-grad: linear-gradient(135deg, #f5f3ff, #ede9fe);
+  --franchise-border: #ddd6fe;
+  --franchise-text: #7c3aed;
+
   --leader-row-grad: linear-gradient(90deg, #fffbeb, var(--bg-surface-alt));
   --leader-ring: #fde68a;
 
@@ -99,6 +107,10 @@
   --cat-varonil-text: #60a5fa;
   --cat-mixto-text: #34d399;
 
+  --franchise-grad: linear-gradient(135deg, rgba(124, 58, 237, 0.18), rgba(124, 58, 237, 0.28));
+  --franchise-border: rgba(124, 58, 237, 0.4);
+  --franchise-text: #c4b5fd;
+
   --leader-row-grad: linear-gradient(90deg, rgba(251, 191, 36, 0.14), var(--bg-surface-alt));
   --leader-ring: rgba(251, 191, 36, 0.4);
 
@@ -130,6 +142,98 @@ body {
 #root {
   width: 100%;
 }
+
+h1, h2, h3, h4,
+.quick-link-label,
+.summary-value,
+.stat-value {
+  font-family: var(--font-display);
+  letter-spacing: .01em;
+  text-wrap: balance;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Badges (estado, franquicia, categoría) ----------
+   Componente compartido por toda la app: un ícono circular + texto, para
+   que "Terminado"/"Pendiente"/"Por aprobar"/"Franquicia"/categoría se vean
+   consistentes sin importar en qué pantalla aparezcan. */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  padding: 6px 13px 6px 9px;
+  border-radius: 999px;
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+.badge .badge-ic {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.badge-win {
+  background: linear-gradient(180deg, var(--status-win-bg), var(--status-win-bg));
+  color: var(--status-win-text);
+  border: 1px solid var(--status-win-border);
+}
+.badge-win .badge-ic { background: var(--status-win-text); color: var(--bg-surface); }
+
+.badge-pending {
+  background: var(--status-pending-bg);
+  color: var(--status-pending-text);
+  border: 1px solid color-mix(in srgb, var(--status-pending-text) 35%, transparent);
+}
+.badge-pending .badge-ic { background: var(--status-pending-text); color: var(--bg-surface); }
+
+.badge-review {
+  background: var(--status-review-bg);
+  color: var(--status-review-text);
+  border: 1px solid color-mix(in srgb, var(--status-review-text) 30%, transparent);
+}
+.badge-review .badge-ic { background: var(--status-review-text); color: var(--bg-surface); }
+
+.badge-franchise {
+  background: var(--franchise-grad);
+  color: var(--franchise-text);
+  border: 1px solid var(--franchise-border);
+}
+.badge-franchise .badge-ic { background: linear-gradient(135deg, #8b5cf6, var(--accent)); color: #fff; }
+
+.badge-cat { border: 1px solid transparent; }
+.badge-cat.varonil { background: var(--cat-varonil-grad); color: var(--cat-varonil-text); }
+.badge-cat.femenil { background: var(--cat-femenil-grad); color: var(--cat-femenil-text); }
+.badge-cat.mixto { background: var(--cat-mixto-grad); color: var(--cat-mixto-text); }
+
+.badge-toggle {
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid transparent;
+  transition: transform .15s cubic-bezier(.2,.8,.2,1), background-color .15s, color .15s, border-color .15s;
+}
+.badge-toggle:hover { transform: translateY(-1px); }
+.badge-toggle.off {
+  background: var(--bg-muted);
+  color: var(--text-faint);
+  border: 1px dashed var(--border-color);
+  box-shadow: none;
+}
+.badge-toggle.off .badge-ic { background: transparent; border: 1.5px dashed var(--text-faint); }
+.badge-toggle.off:hover { border-color: var(--accent); color: var(--accent); }
 
 a {
   font-weight: 500;

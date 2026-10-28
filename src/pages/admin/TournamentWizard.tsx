@@ -439,9 +439,9 @@ function TournamentWizard() {
         {category && (
           <div className="tw-steps">
             {/* PASO 1: GRUPOS */}
-            <section className="tw-step">
+            <section className={`tw-step ${!groupsReady ? 'active' : ''}`}>
               <div className="tw-step-head">
-                <div className={`tw-step-num ${groupsReady ? 'done' : ''}`}>{groupsReady ? '✓' : '1'}</div>
+                <div className={`tw-step-num ${groupsReady ? 'done' : !groupsReady ? 'active' : ''}`}>{groupsReady ? '✓' : '1'}</div>
                 <div className="tw-step-title-wrap">
                   <div className="tw-step-title">Grupos</div>
                   <div className="tw-step-sub">Reparte los equipos inscritos en grupos automáticamente</div>
@@ -506,9 +506,9 @@ function TournamentWizard() {
             </section>
 
             {/* PASO 2: PARTIDOS DE GRUPO */}
-            <section className={`tw-step ${!groupsReady ? 'locked' : ''}`}>
+            <section className={`tw-step ${!groupsReady ? 'locked' : ''} ${groupsReady && !allGroupMatchesDone ? 'active' : ''}`}>
               <div className="tw-step-head">
-                <div className={`tw-step-num ${allGroupMatchesDone ? 'done' : ''}`}>{allGroupMatchesDone ? '✓' : '2'}</div>
+                <div className={`tw-step-num ${allGroupMatchesDone ? 'done' : groupsReady ? 'active' : ''}`}>{allGroupMatchesDone ? '✓' : '2'}</div>
                 <div className="tw-step-title-wrap">
                   <div className="tw-step-title">Partidos de grupo</div>
                   <div className="tw-step-sub">Todos contra todos, dentro de cada grupo</div>
@@ -588,9 +588,9 @@ function TournamentWizard() {
             </section>
 
             {/* PASO 3: PLAYOFFS */}
-            <section className={`tw-step ${groupMatches.length === 0 ? 'locked' : ''}`}>
+            <section className={`tw-step ${groupMatches.length === 0 ? 'locked' : ''} ${allGroupMatchesDone && playoffMatches.length === 0 ? 'active' : ''}`}>
               <div className="tw-step-head">
-                <div className={`tw-step-num ${playoffMatches.length > 0 ? 'done' : ''}`}>{playoffMatches.length > 0 ? '✓' : '3'}</div>
+                <div className={`tw-step-num ${playoffMatches.length > 0 ? 'done' : allGroupMatchesDone ? 'active' : ''}`}>{playoffMatches.length > 0 ? '✓' : '3'}</div>
                 <div className="tw-step-title-wrap">
                   <div className="tw-step-title">Playoffs</div>
                   <div className="tw-step-sub">Siembra el bracket con los mejores de cada grupo</div>

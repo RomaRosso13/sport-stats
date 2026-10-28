@@ -24,16 +24,23 @@ function RosterAvatar({ imageUrl, name }) {
   return <div className="roster-avatar">{getInitial(name)}</div>
 }
 
-function PlayerRosterManager({ team, onAddPlayer, onEditPlayer, onToggleActive, onDeletePlayer }) {
+function PlayerRosterManager({ team, onAddPlayer, onEditPlayer, onToggleActive, onDeletePlayer, onAddCategory = null }) {
   const players = sortPlayersByNumber(team.Player || [])
 
   return (
     <section className="roster-manager">
       <div className="section-header">
         <h3>Jugadores – {team.name}</h3>
-        <button className="primary-btn" onClick={onAddPlayer}>
-          + Nuevo jugador
-        </button>
+        <div style={{ display: 'flex', gap: 8 }}>
+          {onAddCategory && (
+            <button className="primary-btn" style={{ background: 'var(--bg-muted)', color: 'var(--text-secondary)' }} onClick={onAddCategory}>
+              🔗 Agregar a otra categoría
+            </button>
+          )}
+          <button className="primary-btn" onClick={onAddPlayer}>
+            + Nuevo jugador
+          </button>
+        </div>
       </div>
 
       {players.length === 0 ? (

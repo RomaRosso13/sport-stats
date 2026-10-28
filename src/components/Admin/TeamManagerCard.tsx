@@ -1,14 +1,21 @@
 import TeamLogo from '../common/TeamLogo'
 import './TeamManagerCard.css'
 
-function TeamManagerCard({ team, coach, isSelected, onSelect, onEdit, onDelete, onToggleActive, divisions = [], onSetDivision }) {
+const CATEGORY_LABELS = { Mixto: 'Mixto', Femenil: 'Femenil', Varonil: 'Varonil' }
+
+function TeamManagerCard({ team, coach, isSelected, onSelect, onEdit, onDelete, onToggleActive, divisions = [], onSetDivision, franchiseCategories, activeCategoryType, mergeMode, mergeSelected, onToggleMergeSelect }) {
   const playerCount = team.Player?.length || 0
+  const isFranchise = !!franchiseCategories && franchiseCategories.length > 1
 
   return (
     <div
-      className={`team-manager-card ${isSelected ? 'selected' : ''} ${team.active === false ? 'inactive' : ''}`}
-      onClick={() => onSelect(team)}
+      className={`team-manager-card ${isSelected ? 'selected' : ''} ${team.active === false ? 'inactive' : ''} ${isFranchise ? 'franchise' : ''} ${mergeMode && mergeSelected ? 'selected' : ''}`}
+      onClick={() => mergeMode ? onToggleMergeSelect(team) : onSelect(team)}
     >
+      {mergeMode && (
+        <div className={`merge-check ${mergeSelected ? 'on' : ''}`}>{mergeSelected ? '✓' : ''}</div>
+      )}
+
       <TeamLogo logoUrl={team.logo_url} name={team.name} alt={team.name} className="team-manager-logo" />
 
       <div className="team-manager-info">
@@ -16,6 +23,15 @@ function TeamManagerCard({ team, coach, isSelected, onSelect, onEdit, onDelete, 
         <span className="team-manager-count">
           {playerCount} jugador{playerCount === 1 ? '' : 'es'}
         </span>
+        {isFranchise && (
+          <div className="franchise-cat-chips">
+            {franchiseCategories.map((c, i) => (
+              <span key={`${c.type}-${i}`} className={`badge badge-cat ${(c.type || '').toLowerCase()} ${c.type === activeCategoryType ? '' : 'dim'}`}>
+                {CATEGORY_LABELS[c.type] || c.type}
+              </span>
+            ))}
+          </div>
+        )}
         {team.active === false && (
           <span className="team-manager-inactive-tag">Inactivo</span>
         )}
@@ -44,6 +60,7 @@ function TeamManagerCard({ team, coach, isSelected, onSelect, onEdit, onDelete, 
         )}
       </div>
 
+      {!mergeMode && (
       <div className="team-manager-actions">
         <button
           type="button"
@@ -78,6 +95,7 @@ function TeamManagerCard({ team, coach, isSelected, onSelect, onEdit, onDelete, 
           Eliminar
         </button>
       </div>
+      )}
     </div>
   )
 }

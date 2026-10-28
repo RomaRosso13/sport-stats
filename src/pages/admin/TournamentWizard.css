@@ -37,6 +37,13 @@
   border-radius: 16px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
   overflow: hidden;
+  border: 1.5px solid transparent;
+  transition: border-color .25s ease, box-shadow .25s ease;
+}
+
+.tw-step.active {
+  border-color: rgba(var(--accent-rgb), .3);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(var(--accent-rgb), .06);
 }
 
 .tw-step.locked {
@@ -53,21 +60,32 @@
 
 .tw-step-num {
   flex-shrink: 0;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 14px;
-  background: var(--accent-soft);
-  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: 16px;
+  background: var(--bg-muted);
+  color: var(--text-faint);
+  border: 2px solid var(--border-color);
+  transition: all .3s cubic-bezier(.2,.8,.2,1);
+}
+
+.tw-step-num.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  box-shadow: 0 0 0 5px rgba(var(--accent-rgb), .16);
 }
 
 .tw-step-num.done {
-  background: var(--status-win-bg);
-  color: var(--status-win-text);
+  background: var(--status-win-text);
+  border-color: var(--status-win-text);
+  color: #fff;
 }
 
 .tw-step-title-wrap {

@@ -1,4 +1,5 @@
 .team-manager-card {
+  position: relative;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -8,13 +9,13 @@
   background: var(--card-grad);
   box-shadow: 0 6px 18px rgba(0,0,0,0.05);
   cursor: pointer;
-  transition: all .2s ease;
+  transition: transform .22s cubic-bezier(.2,.8,.2,1), box-shadow .22s ease, border-color .22s ease, background-color .22s ease;
   border: 2px solid transparent;
 }
 
 .team-manager-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 22px rgba(0,0,0,0.08);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px rgba(0,0,0,0.1), 0 4px 10px rgba(0,0,0,0.05);
 }
 
 .team-manager-card.selected {
@@ -24,6 +25,69 @@
 
 .team-manager-card.inactive {
   opacity: 0.6;
+}
+
+.team-manager-card.franchise {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--franchise-text) 6%, var(--bg-surface)), var(--bg-surface) 60%);
+  border-color: var(--franchise-border, #ddd6fe);
+  overflow: hidden;
+}
+
+.team-manager-card.franchise::before {
+  content: "🔗 FRANQUICIA";
+  position: absolute;
+  top: 12px;
+  right: -34px;
+  width: 150px;
+  text-align: center;
+  background: linear-gradient(135deg, #8b5cf6, var(--accent));
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  padding: 4px 0;
+  transform: rotate(40deg);
+  box-shadow: 0 2px 6px rgba(0,0,0,.2);
+  pointer-events: none;
+}
+
+.franchise-cat-chips {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+.franchise-cat-chips .badge {
+  padding: 3px 9px 3px 7px;
+  font-size: 9.5px;
+}
+.franchise-cat-chips .badge .badge-ic { width: 11px; height: 11px; }
+
+.franchise-cat-chips .badge.dim {
+  opacity: .5;
+}
+
+.merge-check {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 2px solid var(--border-color);
+  background: var(--bg-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 900;
+  color: #fff;
+}
+
+.merge-check.on {
+  background: var(--accent);
+  border-color: var(--accent);
 }
 
 .team-manager-inactive-tag {
@@ -106,6 +170,22 @@
   flex-wrap: wrap;
   gap: 8px;
   justify-content: flex-end;
+}
+
+/* En mouse/trackpad las acciones se ocultan hasta hover/foco, para que el
+   grid se vea limpio — en touch (sin hover real) se quedan siempre
+   visibles, porque ahí no existe un "antes de tocar" que las revele. */
+@media (hover: hover) and (pointer: fine) {
+  .team-manager-actions {
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity .18s ease, transform .18s ease;
+  }
+  .team-manager-card:hover .team-manager-actions,
+  .team-manager-card:focus-within .team-manager-actions {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .team-manager-edit-btn,

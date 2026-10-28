@@ -12,9 +12,19 @@ import TeamManagerCard from '../../components/Admin/TeamManagerCard'
 import TeamFormModal from '../../components/Admin/TeamFormModal'
 import PlayerFormModal from '../../components/Admin/PlayerFormModal'
 import PlayerRosterManager from '../../components/Admin/PlayerRosterManager'
+import FranchiseRosterManager from '../../components/Admin/FranchiseRosterManager'
+import FranchiseMergeModal from '../../components/Admin/FranchiseMergeModal'
+import AddFranchiseCategoryModal from '../../components/Admin/AddFranchiseCategoryModal'
 
-import { getTeamsByCategoryId, deleteTeam, setTeamActive, setTeamDivision } from '../../services/team.service.js'
-import { setPlayerActive, deletePlayer } from '../../services/player.service.js'
+import {
+  getTeamsByCategoryId,
+  getTeamsByCategoryIds,
+  getTeamsByFranchiseIds,
+  deleteTeam,
+  setTeamActive,
+  setTeamDivision
+} from '../../services/team.service.js'
+import { getPlayersByTeamIds, setPlayerActive, deletePlayer } from '../../services/player.service.js'
 import { getCoachAssignmentsByLeagueId } from '../../services/league_user.service.js'
 import { getActiveDivisionsByCategoryId } from '../../services/division.service.js'
 
@@ -32,6 +42,22 @@ function TeamManager() {
   const [coachesByTeamId, setCoachesByTeamId] = useState({})
   const [divisions, setDivisions] = useState([])
 
+  // { [franchiseId]: [{ id, category_id }] } — todos los Team de la
+  // franquicia (en cualquier categoría), para pintar los chips en la
+  // tarjeta y saber a qué categorías les falta roster.
+  const [franchiseTeamsByFranchiseId, setFranchiseTeamsByFranchiseId] = useState({})
+
+  // Roster unificado del equipo seleccionado, cuando es una franquicia con
+  // más de una categoría enlazada.
+  const [franchisePlayers, setFranchisePlayers] = useState([])
+  const [loadingFranchiseRoster, setLoadingFranchiseRoster] = useState(false)
+
+  const [mergeMode, setMergeMode] = useState(false)
+  const [mergeSelection, setMergeSelection] = useState([])
+  const [allTeams, setAllTeams] = useState([])
+  const [showMergeModal, setShowMergeModal] = useState(false)
+  const [showAddCatModal, setShowAddCatModal] = useState(false)
+
   const [editingTeam, setEditingTeam] = useState(null)
   const [showTeamModal, setShowTeamModal] = useState(false)
 
@@ -40,22 +66,21 @@ function TeamManager() {
 
   useEffect(() => {
     if (!category) return
-
-    async function loadTeams() {
-      try {
-        setLoadingTeams(true)
-        const teamsData = await getTeamsByCategoryId(category.id)
-        setTeams(teamsData || [])
-      } catch (err) {
-        console.error(err)
-      } finally {
-        setLoadingTeams(false)
-      }
-    }
-
     loadTeams()
     setSelectedTeamId(null)
   }, [category?.id])
+
+  async function loadTeams() {
+    try {
+      setLoadingTeams(true)
+      const teamsData = await getTeamsByCategoryId(category.id)
+      setTeams(teamsData || [])
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setLoadingTeams(false)
+    }
+  }
 
   useEffect(() => {
     if (!category) {
@@ -92,17 +117,76 @@ function TeamManager() {
     loadCoaches()
   }, [league?.id])
 
-  const selectedTeam = teams.find(t => t.id === selectedTeamId)
+  // Mapa de franquicias visibles en esta categoría → todos sus Team (en
+  // cualquier categoría), para los chips de la tarjeta.
+  useEffect(() => {
+    const franchiseIds = [...new Set(teams.map(t => t.franchise_id).filter(Boolean))]
+    if (franchiseIds.length === 0) {
+      setFranchiseTeamsByFranchiseId({})
+      return
+    }
 
-  function handleTeamSaved(savedTeam) {
+    getTeamsByFranchiseIds(franchiseIds)
+      .then(rows => {
+        const map = {}
+        ;(rows || []).forEach(row => {
+          (map[row.franchise_id] ||= []).push(row)
+        })
+        setFranchiseTeamsByFranchiseId(map)
+      })
+      .catch(err => console.error(err))
+  }, [teams])
+
+  const selectedTeam = teams.find(t => t.id === selectedTeamId)
+  const selectedFranchiseTeams = selectedTeam?.franchise_id
+    ? (franchiseTeamsByFranchiseId[selectedTeam.franchise_id] || [])
+    : []
+  const isFranchiseSelected = selectedFranchiseTeams.length > 1
+
+  // Roster compartido del equipo seleccionado, solo cuando de verdad tiene
+  // más de una categoría enlazada — si no, el roster normal de siempre basta.
+  useEffect(() => {
+    if (!isFranchiseSelected) {
+      setFranchisePlayers([])
+      return
+    }
+
+    const teamIds = selectedFranchiseTeams.map(t => t.id)
+
+    setLoadingFranchiseRoster(true)
+    getPlayersByTeamIds(teamIds)
+      .then(data => setFranchisePlayers(data || []))
+      .catch(err => console.error(err))
+      .finally(() => setLoadingFranchiseRoster(false))
+  }, [selectedTeam?.franchise_id, selectedFranchiseTeams.length])
+
+  function categoryTypeById(categoryId) {
+    return categories.find(c => c.id === categoryId)?.type
+  }
+
+  async function reloadAfterFranchiseChange() {
+    await loadTeams()
+  }
+
+  function handleTeamSaved(savedTeamOrFranchise) {
+    if (savedTeamOrFranchise?.franchise) {
+      // Se creó una franquicia: puede incluir Team de otras categorías que
+      // no se ven aquí — recargamos la categoría activa para traer el suyo.
+      reloadAfterFranchiseChange().then(() => {
+        const ownTeam = savedTeamOrFranchise.teams.find(t => t.category_id === category.id)
+        if (ownTeam) setSelectedTeamId(ownTeam.id)
+      })
+      return
+    }
+
     setTeams(prev => {
-      const exists = prev.some(t => t.id === savedTeam.id)
+      const exists = prev.some(t => t.id === savedTeamOrFranchise.id)
       if (exists) {
-        return prev.map(t => t.id === savedTeam.id ? { ...t, ...savedTeam } : t)
+        return prev.map(t => t.id === savedTeamOrFranchise.id ? { ...t, ...savedTeamOrFranchise } : t)
       }
-      return [...prev, { ...savedTeam, Player: [] }]
+      return [...prev, { ...savedTeamOrFranchise, Player: [] }]
     })
-    setSelectedTeamId(savedTeam.id)
+    setSelectedTeamId(savedTeamOrFranchise.id)
   }
 
   function handlePlayerSaved(savedPlayer) {
@@ -189,6 +273,40 @@ function TeamManager() {
     }
   }
 
+  // ---- Fusionar equipos ----
+  async function handleEnterMergeMode() {
+    try {
+      const data = await getTeamsByCategoryIds(categories.map(c => c.id))
+      setAllTeams(data || [])
+      setMergeMode(true)
+      setMergeSelection([])
+      setSelectedTeamId(null)
+    } catch (err) {
+      console.error(err)
+      toast.error('No se pudieron cargar los equipos')
+    }
+  }
+
+  function handleCancelMerge() {
+    setMergeMode(false)
+    setMergeSelection([])
+  }
+
+  function handleToggleMergeSelect(team) {
+    setMergeSelection(prev => prev.includes(team.id) ? prev.filter(id => id !== team.id) : [...prev, team.id])
+  }
+
+  async function handleMergeDone() {
+    setShowMergeModal(false)
+    setMergeMode(false)
+    setMergeSelection([])
+    await reloadAfterFranchiseChange()
+    toast.success('Franquicia creada')
+  }
+
+  const mergeTeams = allTeams.filter(t => mergeSelection.includes(t.id))
+  const canAddCategory = !!selectedTeam && categories.length > (selectedTeam.franchise_id ? selectedFranchiseTeams.length : 1)
+
   return (
     <div className="app-layout">
       <Header league={league}/>
@@ -201,51 +319,108 @@ function TeamManager() {
         <CategorySwitcher categories={categories} active={category} onChange={setCategory} label="Editando categoría"/>
 
         <div className="section-header">
-          <h3>Equipos</h3>
-          <button
-            className="primary-btn"
-            onClick={() => { setEditingTeam(null); setShowTeamModal(true) }}
-            disabled={!category}
-          >
-            + Nuevo equipo
-          </button>
+          <h3>{mergeMode ? 'Selecciona 2 o más equipos para fusionar' : 'Equipos'}</h3>
+          <div style={{ display: 'flex', gap: 8 }}>
+            {mergeMode ? (
+              <button className="primary-btn" style={{ background: 'var(--bg-muted)', color: 'var(--text-secondary)' }} onClick={handleCancelMerge}>
+                Cancelar
+              </button>
+            ) : (
+              <button className="primary-btn" style={{ background: 'var(--bg-muted)', color: 'var(--text-secondary)' }} onClick={handleEnterMergeMode}>
+                🔀 Fusionar equipos
+              </button>
+            )}
+            {!mergeMode && (
+              <button
+                className="primary-btn"
+                onClick={() => { setEditingTeam(null); setShowTeamModal(true) }}
+                disabled={!category}
+              >
+                + Nuevo equipo
+              </button>
+            )}
+            {mergeMode && (
+              <button
+                className="primary-btn"
+                disabled={mergeSelection.length < 2}
+                onClick={() => {
+                  const picked = allTeams.filter(t => mergeSelection.includes(t.id))
+                  const categoryIds = picked.map(t => t.category_id)
+                  const hasDuplicateCategory = new Set(categoryIds).size !== categoryIds.length
+                  if (hasDuplicateCategory) {
+                    toast.error('Dos de los equipos que elegiste son de la misma categoría — una franquicia necesita un equipo por categoría distinta')
+                    return
+                  }
+                  setShowMergeModal(true)
+                }}
+              >
+                Fusionar seleccionados ({mergeSelection.length})
+              </button>
+            )}
+          </div>
         </div>
 
-        {!loadingTeams && teams.length === 0 ? (
-          <p className="empty-state">Esta categoría aún no tiene equipos</p>
-        ) : (
-          <div className="team-manager-grid">
-            {teams.map(team => (
-              <TeamManagerCard
-                key={team.id}
-                team={team}
-                coach={coachesByTeamId[team.id]}
-                isSelected={selectedTeamId === team.id}
-                onSelect={t => setSelectedTeamId(t.id)}
-                onEdit={t => { setEditingTeam(t); setShowTeamModal(true) }}
-                onDelete={handleDeleteTeam}
-                onToggleActive={handleToggleTeamActive}
-                divisions={divisions}
-                onSetDivision={handleSetDivision}
-              />
-            ))}
-          </div>
-        )}
+        {(() => {
+          const visibleTeams = mergeMode ? allTeams : teams
+          if (!loadingTeams && visibleTeams.length === 0) {
+            return <p className="empty-state">Esta categoría aún no tiene equipos</p>
+          }
+          return (
+            <div className="team-manager-grid">
+              {visibleTeams.map(team => (
+                <TeamManagerCard
+                  key={team.id}
+                  team={team}
+                  coach={coachesByTeamId[team.id]}
+                  isSelected={selectedTeamId === team.id}
+                  onSelect={t => setSelectedTeamId(t.id)}
+                  onEdit={t => { setEditingTeam(t); setShowTeamModal(true) }}
+                  onDelete={handleDeleteTeam}
+                  onToggleActive={handleToggleTeamActive}
+                  divisions={mergeMode ? [] : divisions}
+                  onSetDivision={handleSetDivision}
+                  franchiseCategories={[...new Set((franchiseTeamsByFranchiseId[team.franchise_id] || []).map(ft => ft.category_id))]
+                    .map(categoryId => ({ type: categoryTypeById(categoryId) }))
+                    .filter(c => c.type)}
+                  activeCategoryType={category?.type}
+                  mergeMode={mergeMode}
+                  mergeSelected={mergeSelection.includes(team.id)}
+                  onToggleMergeSelect={handleToggleMergeSelect}
+                />
+              ))}
+            </div>
+          )
+        })()}
 
-        {selectedTeam && (
-          <PlayerRosterManager
-            team={selectedTeam}
-            onAddPlayer={() => { setEditingPlayer(null); setShowPlayerModal(true) }}
-            onEditPlayer={p => { setEditingPlayer(p); setShowPlayerModal(true) }}
-            onToggleActive={handleToggleActive}
-            onDeletePlayer={handleDeletePlayer}
-          />
+        {!mergeMode && selectedTeam && (
+          isFranchiseSelected ? (
+            <FranchiseRosterManager
+              team={selectedTeam}
+              franchiseTeams={selectedFranchiseTeams}
+              categories={categories}
+              players={franchisePlayers}
+              loading={loadingFranchiseRoster}
+              onPlayersChanged={setFranchisePlayers}
+              onAddCategory={canAddCategory ? () => setShowAddCatModal(true) : undefined}
+            />
+          ) : (
+            <PlayerRosterManager
+              team={selectedTeam}
+              onAddPlayer={() => { setEditingPlayer(null); setShowPlayerModal(true) }}
+              onEditPlayer={p => { setEditingPlayer(p); setShowPlayerModal(true) }}
+              onToggleActive={handleToggleActive}
+              onDeletePlayer={handleDeletePlayer}
+              onAddCategory={canAddCategory ? () => setShowAddCatModal(true) : undefined}
+            />
+          )
         )}
       </main>
 
       {showTeamModal && (
         <TeamFormModal
           categoryId={category?.id}
+          categories={categories}
+          leagueId={league?.id}
           team={editingTeam}
           onClose={() => setShowTeamModal(false)}
           onSaved={handleTeamSaved}
@@ -258,6 +433,31 @@ function TeamManager() {
           player={editingPlayer}
           onClose={() => setShowPlayerModal(false)}
           onSaved={handlePlayerSaved}
+        />
+      )}
+
+      {showMergeModal && (
+        <FranchiseMergeModal
+          leagueId={league?.id}
+          teams={mergeTeams}
+          categories={categories}
+          onClose={() => setShowMergeModal(false)}
+          onMerged={handleMergeDone}
+        />
+      )}
+
+      {showAddCatModal && selectedTeam && (
+        <AddFranchiseCategoryModal
+          team={selectedTeam}
+          leagueId={league?.id}
+          franchiseTeams={selectedFranchiseTeams.length ? selectedFranchiseTeams : [{ id: selectedTeam.id, category_id: selectedTeam.category_id }]}
+          categories={categories}
+          onClose={() => setShowAddCatModal(false)}
+          onAdded={async () => {
+            setShowAddCatModal(false)
+            await reloadAfterFranchiseChange()
+            toast.success('Categoría agregada')
+          }}
         />
       )}
 

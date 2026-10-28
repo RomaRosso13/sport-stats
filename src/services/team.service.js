@@ -1,6 +1,7 @@
 import { supabase } from '../libs/supabase'
 import { runQuery } from '../libs/supabaseQuery'
 import { cached, invalidate } from '../utils/queryCache'
+import { createFranchise } from './franchise.service'
 
 export async function getTeamsByCategoryId(categoryId) {
   return cached('getTeamsByCategoryId', [categoryId], () =>
@@ -104,11 +105,92 @@ export async function getTeamById(teamId) {
   )
 }
 
+// Para saber en qué OTRAS categorías compite la franquicia de un equipo
+// (las consultas por categoría solo traen el Team de esa categoría).
+export async function getTeamsByFranchiseIds(franchiseIds) {
+  const ids = [...new Set((franchiseIds || []).filter(Boolean))]
+  if (ids.length === 0) return []
+
+  return cached('getTeamsByFranchiseIds', [ids.sort()], () =>
+    runQuery(
+      supabase.from('Team').select('id, category_id, franchise_id').in('franchise_id', ids)
+    )
+  )
+}
+
 function invalidateTeamCaches() {
   invalidate('getTeamsByCategoryId')
   invalidate('getTeamsByCategoryIds')
   invalidate('getTeamById')
   invalidate('getTeamsByIds')
+  invalidate('getTeamsByFranchiseIds')
+}
+
+// Da de alta una franquicia nueva: crea el renglón de Franchise y, de una
+// vez, un Team por cada categoría elegida, todos enlazados a esa franquicia.
+export async function createFranchiseTeams(leagueId, { name, logoUrl, primaryColor }, categoryIds) {
+  const franchise = await createFranchise(leagueId, { name, logoUrl, primaryColor })
+
+  const payload = categoryIds.map(categoryId => ({
+    category_id: Number(categoryId),
+    name,
+    logo_url: logoUrl || null,
+    primary_color: primaryColor || null,
+    franchise_id: franchise.id,
+    active: true
+  }))
+
+  const teams = await runQuery(
+    supabase.from('Team').insert(payload).select(),
+    'No se pudieron crear los equipos de la franquicia'
+  )
+
+  invalidateTeamCaches()
+  return { franchise, teams }
+}
+
+// "Agregar a otra categoría": la franquicia ya existe, se le suma un Team
+// más (mismo franchise_id, misma identidad) para la categoría nueva. El
+// roster de esa categoría arranca vacío — el admin va etiquetando ahí a
+// quienes también jueguen esa categoría desde el roster compartido.
+export async function addTeamToFranchiseCategory(franchiseId, categoryId, { name, logoUrl, primaryColor }) {
+  const result = await runQuery(
+    supabase
+      .from('Team')
+      .insert([{
+        category_id: Number(categoryId),
+        name,
+        logo_url: logoUrl || null,
+        primary_color: primaryColor || null,
+        franchise_id: Number(franchiseId),
+        active: true
+      }])
+      .select()
+      .single(),
+    'No se pudo agregar la categoría a la franquicia'
+  )
+
+  invalidateTeamCaches()
+  return result
+}
+
+// Fusiona equipos YA EXISTENTES (de distintas categorías) en una sola
+// franquicia. Los Team originales NO se borran ni se recrean — conservan su
+// id, así que todos sus partidos/estadísticas/divisiones siguen intactos;
+// solo se enlazan a la Franchise nueva y adoptan su nombre/logo/color.
+export async function mergeTeamsIntoFranchise(leagueId, teamIds, { name, logoUrl, primaryColor }) {
+  const franchise = await createFranchise(leagueId, { name, logoUrl, primaryColor })
+
+  await runQuery(
+    supabase
+      .from('Team')
+      .update({ franchise_id: franchise.id, name, logo_url: logoUrl || null, primary_color: primaryColor || null })
+      .in('id', teamIds),
+    'No se pudieron fusionar los equipos'
+  )
+
+  invalidateTeamCaches()
+  return franchise
 }
 
 export async function createTeam(categoryId, { name, logoUrl, primaryColor }) {

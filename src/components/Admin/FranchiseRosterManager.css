@@ -1,0 +1,48 @@
+.franchise-roster-tag {
+  color: var(--franchise-text);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.franchise-roster-hint {
+  margin: 4px 0 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.franchise-roster-filters {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.franchise-filter-pill {
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface-alt);
+  color: var(--text-secondary);
+  padding: 7px 14px;
+  border-radius: 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+
+.franchise-filter-pill:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.franchise-filter-pill.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(var(--accent-rgb), .3);
+}
+
+.franchise-roster-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
